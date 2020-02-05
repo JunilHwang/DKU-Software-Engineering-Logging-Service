@@ -1,5 +1,11 @@
 # 단국대학교 소프트웨어학과 기록 서비스
 
+## 기술 스택
+
+- Vue-cli 3
+- Vue 2.x
+- Nest.js
+
 ## 운영 방안
 
 - 일단은 Repository에 과제물 및 수업 내용에 대한 산출물을 올린다.
@@ -7,7 +13,9 @@
 
 ## 서비스 개발 아이디어 노트
 
-### 산출물을 이용하여 어떤 식으로 서비스를 만들지에 대한 아이디어를 생각 날 때 마다 기록한다.
+어떤 식으로 서비스를 만들지에 대한 아이디어를 생각 날 때 마다 기록한다.
+
+### GitHub API 이용
 
 - GitHub API를 이용하여 다른 사람의 Repository에 있는 README.md 파일을 읽어오는 방식으로 포스팅 한다.
 - 회원가입/로그인은 무조건 GitHub Authorization을 이용한다.
@@ -16,6 +24,7 @@
 - 댓글은 Utterances를 이용한다.
 
 ### Repository 연동 방법
+
 
 - 사용자는 서비스에 등록할 Repository를 만든다.
 - frontmatter 문법으로 title, date, category 등의 정보를 입력할 수 있다.
