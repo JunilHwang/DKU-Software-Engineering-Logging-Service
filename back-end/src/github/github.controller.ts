@@ -7,9 +7,15 @@ export class GithubController {
 
   @Get('repo/:user')
   async getRepo(@Param() param): Promise<any> {
-    const success = true
+    const send = {
+      success: false,
+      result: null
+    }
     const result = await this.githubService.getRepo(param.user)
-    console.log(result)
-    return { success, result }
+    if (result !== null) {
+      send.success = true
+      send.result = result
+    }
+    return send;
   }
 }

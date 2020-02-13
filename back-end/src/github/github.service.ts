@@ -10,7 +10,9 @@ const BASE_URL = 'https://api.github.com'
 @Injectable()
 export class GithubService {
   async getRepo(user: string): Promise<any> {
-    const { data } = await $http.get(`${BASE_URL}/users/${user}/repos`, { headers })
-    return data
+    const params = { sort: 'pushed', type: 'owner', direction: 'desc' }
+    const response = await $http.get(`${BASE_URL}/users/${user}/repos`, { params, headers });
+    const { data, status } = response
+    return status === 200 ? data : null
   }
 }
