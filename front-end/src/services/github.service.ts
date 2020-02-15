@@ -1,4 +1,6 @@
 import $http from 'axios'
+import { Base64 } from 'js-base64'
+
 const baseURI = '/api/github'
 
 interface ContentVO {
@@ -16,8 +18,7 @@ const GithubService = class {
 
   async getContent (params: ContentVO): Promise<any> {
     const { data } = await $http.get(`${baseURI}/content`, { params })
-    console.log(data)
-    return data.result
+    return Base64.decode(data.result.content)
   }
 }
 
