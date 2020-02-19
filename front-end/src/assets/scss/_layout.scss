@@ -16,6 +16,7 @@
     a {
       font-size: 21px;
       font-weight: 600;
+      color: #00529c;
 
       &:hover {
         text-decoration: none;
@@ -99,6 +100,12 @@
 
       + a:before {
         content: "";
+        margin: -1px 10px 0;
+        display: inline-block;
+        vertical-align: middle;
+        width: 1px;
+        height: 13px;
+        background: #fff;
       }
     }
     @include clear-fix();
@@ -111,3 +118,9 @@
   }
 }
 /* </사이트 하단> */
+
+/* <사이트 컨텐츠 영역> */
+.siteContent {
+  padding:100px 0 20px;
+}
+/* </사이트 컨텐츠 영역> */
