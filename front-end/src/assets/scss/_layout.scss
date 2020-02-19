@@ -1,15 +1,25 @@
 /* <사이트 상단> */
 .siteHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   border-bottom: 1px solid #eee;
   padding: 10px 0;
   line-height: 60px;
+  background: fade-out(#fff, 0.15);
 
   &Logo {
     float: left;
 
     a {
       font-size: 21px;
-      font-weight: bold;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 
@@ -41,16 +51,63 @@
         display: block;
         font-weight: 600;
         color: #aaa;
+        position: relative;
 
         &:hover {
           text-decoration: none;
         }
 
+        &:after {
+          content: "";
+          position: absolute;
+          display: block;
+          height: 2px;
+          background: #09F;
+          left: 50%;
+          right: 50%;
+          bottom: 10px;
+          transition-property: left, right;
+          transition-duration: 0.3s;
+        }
+
         &.router-link-exact-active {
           color: #09F;
+
+          &:after {
+            left: 0;
+            right: 0;
+          }
         }
       }
     }
   }
 }
 /* </사이트 상단> */
+
+/* <사이트 하단> */
+.siteFooter {
+  padding: 20px 0;
+  background: #424242;
+  color: #adadad;
+  font-size: 12px;
+
+  &Nav {
+    a {
+      font-size: 13px;
+      color: #fff;
+      float: left;
+
+      + a:before {
+        content: "";
+      }
+    }
+    @include clear-fix();
+  }
+
+  &Copyright {
+    a {
+      font-weight: bold;
+    }
+  }
+}
+/* </사이트 하단> */
