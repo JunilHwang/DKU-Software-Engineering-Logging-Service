@@ -1,5 +1,5 @@
 <template>
-  <header>
-    사이트 상단
-  </header>
+  <footer>
+    사이트 하단
+  </footer>
 </template>

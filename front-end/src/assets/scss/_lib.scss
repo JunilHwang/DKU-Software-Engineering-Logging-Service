@@ -1,0 +1,14 @@
+// PC 에서만 적용할 Style
+@mixin only-pc {
+  @media (min-width: 1200px) {
+    @content
+  }
+}
+
+@mixin clear-fix {
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
