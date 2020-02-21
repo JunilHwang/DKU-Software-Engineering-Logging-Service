@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Redirect } from '@nestjs/common';
+import {Controller, Get, Next, Param, Query, Redirect} from '@nestjs/common';
 import { GithubService } from './github.service';
 import { clientId, redirectURL } from './secret'
 
@@ -43,16 +43,21 @@ export class GithubController {
   }
 
   @Get('authentication')
-  async authentication (@Query() { code }) {
+  async authentication (@Query() { code }, @Next() next) {
     const send = {
       success: false,
       result: null
     }
-    const result = await this.githubService.getToken(code)
-    if (result !== null) {
-      send.success = true
-      send.result = result
-    }
-    return send;
+    let result = await this.githubService.getToken(code)
+    if (result === null) return send
+
+    const { access_token } = result
+    result = await this.githubService.getProfile(access_token);
+
+    if (result === null) return send
+
+    send.success = true
+    send.result = result
+    return send
   }
 }
