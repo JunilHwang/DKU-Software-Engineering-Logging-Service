@@ -9,7 +9,7 @@
           <li><router-link to="/">Repositories</router-link></li>
           <li><router-link to="/content">Content</router-link></li>
           <li>
-            <el-button type="default" size="small" round="true" @click="signIn">
+            <el-button type="default" size="small" @click="signIn" round>
               Login With <strong>GitHub</strong>
             </el-button>
           </li>

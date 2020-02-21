@@ -1,4 +1,4 @@
-import {Controller, Get, Next, Param, Query, Redirect, Res} from '@nestjs/common';
+import { Controller, Get, Param, Query, Redirect, Res } from '@nestjs/common';
 import { GithubService } from './github.service';
 import { clientId, redirectURL } from './secret'
 
@@ -45,7 +45,7 @@ export class GithubController {
   }
 
   @Get('authentication')
-  async authentication (@Query() { code }, @Res() response) {
+  async authentication (@Query('code') code, @Res() response) {
     const send = {
       success: false,
       result: null
@@ -60,6 +60,15 @@ export class GithubController {
 
     context[access_token] = result
 
+    response.cookie('access_token', access_token, { maxAge: 1000 * 60 * 60 })
     response.redirect('/')
+  }
+
+  @Get('profile')
+  getProfile (@Query('access_token') access_token) {
+    return {
+      success: true,
+      result: context[access_token]
+    }
   }
 }

@@ -9,10 +9,9 @@ interface ContentVO {
   path: string
 }
 
-const GithubService = class {
+const Github = class {
   async getRepo (user: string): Promise<any> {
     const { data } = await $http.get(`${baseURI}/repo/${user}`)
-    console.log(data)
     return data.result
   }
 
@@ -20,8 +19,14 @@ const GithubService = class {
     const { data } = await $http.get(`${baseURI}/content`, { params })
     return Base64.decode(data.result.content)
   }
+
+  async getProfile (access_token: string|null): Promise<any> {
+    const params = { access_token }
+    const { data } = await $http.get(`${baseURI}/profile`, { params })
+    return data.result
+  }
 }
 
-const githubService = new GithubService();
+const githubService = new Github();
 
 export default githubService

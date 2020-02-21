@@ -19,7 +19,6 @@ export default class Home extends Vue {
   baseURL = 'https://github.com'
   async created () {
     this.list = await githubService.getRepo('junilhwang')
-    console.log(this.list)
   }
 }
 </script>

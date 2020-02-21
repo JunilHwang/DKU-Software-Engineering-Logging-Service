@@ -9,11 +9,13 @@
   },
   "dependencies": {
     "@types/js-base64": "^2.3.1",
+    "@types/js-cookie": "^2.2.4",
     "@types/markdown-it": "^0.0.9",
     "axios": "^0.19.2",
     "core-js": "^3.4.4",
     "element-ui": "^2.13.0",
     "js-base64": "^2.5.2",
+    "js-cookie": "^2.2.1",
     "markdown-it": "^10.0.0",
     "markdown-it-front-matter": "^0.2.1",
     "vue": "^2.6.10",
