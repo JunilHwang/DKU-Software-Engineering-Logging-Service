@@ -1,8 +1,10 @@
-import {Controller, Get, Next, Param, Query, Redirect} from '@nestjs/common';
+import {Controller, Get, Next, Param, Query, Redirect, Res} from '@nestjs/common';
 import { GithubService } from './github.service';
 import { clientId, redirectURL } from './secret'
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectURL}`
+
+const context = {}
 
 @Controller('/api/github')
 export class GithubController {
@@ -43,7 +45,7 @@ export class GithubController {
   }
 
   @Get('authentication')
-  async authentication (@Query() { code }, @Next() next) {
+  async authentication (@Query() { code }, @Res() response) {
     const send = {
       success: false,
       result: null
@@ -52,12 +54,12 @@ export class GithubController {
     if (result === null) return send
 
     const { access_token } = result
-    result = await this.githubService.getProfile(access_token);
 
+    result = await this.githubService.getProfile(access_token);
     if (result === null) return send
 
-    send.success = true
-    send.result = result
-    return send
+    context[access_token] = result
+
+    response.redirect('/')
   }
 }
