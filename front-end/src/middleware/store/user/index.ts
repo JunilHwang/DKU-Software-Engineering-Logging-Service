@@ -4,7 +4,7 @@ import { ActionContext } from 'vuex';
 import { RootState, UserState } from '@/middleware/store/types';
 import { SIGN_IN } from '../mutations-type';
 
-const access_token = Cookie.get('access_token') || null
+const access_token: string|null = Cookie.get('access_token') || null
 
 const state: UserState = {
   access_token,
@@ -24,8 +24,4 @@ const actions = {
   }
 }
 
-export default {
-  state,
-  mutations,
-  actions,
-}
+export default { state, mutations, actions }

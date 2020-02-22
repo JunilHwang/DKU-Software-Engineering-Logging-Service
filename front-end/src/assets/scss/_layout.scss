@@ -27,6 +27,15 @@
   > .container {
     @include clear-fix();
   }
+
+  &Profile {
+    .img-wrap{
+      @include img-wrap();
+      img {
+        @include circle(30px);
+      }
+    }
+  }
 }
 
 .gnb {
@@ -58,7 +67,11 @@
           text-decoration: none;
         }
 
-        &:after {
+        &.router-link-exact-active {
+          color: #09F;
+        }
+
+        &:not(.siteHeaderProfile):after {
           content: "";
           position: absolute;
           display: block;
@@ -66,15 +79,11 @@
           background: #09F;
           left: 50%;
           right: 50%;
-          bottom: 10px;
+          bottom: 15px;
           transition-property: left, right;
           transition-duration: 0.3s;
-        }
 
-        &.router-link-exact-active {
-          color: #09F;
-
-          &:after {
+          .router-link-exact-active & {
             left: 0;
             right: 0;
           }

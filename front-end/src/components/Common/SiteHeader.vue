@@ -13,21 +13,27 @@
           </li>
         </ul>
         <ul v-else>
-          <li><router-link to="/repository">Repository</router-link></li>
+          <li>
+            <router-link to="/mypage" class="siteHeaderProfile">
+              <figure class="img-wrap">
+                <img :src="profile.avatar_url" :alt="profile.login" />
+              </figure>
+            </router-link>
+          </li>
         </ul>
       </nav>
     </div>
   </header>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { State } from 'vuex-class'
 
 @Component
 export default class SiteHeader extends Vue {
-  @State(state => state.user.profile) profile
+  @State(state => state.user.profile) profile: any
 
   created () {
     console.log(this.profile)

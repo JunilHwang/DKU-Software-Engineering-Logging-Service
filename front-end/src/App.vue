@@ -1,28 +1,31 @@
 <template>
   <div id="app">
-    <site-header></site-header>
+    <site-header />
     <div class="siteContent">
       <router-view />
     </div>
-    <site-footer></site-footer>
+    <site-footer />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Action, State } from 'vuex-class'
 import { default as components } from '@/components/Common';
 import { SIGN_IN } from '@/middleware/store/mutations-type';
+import {ActionMethod} from "vuex";
 
 @Component({ components })
 export default class App extends Vue {
-  @State(state => state.user.access_token) token
-  @Action(SIGN_IN) signIn
+  @State(state => state.user.access_token)
+  private token: string | null | undefined
+
+  @Action(SIGN_IN) signIn: ActionMethod | undefined
 
   created () {
     const { token, signIn } = this
-    token && signIn(token)
+    token && signIn && signIn(token)
   }
 }
 </script>

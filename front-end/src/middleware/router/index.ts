@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Home, Content, Repository } from '@/views'
+import { Home, Content, Mypage } from '@/views'
 
 Vue.use(VueRouter)
 
@@ -14,8 +14,8 @@ const routes = [
     component: Content
   },
   {
-    path: '/repository',
-    component: Repository
+    path: '/mypage',
+    component: Mypage
   },
 ]
 
