@@ -35,10 +35,6 @@ import { State } from 'vuex-class'
 export default class SiteHeader extends Vue {
   @State(state => state.user.profile) profile: any
 
-  created () {
-    console.log(this.profile)
-  }
-
   signIn () {
     location.replace('/api/github/sign-in')
   }
