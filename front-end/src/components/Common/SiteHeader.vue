@@ -30,10 +30,11 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { State } from 'vuex-class'
+import { ProfileType } from '@/middleware/store/StateType';
 
 @Component
 export default class SiteHeader extends Vue {
-  @State(state => state.user.profile) profile: any
+  @State(state => state.user.profile) profile!: ProfileType
 
   signIn () {
     location.replace('/api/github/sign-in')

@@ -1,6 +1,6 @@
 import { githubService } from '@/services'
 import { FETCH_REPO } from '../MutationType';
-import { GithubState, RootState } from '../StateType';
+import { GithubState, RepositoryType, RootState } from '../StateType';
 import { ActionContext, Module } from 'vuex';
 
 const state: GithubState = {
@@ -8,9 +8,8 @@ const state: GithubState = {
 }
 
 const mutations = {
-  [FETCH_REPO]: (state: GithubState, repository: Array<Object>) => {
+  [FETCH_REPO]: (state: GithubState, repository: Array<RepositoryType>) => {
     state.repository = repository
-    console.log(repository)
   }
 }
 

@@ -1,7 +1,7 @@
 import Cookie from 'js-cookie'
 import { githubService } from '@/services';
-import {ActionContext, Module} from 'vuex';
-import { RootState, UserState } from '@/middleware/store/StateType';
+import { ActionContext, Module } from 'vuex';
+import { RootState, UserState, ProfileType } from '@/middleware/store/StateType';
 import { SIGN_IN } from '../MutationType';
 
 const access_token: string|null = Cookie.get('access_token') || null
@@ -12,7 +12,7 @@ const state: UserState = {
 }
 
 const mutations = {
-  [SIGN_IN]: (state: UserState, profile: Object) => {
+  [SIGN_IN]: (state: UserState, profile: ProfileType) => {
     state.profile = profile
   }
 }
