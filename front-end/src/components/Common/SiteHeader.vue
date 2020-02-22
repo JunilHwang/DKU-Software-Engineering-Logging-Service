@@ -5,14 +5,15 @@
         <router-link to="/">DKU Developer Logging</router-link>
       </div>
       <nav class="gnb">
-        <ul>
-          <li><router-link to="/">Repositories</router-link></li>
-          <li><router-link to="/content">Content</router-link></li>
+        <ul v-if="profile.login === undefined">
           <li>
             <el-button type="default" size="small" @click="signIn" round>
               Login With <strong>GitHub</strong>
             </el-button>
           </li>
+        </ul>
+        <ul v-else>
+          <li><router-link to="/repository">Repository</router-link></li>
         </ul>
       </nav>
     </div>
@@ -22,9 +23,16 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { State } from 'vuex-class'
 
 @Component
 export default class SiteHeader extends Vue {
+  @State(state => state.user.profile) profile
+
+  created () {
+    console.log(this.profile)
+  }
+
   signIn () {
     location.replace('/api/github/sign-in')
   }

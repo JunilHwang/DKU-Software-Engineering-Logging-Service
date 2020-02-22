@@ -11,17 +11,18 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Action } from 'vuex-class'
+import { Action, State } from 'vuex-class'
 import { default as components } from '@/components/Common';
 import { SIGN_IN } from '@/middleware/store/mutations-type';
 
 @Component({ components })
 export default class App extends Vue {
-
+  @State(state => state.user.access_token) token
   @Action(SIGN_IN) signIn
 
   created () {
-    this.signIn()
+    const { token, signIn } = this
+    token && signIn(token)
   }
 }
 </script>
