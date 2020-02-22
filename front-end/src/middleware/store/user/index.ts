@@ -1,8 +1,8 @@
 import Cookie from 'js-cookie'
 import { githubService } from '@/services';
-import { ActionContext } from 'vuex';
-import { RootState, UserState } from '@/middleware/store/types';
-import { SIGN_IN } from '../mutations-type';
+import {ActionContext, Module} from 'vuex';
+import { RootState, UserState } from '@/middleware/store/StateType';
+import { SIGN_IN } from '../MutationType';
 
 const access_token: string|null = Cookie.get('access_token') || null
 
@@ -24,4 +24,6 @@ const actions = {
   }
 }
 
-export default { state, mutations, actions }
+const UserModule: Module<UserState, RootState> = { state, mutations, actions }
+
+export default UserModule

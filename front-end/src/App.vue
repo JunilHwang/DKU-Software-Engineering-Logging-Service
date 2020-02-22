@@ -13,7 +13,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Action, State } from 'vuex-class'
 import { default as components } from '@/components/Common';
-import { SIGN_IN } from '@/middleware/store/mutations-type';
+import { SIGN_IN } from '@/middleware/store/MutationType';
 import {ActionMethod} from "vuex";
 
 @Component({ components })

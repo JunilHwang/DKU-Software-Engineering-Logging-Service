@@ -1,13 +1,16 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, {ModuleTree, StoreOptions} from 'vuex'
 import user from './user'
 import github from './github'
+import {RootModuleState, RootState} from './StateType';
 
 Vue.use(Vuex)
 
-const modules = { user, github }
-const state = { }
+const state: RootState = { }
 const mutations = { }
 const actions = { }
+const modules = { user, github }
 
-export default new Vuex.Store({ modules, state, mutations, actions })
+const store: StoreOptions<RootState> = { state, mutations, actions, modules }
+
+export default new Vuex.Store<RootState>(store)
