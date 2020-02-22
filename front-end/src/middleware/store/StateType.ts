@@ -2,7 +2,10 @@ export type ProfileType = {
   avatar_url: string
   login: string
 }
-export type RepositoryType = Array<any>
+export type RepositoryItemType = {
+  name: string
+}
+export type RepositoryType = Array<RepositoryItemType>
 export type AccessToken = string|null
 
 export type RootState = { }
