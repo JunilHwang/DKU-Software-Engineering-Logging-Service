@@ -1,6 +1,6 @@
 import $http from 'axios'
 import { Base64 } from 'js-base64'
-import {AccessToken} from "@/middleware/store/StateType";
+import {AccessToken, ProfileType, RepositoryType} from "@/middleware/store/StateType";
 
 const baseURI = '/api/github'
 
@@ -11,7 +11,7 @@ interface ContentVO {
 }
 
 const Github = class {
-  async getRepo (user: string): Promise<any> {
+  async getRepo (user: string): Promise<RepositoryType> {
     const { data } = await $http.get(`${baseURI}/repo/${user}`)
     return data.result
   }
@@ -26,7 +26,7 @@ const Github = class {
     return Base64.decode(result.content)
   }
 
-  async getProfile (access_token: AccessToken): Promise<any> {
+  async getProfile (access_token: AccessToken): Promise<ProfileType> {
     const params = { access_token }
     const { data } = await $http.get(`${baseURI}/profile`, { params })
     return data.result

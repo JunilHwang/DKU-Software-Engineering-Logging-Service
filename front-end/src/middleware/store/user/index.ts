@@ -8,7 +8,10 @@ const access_token: AccessToken = Cookie.get('access_token') || null
 
 const state: UserState = {
   access_token,
-  profile: {}
+  profile: {
+    login: '',
+    avatar_url: ''
+  }
 }
 
 const mutations = {
@@ -19,7 +22,7 @@ const mutations = {
 
 const actions = {
   [SIGN_IN]: async ({ commit, state }: ActionContext<UserState, RootState>) => {
-    const profile: Object = await githubService.getProfile(state.access_token)
+    const profile = await githubService.getProfile(state.access_token)
     commit(SIGN_IN, profile)
   }
 }
