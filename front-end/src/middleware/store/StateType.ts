@@ -1,5 +1,5 @@
 export type ProfileType = any
-export type RepositoryType = any
+export type RepositoryType = Array<any>
 export type AccessToken = string|null
 
 export type RootState = { }
@@ -8,5 +8,5 @@ export type UserState = {
   profile: ProfileType
 }
 export type GithubState = {
-  repository: Array<Object>
+  repository: RepositoryType
 }
