@@ -1,5 +1,6 @@
 import $http from 'axios'
 import { Base64 } from 'js-base64'
+import {AccessToken} from "@/middleware/store/StateType";
 
 const baseURI = '/api/github'
 
@@ -25,7 +26,7 @@ const Github = class {
     return Base64.decode(result.content)
   }
 
-  async getProfile (access_token: string|null): Promise<any> {
+  async getProfile (access_token: AccessToken): Promise<any> {
     const params = { access_token }
     const { data } = await $http.get(`${baseURI}/profile`, { params })
     return data.result
