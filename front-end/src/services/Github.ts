@@ -15,14 +15,14 @@ const Github = class {
     return data.result
   }
 
-  async getContent (params: ContentVO): Promise<any> {
+   async getContent (params: ContentVO): Promise<any> {
     const { data } = await $http.get(`${baseURI}/content`, { params })
-    return Base64.decode(data.result.content)
+    return data.result
   }
 
-  async getDirectory (params: ContentVO): Promise<any> {
-    const { data } = await $http.get(`${baseURI}/directory`, { params })
-    return data.result
+  async getMD (params: ContentVO): Promise<any> {
+    const result = await this.getContent(params)
+    return Base64.decode(result.content)
   }
 
   async getProfile (access_token: string|null): Promise<any> {
