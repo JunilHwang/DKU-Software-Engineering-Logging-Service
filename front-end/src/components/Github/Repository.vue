@@ -21,7 +21,7 @@ import { githubService } from '@/services';
 @Component
 export default class Repository extends Vue {
   @Action(FETCH_REPO) fetchRepo!: ActionMethod
-  @State(state => state.github.repository) repo!: Array<RepositoryType>
+  @State(state => state.github.repository) repo!: RepositoryType
   @State(state => state.user.profile) profile!: ProfileType
 
   created () {

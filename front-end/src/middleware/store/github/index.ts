@@ -8,7 +8,7 @@ const state: GithubState = {
 }
 
 const mutations = {
-  [FETCH_REPO]: (state: GithubState, repository: Array<RepositoryType>) => {
+  [FETCH_REPO]: (state: GithubState, repository: RepositoryType) => {
     state.repository = repository
   }
 }
