@@ -23,7 +23,7 @@ const mutations = {
 const actions = {
   [SIGN_IN]: async ({ commit, state }: ActionContext<UserState, RootState>) => {
     const profile = await githubService.getProfile(state.access_token)
-    commit(SIGN_IN, profile)
+    if (profile) commit(SIGN_IN, profile)
   }
 }
 

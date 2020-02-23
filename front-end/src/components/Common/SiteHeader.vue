@@ -5,7 +5,7 @@
         <router-link to="/">DKU Developer Logging</router-link>
       </div>
       <nav class="gnb">
-        <ul v-if="!profile.login">
+        <ul v-if="profile.login.length === 0">
           <li>
             <el-button type="default" size="small" @click="signIn" round>
               Login With <strong>GitHub</strong>

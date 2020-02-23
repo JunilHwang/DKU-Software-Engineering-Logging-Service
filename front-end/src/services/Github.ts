@@ -13,6 +13,7 @@ interface ContentVO {
 const Github = class {
   async getRepo (user: string): Promise<RepositoryType> {
     const { data } = await $http.get(`${baseURI}/repo/${user}`)
+    console.log(data.result)
     return data.result
   }
 

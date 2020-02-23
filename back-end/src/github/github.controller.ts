@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query, Redirect, Res } from '@nestjs/common';
 import { GithubService } from './github.service';
-import { clientId, redirectURL } from './secret'
+import { client_id, redirectURL } from './secret'
 
-const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectURL}`
+const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}`
 
 const context = {}
 

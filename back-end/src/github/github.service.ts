@@ -1,38 +1,32 @@
 import { Injectable } from '@nestjs/common'
 import $http from 'axios'
-import {
-  clientId as client_id,
-  clientSecret as client_secret
-} from './secret'
+import { client_id, client_secret } from './secret'
+import { GithubRepository } from '../../../domain';
 
-const headers = {
-  Accept: 'application/vnd.github.v3+json'
-}
+const headers = { Accept: 'application/vnd.github.v3+json' }
 
 const BASE_URL = 'https://api.github.com'
 
 @Injectable()
 export class GithubService {
-  async getRepo (user: string): Promise<any> {
+  async getRepo (user: string): Promise<Array<GithubRepository>> {
     const params = { sort: 'pushed', type: 'owner', direction: 'desc' }
-    const response = await $http.get(`${BASE_URL}/users/${user}/repos`, { params, headers });
-    const { data, status } = response
-    return status === 200 ? data : null
+    const { data } = await $http.get(`${BASE_URL}/users/${user}/repos`, { params, headers });
+    return data
   }
   async getContent (user: string, repo: string, path: string): Promise<any> {
-    const response = await $http.get(`${BASE_URL}/repos/${user}/${repo}/contents/${path}`, { headers });
-    const { data, status } = response
-    return status === 200 ? data : null
+    const { data } = await $http.get(`${BASE_URL}/repos/${user}/${repo}/contents/${path}`, { headers });
+    return data
   }
   async getToken (code: string): Promise<any> {
     const params = { client_id, client_secret, code }
     const headers = { Accept: 'application/json' }
-    const { data, status } = await $http.post(`https://github.com/login/oauth/access_token`, params, { headers })
-    return status === 200 ? data : null
+    const { data } = await $http.post(`https://github.com/login/oauth/access_token`, params, { headers })
+    return data
   }
   async getProfile (token: string) {
     const headers = { Authorization: `token ${token}` }
-    const { data, status } = await $http.get(`${BASE_URL}/user`, { headers })
-    return status === 200 ? data : null
+    const { data } = await $http.get(`${BASE_URL}/user`, { headers })
+    return data
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <section class="repository">
-    <h2>Repository</h2>
+    <h2>GithubRepository</h2>
     <ul>
       <li v-for="({ name }, k) in repo" :key="k">
         <el-link type="primary" @click.native="showContents(name)">{{ name }}</el-link>
