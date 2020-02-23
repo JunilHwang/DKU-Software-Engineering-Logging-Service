@@ -12,8 +12,8 @@ import { githubService } from '@/services';
 export default class Content extends Vue {
   content: string|null = null
   async created () {
-    const content = await githubService.getContent({user: 'junilhwang', repo: 'TIL', path: 'README.md'})
-    this.content = md.render(content)
+    const result = await githubService.getContent({user: 'junilhwang', repo: 'TIL', path: 'README.md'})
+    this.content = md.render(result.content!)
   }
 }
 </script>

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import $http from 'axios'
 import { client_id, client_secret } from './secret'
-import { GithubRepository } from '../../../domain';
+import { GithubRepository, GithubContent, GithubResponseToken } from '@Domain/Github'
+import GithubProfile from "../../dist/domain/GithubProfile";
 
 const headers = { Accept: 'application/vnd.github.v3+json' }
 
@@ -14,17 +15,17 @@ export class GithubService {
     const { data } = await $http.get(`${BASE_URL}/users/${user}/repos`, { params, headers });
     return data
   }
-  async getContent (user: string, repo: string, path: string): Promise<any> {
+  async getContent (user: string, repo: string, path: string): Promise<GithubContent> {
     const { data } = await $http.get(`${BASE_URL}/repos/${user}/${repo}/contents/${path}`, { headers });
     return data
   }
-  async getToken (code: string): Promise<any> {
+  async getToken (code: string): Promise<GithubResponseToken> {
     const params = { client_id, client_secret, code }
     const headers = { Accept: 'application/json' }
     const { data } = await $http.post(`https://github.com/login/oauth/access_token`, params, { headers })
     return data
   }
-  async getProfile (token: string) {
+  async getProfile (token: string): Promise<GithubProfile> {
     const headers = { Authorization: `token ${token}` }
     const { data } = await $http.get(`${BASE_URL}/user`, { headers })
     return data

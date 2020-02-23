@@ -1,12 +1,12 @@
-import GithubProfile from './GithubProfile'
+import Profile from './Profile'
 
-type GithubRepository = {
+type Repository = {
   id: 238215656
   node_id: string
   name: string
   full_name: string
   private: boolean
-  owner: GithubProfile
+  owner: Profile
   html_url: string
   description: string
   fork: boolean
@@ -76,4 +76,4 @@ type GithubRepository = {
   default_branch: string
 }
 
-export default GithubRepository
+export default Repository

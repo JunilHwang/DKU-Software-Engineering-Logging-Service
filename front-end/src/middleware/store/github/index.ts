@@ -1,22 +1,23 @@
 import { githubService } from '@/services'
 import { FETCH_REPO } from '../MutationType';
-import { GithubState, RepositoryType, RootState } from '../StateType';
+import { GithubState, RootState } from '../StateType';
 import { ActionContext, Module } from 'vuex';
+import { GithubRepository } from '@Domain/Github';
 
 const state: GithubState = {
-  repository: [],
+  repositories: [],
 }
 
 const mutations = {
-  [FETCH_REPO]: (state: GithubState, repository: RepositoryType) => {
-    state.repository = repository
+  [FETCH_REPO]: (state: GithubState, repositories: Array<GithubRepository>) => {
+    state.repositories = repositories
   }
 }
 
 const actions = {
   [FETCH_REPO]: ({ commit, rootState }: ActionContext<GithubState, any>) => {
     const { login } = rootState.user.profile
-    githubService.getRepo(login).then(repository => commit(FETCH_REPO, repository))
+    githubService.getRepo(login).then(repositories => commit(FETCH_REPO, repositories))
   }
 }
 

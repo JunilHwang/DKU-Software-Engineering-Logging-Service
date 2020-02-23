@@ -23,7 +23,7 @@
 - GitHub Repository와 Post를 연동한다
 - 댓글은 Utterances를 이용한다.
 
-### GithubRepository 연동 방법
+### Repository 연동 방법
 
 
 - 사용자는 서비스에 등록할 Repository를 만든다.
@@ -34,9 +34,9 @@
 
 ### 기타 제공 서비스
 
-- GithubRepository star
+- Repository star
 - User Following, Follower
-- User GithubRepository total star
+- User Repository total star
 - hottest repository
 - hottest user
 - 주간 commit 랭킹

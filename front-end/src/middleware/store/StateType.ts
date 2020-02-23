@@ -1,18 +1,12 @@
-export type ProfileType = {
-  avatar_url: string
-  login: string
-}
-export type RepositoryItemType = {
-  name: string
-}
-export type RepositoryType = Array<RepositoryItemType>
+import { GithubProfile, GithubRepository } from '@Domain/Github';
+
 export type AccessToken = string|null
 
 export type RootState = { }
 export type UserState = {
   access_token: AccessToken
-  profile: ProfileType
+  profile: GithubProfile
 }
 export type GithubState = {
-  repository: RepositoryType
+  repositories: Array<GithubRepository>
 }

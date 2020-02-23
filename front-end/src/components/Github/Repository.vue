@@ -1,6 +1,6 @@
 <template>
   <section class="repository">
-    <h2>GithubRepository</h2>
+    <h2>Repository</h2>
     <ul>
       <li v-for="({ name }, k) in repo" :key="k">
         <el-link type="primary" @click.native="showContents(name)">{{ name }}</el-link>
@@ -14,15 +14,15 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Action, State } from 'vuex-class'
 import { FETCH_REPO } from '@/middleware/store/MutationType';
-import { ProfileType, RepositoryType } from '@/middleware/store/StateType';
+import { GithubProfile, GithubRepository } from '@Domain/Github';
 import { ActionMethod } from 'vuex';
 import { githubService } from '@/services';
 
 @Component
 export default class Repository extends Vue {
   @Action(FETCH_REPO) fetchRepo!: ActionMethod
-  @State(state => state.github.repository) repo!: RepositoryType
-  @State(state => state.user.profile) profile!: ProfileType
+  @State(state => state.github.repositories) repo!: Array<GithubRepository>
+  @State(state => state.user.profile) profile!: GithubProfile
 
   created () {
     this.fetchRepo()

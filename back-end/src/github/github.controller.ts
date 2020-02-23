@@ -50,15 +50,15 @@ export class GithubController {
       success: false,
       result: null
     }
-    let result = await this.githubService.getToken(code)
-    if (result === null) return send
+    const tokenResult = await this.githubService.getToken(code)
+    if (tokenResult === null) return send
 
-    const { access_token } = result
+    const { access_token } = tokenResult
 
-    result = await this.githubService.getProfile(access_token);
-    if (result === null) return send
+    const profileResult = await this.githubService.getProfile(access_token);
+    if (profileResult === null) return send
 
-    context[access_token] = result
+    context[access_token] = profileResult
 
     response.cookie('access_token', access_token, { maxAge: 1000 * 60 * 60 })
     response.redirect('/')

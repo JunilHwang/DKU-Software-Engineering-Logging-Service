@@ -1,4 +1,4 @@
-type GithubProfile = {
+type Profile = {
   login: string
   id: number
   node_id: string
@@ -19,4 +19,4 @@ type GithubProfile = {
   site_admin: boolean
 }
 
-export default GithubProfile
+export default Profile

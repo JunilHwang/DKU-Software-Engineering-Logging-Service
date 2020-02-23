@@ -15,9 +15,8 @@
       "node"
     ],
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"],
+      "@Domain/*": ["../domain/*"]
     },
     "lib": [
       "esnext",

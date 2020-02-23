@@ -1,10 +1,10 @@
-export type GithubContentLink = {
+export type ContentLink = {
   self: string
   git: string
   html: string
 }
 
-type GithubContent = {
+type Content = {
   name: string
   path: string
   sha: string
@@ -14,7 +14,8 @@ type GithubContent = {
   git_url: string
   download_url: string
   type: string
-  _links: GithubContentLink
+  content?: string
+  _links: ContentLink
 }
 
-export default GithubContent
+export default Content
