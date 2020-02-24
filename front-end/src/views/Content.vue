@@ -6,13 +6,14 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { md } from '@/middleware'
-import { githubService } from '@/services';
+import { githubService } from '@/services'
+import { GithubContent } from '@Domain/Github';
 
 @Component
 export default class Content extends Vue {
   content: string|null = null
   async created () {
-    const result = await githubService.getContent({user: 'junilhwang', repo: 'TIL', path: 'README.md'})
+    const result = await githubService.getContent({user: 'junilhwang', repo: 'TIL', path: 'README.md'}) as GithubContent
     this.content = md.render(result.content!)
   }
 }

@@ -6,15 +6,19 @@
         <el-link type="primary" @click.native="showContents(repository)" v-html="repository.name" />
       </li>
     </ul>
-    <el-dialog :title="dialogTitle" :visible.sync="opened">
+    <el-dialog :visible.sync="opened" class="repositoryContent">
+      <h3 class="repositoryContentHeader" slot="title" v-html="dialogTitle" />
       <el-breadcrumb separator="&gt;">
         <el-breadcrumb-item v-for="(v, k) in repoRoute" :key="k" v-html="v" />
-        <ul>
-          <li v-for="(content, k) in contents">
-            <el-link type="primary" v-html="content.name" />
-          </li>
-        </ul>
       </el-breadcrumb>
+      <ul class="repositoryContentItem">
+        <li v-for="(content, k) in contents">
+          <el-link>
+            <i :class="`el-icon-${content.type === 'file' ? 'document' : 'folder'}`"></i>
+            {{ content.name }}
+          </el-link>
+        </li>
+      </ul>
     </el-dialog>
   </section>
 </template>
@@ -59,6 +63,13 @@ export default class Repository extends Vue {
       .getContent({ repo, user, path: '' })
       .then(data => {
         this.contents = data as GithubContent[]
+        this.contents.sort((a: GithubContent, b: GithubContent) => {
+          if (a.type !== b.type) {
+            return a.type === 'file' ? 1 : -1
+          } else {
+            return a.name < b.name ? -1 : 1
+          }
+        })
       })
   }
 }
