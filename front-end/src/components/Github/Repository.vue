@@ -3,11 +3,18 @@
     <h2>Repository</h2>
     <ul>
       <li v-for="(repository, k) in repositories" :key="k">
-        <el-link type="primary" @click.native="showContents(repository)">{{ repository.name }}</el-link>
+        <el-link type="primary" @click.native="showContents(repository)" v-html="repository.name" />
       </li>
     </ul>
     <el-dialog :title="dialogTitle" :visible.sync="opened">
-      test
+      <el-breadcrumb separator="&gt;">
+        <el-breadcrumb-item v-for="(v, k) in repoRoute" :key="k" v-html="v" />
+        <ul>
+          <li v-for="(content, k) in contents">
+            <el-link type="primary" v-html="content.name" />
+          </li>
+        </ul>
+      </el-breadcrumb>
     </el-dialog>
   </section>
 </template>
@@ -32,7 +39,8 @@ export default class Repository extends Vue {
   private get dialogTitle (): string {
     return this.selected !== null ? this.selected.name : ''
   }
-  private repoRoute = []
+  private repoRoute: string[] = []
+  private contents: GithubContent[] = []
 
   created () {
     this.fetchRepo()
@@ -44,10 +52,13 @@ export default class Repository extends Vue {
     this.opened = true
     this.selected = repository
 
+    this.repoRoute = ['Root']
+    this.contents = []
+
     githubService
       .getContent({ repo, user, path: '' })
       .then(data => {
-        console.log(data)
+        this.contents = data as GithubContent[]
       })
   }
 }

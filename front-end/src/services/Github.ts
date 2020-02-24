@@ -14,18 +14,17 @@ interface ContentVO {
 const Github = class {
   async getRepo (user: string): Promise<Array<GithubRepository>> {
     const { data } = await $http.get(`${baseURI}/repo/${user}`)
-    console.log(data.result)
     return data.result
   }
 
-   async getContent (params: ContentVO): Promise<GithubContent> {
+   async getContent (params: ContentVO): Promise<GithubContent|GithubContent[]> {
     const { data } = await $http.get(`${baseURI}/content`, { params })
     return data.result
   }
 
   async getMD (params: ContentVO): Promise<string> {
-    const result = await this.getContent(params)
-    return Base64.decode(result.content!)
+    const result = (await this.getContent(params)) as GithubContent
+    return Base64.decode((result.content!))
   }
 
   async getProfile (access_token: AccessToken): Promise<GithubProfile> {
