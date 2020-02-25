@@ -8,8 +8,10 @@
     </ul>
     <el-dialog :visible.sync="opened" class="repositoryContent">
       <h3 class="repositoryContentHeader" slot="title" v-html="dialogTitle" />
-      <el-breadcrumb separator="&gt;">
-        <el-breadcrumb-item v-for="(v, k) in repoRoute" :key="k" v-html="v" />
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item v-for="(v, k) in repoRoute" :key="k">
+          <a href="#" @click.prevent="goToPath(v, k)">{{ v || 'ROOT' }}</a>
+        </el-breadcrumb-item>
       </el-breadcrumb>
       <ul class="repositoryContentItem">
         <li v-for="(content, k) in contents">
@@ -57,7 +59,7 @@ export default class Repository extends Vue {
     this.opened = true
     this.selected = repository
 
-    this.repoRoute = ['Root']
+    this.repoRoute = ['']
     this.contents = []
 
     githubService
@@ -74,16 +76,42 @@ export default class Repository extends Vue {
       })
   }
 
-  viewContents ({ type, path }: GithubContent) {
+  async viewContents ({ type, path, name }: GithubContent) {
     const user: string = this.profile.login
     const { repo } = this
+
+    const data = await githubService.getContent({ repo, user, path })
+
     if (type === 'dir') {
-      this.repoRoute.push(path)
+      this.repoRoute.push(name)
+      this.contents = data as GithubContent[]
+      this.contents.sort((a: GithubContent, b: GithubContent) => {
+        if (a.type !== b.type) {
+          return a.type === 'file' ? 1 : -1
+        } else {
+          return a.name < b.name ? -1 : 1
+        }
+      })
     }
+  }
+
+  goToPath (path: string, key: number) {
+    const user: string = this.profile.login
+    const { repo } = this
 
     githubService
       .getContent({ repo, user, path })
-      .then(console.log)
+      .then(data => {
+        this.repoRoute = this.repoRoute.filter((v, k) => k <= key)
+        this.contents = data as GithubContent[]
+        this.contents.sort((a: GithubContent, b: GithubContent) => {
+          if (a.type !== b.type) {
+            return a.type === 'file' ? 1 : -1
+          } else {
+            return a.name < b.name ? -1 : 1
+          }
+        })
+      })
   }
 }
 </script>

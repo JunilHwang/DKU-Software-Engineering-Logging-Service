@@ -5,7 +5,7 @@ import { GithubRepository, GithubProfile, GithubContent } from '@Domain/Github';
 
 const baseURI = '/api/github'
 
-interface ContentVO {
+export interface ContentVO {
   user: string
   repo: string
   path: string
