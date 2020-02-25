@@ -3,7 +3,7 @@ import { githubService } from '@/services';
 import { ActionContext, Module } from 'vuex';
 import { RootState, UserState, AccessToken } from '@/middleware/store/StateType';
 import { SIGN_IN } from '../MutationType';
-import { GithubProfile } from '@Domain/Github';
+import { GithubProfile } from '../../../../../back-end/src/domain/Github';
 
 const access_token: AccessToken = Cookie.get('access_token') || null
 const profileInit = {

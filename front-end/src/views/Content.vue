@@ -7,7 +7,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { md } from '@/middleware'
 import { githubService } from '@/services'
-import { GithubContent } from '@Domain/Github';
+import { GithubContent } from '../../../back-end/src/domain/Github';
 
 @Component
 export default class Content extends Vue {

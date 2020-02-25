@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import $http from 'axios'
 import { client_id, client_secret } from './secret'
-import { GithubRepository, GithubContent, GithubResponseToken } from '@Domain/Github'
-import GithubProfile from "../../dist/domain/GithubProfile";
+import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile } from '../domain/Github'
 
 const headers = { Accept: 'application/vnd.github.v3+json' }
 

@@ -30,7 +30,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Action, State } from 'vuex-class'
 import { FETCH_REPO } from '@/middleware/store/MutationType';
-import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github';
+import { GithubProfile, GithubRepository, GithubContent } from '../../../../back-end/src/domain/Github';
 import { ActionMethod } from 'vuex';
 import { githubService } from '@/services';
 
@@ -39,6 +39,7 @@ export default class Repository extends Vue {
   @Action(FETCH_REPO) fetchRepo!: ActionMethod
   @State(state => state.github.repositories) repositories!: Array<GithubRepository>
   @State(state => state.user.profile) profile!: GithubProfile
+  @State(state => state.user.access_token) access_token!: string
 
   private opened = false
   private selected: GithubRepository|null = null

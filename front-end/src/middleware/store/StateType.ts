@@ -1,4 +1,4 @@
-import { GithubProfile, GithubRepository } from '@Domain/Github';
+import { GithubProfile, GithubRepository } from '../../../../back-end/src/domain/Github';
 
 export type AccessToken = string|null
 

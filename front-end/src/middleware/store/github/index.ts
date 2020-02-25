@@ -2,7 +2,7 @@ import { githubService } from '@/services'
 import { FETCH_REPO } from '../MutationType';
 import { GithubState, RootState } from '../StateType';
 import { ActionContext, Module } from 'vuex';
-import { GithubRepository } from '@Domain/Github';
+import { GithubRepository } from '../../../../../back-end/src/domain/Github';
 
 const state: GithubState = {
   repositories: [],
