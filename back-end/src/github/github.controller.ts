@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Redirect, Res, Request } from '@nestjs/common';
+import {Controller, Get, Param, Query, Redirect, Res, Request, Req} from '@nestjs/common';
 import { GithubService } from './github.service';
 import { client_id, redirectURL } from './secret'
 
@@ -11,26 +11,19 @@ export class GithubController {
   constructor(private readonly githubService: GithubService) {}
 
   @Get('repo/:user')
-  getRepo (@Param('user') user: string, @Request() req): any {
-
-    console.log("======================");
-    console.log(user);
-    console.log(req.cookies.access_token);
-    console.log("======================");
+  async getRepo (@Param('user') user: string, @Request() { cookies } ): Promise<any> {
 
     const send = {
       success: false,
       result: null
     }
 
+    const result = await this.githubService.getRepo(user, cookies.access_token)
+    if (result !== null) {
+      send.success = true
+      send.result = result
+    }
     return send;
-
-    // const result = await this.githubService.getRepo(user)
-    // if (result !== null) {
-    //   send.success = true
-    //   send.result = result
-    // }
-    // return send;
   }
 
   @Get('content')

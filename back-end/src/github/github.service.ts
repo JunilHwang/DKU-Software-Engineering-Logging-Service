@@ -9,13 +9,16 @@ const BASE_URL = 'https://api.github.com'
 
 @Injectable()
 export class GithubService {
-  async getRepo (user: string): Promise<Array<GithubRepository>> {
+  async getRepo (user: string, access_token: string): Promise<Array<GithubRepository>> {
+    const Authorization = `token ${access_token}`
     const params = { sort: 'pushed', type: 'owner', direction: 'desc' }
-    const { data } = await $http.get(`${BASE_URL}/users/${user}/repos`, { params, headers });
+    const url = `${BASE_URL}/users/${user}/repos`
+    const { data } = await $http.get(url, { params, headers: { ...headers, Authorization } })
     return data
   }
   async getContent (user: string, repo: string, path: string): Promise<GithubContent> {
-    const { data } = await $http.get(`${BASE_URL}/repos/${user}/${repo}/contents/${path}`, { headers });
+    const url = `${BASE_URL}/repos/${user}/${repo}/contents/${path}`
+    const { data } = await $http.get(url, { headers })
     return data
   }
   async getToken (code: string): Promise<GithubResponseToken> {
