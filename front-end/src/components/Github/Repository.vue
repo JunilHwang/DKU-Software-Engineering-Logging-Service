@@ -13,7 +13,7 @@
       </el-breadcrumb>
       <ul class="repositoryContentItem">
         <li v-for="(content, k) in contents">
-          <el-link>
+          <el-link @click.native="viewContents(content)">
             <i :class="`el-icon-${content.type === 'file' ? 'document' : 'folder'}`"></i>
             {{ content.name }}
           </el-link>
@@ -45,6 +45,7 @@ export default class Repository extends Vue {
   }
   private repoRoute: string[] = []
   private contents: GithubContent[] = []
+  private repo: string = ''
 
   created () {
     this.fetchRepo()
@@ -52,7 +53,7 @@ export default class Repository extends Vue {
 
   showContents (repository: GithubRepository) {
     const user: string = this.profile.login
-    const repo: string = repository.name
+    const repo: string = this.repo = repository.name
     this.opened = true
     this.selected = repository
 
@@ -71,6 +72,18 @@ export default class Repository extends Vue {
           }
         })
       })
+  }
+
+  viewContents ({ type, path }: GithubContent) {
+    const user: string = this.profile.login
+    const { repo } = this
+    if (type === 'dir') {
+      this.repoRoute.push(path)
+    }
+
+    githubService
+      .getContent({ repo, user, path })
+      .then(console.log)
   }
 }
 </script>
