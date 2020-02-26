@@ -101,6 +101,7 @@ export default class Repository extends Vue {
   }
 
   async viewContents ({ type, path, name }: GithubContent) {
+
     const user: string = this.profile.login
     const { repo } = this
 
