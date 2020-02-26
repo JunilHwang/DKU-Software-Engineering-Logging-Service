@@ -14,7 +14,7 @@
         </el-breadcrumb-item>
       </el-breadcrumb>
       <ul class="repositoryContentItem">
-        <li v-for="(content, k) in contents">
+        <li v-for="(content, k) in contents" :key="k">
           <el-link @click.native="viewContents(content)">
             <i :class="`el-icon-${content.type === 'file' ? 'document' : 'folder'}`"></i>
             {{ content.name }}
@@ -30,7 +30,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Action, State } from 'vuex-class'
 import { FETCH_REPO } from '@/middleware/store/MutationType';
-import { GithubProfile, GithubRepository, GithubContent } from '../../../../back-end/src/domain/Github';
+import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github';
 import { ActionMethod } from 'vuex';
 import { githubService } from '@/services';
 
@@ -54,6 +54,17 @@ export default class Repository extends Vue {
     this.fetchRepo()
   }
 
+  showDirectory (data: GithubContent|GithubContent[]) {
+    this.contents = data as GithubContent[]
+    this.contents.sort((a: GithubContent, b: GithubContent) => {
+      if (a.type !== b.type) {
+        return a.type === 'file' ? 1 : -1
+      } else {
+        return a.name < b.name ? -1 : 1
+      }
+    })
+  }
+
   showContents (repository: GithubRepository) {
     const user: string = this.profile.login
     const repo: string = this.repo = repository.name
@@ -65,16 +76,7 @@ export default class Repository extends Vue {
 
     githubService
       .getContent({ repo, user, path: '' })
-      .then(data => {
-        this.contents = data as GithubContent[]
-        this.contents.sort((a: GithubContent, b: GithubContent) => {
-          if (a.type !== b.type) {
-            return a.type === 'file' ? 1 : -1
-          } else {
-            return a.name < b.name ? -1 : 1
-          }
-        })
-      })
+      .then(this.showDirectory)
   }
 
   async viewContents ({ type, path, name }: GithubContent) {
@@ -85,34 +87,21 @@ export default class Repository extends Vue {
 
     if (type === 'dir') {
       this.repoRoute.push(name)
-      this.contents = data as GithubContent[]
-      this.contents.sort((a: GithubContent, b: GithubContent) => {
-        if (a.type !== b.type) {
-          return a.type === 'file' ? 1 : -1
-        } else {
-          return a.name < b.name ? -1 : 1
-        }
-      })
+      this.showDirectory(data)
+    } else {
+
     }
   }
 
   goToPath (path: string, key: number) {
+    if (key === this.repoRoute.length - 1) return
+
     const user: string = this.profile.login
     const { repo } = this
 
     githubService
       .getContent({ repo, user, path })
-      .then(data => {
-        this.repoRoute = this.repoRoute.filter((v, k) => k <= key)
-        this.contents = data as GithubContent[]
-        this.contents.sort((a: GithubContent, b: GithubContent) => {
-          if (a.type !== b.type) {
-            return a.type === 'file' ? 1 : -1
-          } else {
-            return a.name < b.name ? -1 : 1
-          }
-        })
-      })
+      .then(this.showDirectory)
   }
 }
 </script>

@@ -1,7 +1,7 @@
 import $http from 'axios'
 import { Base64 } from 'js-base64'
 import { AccessToken } from "@/middleware/store/StateType";
-import { GithubRepository, GithubProfile, GithubContent } from '../../../back-end/src/domain/Github';
+import { GithubRepository, GithubProfile, GithubContent } from '@Domain/Github';
 
 const baseURI = '/api/github'
 
