@@ -22,44 +22,58 @@
         </li>
       </ul>
     </el-dialog>
-    <el-dialog :visible.sync="contentOpened" width="700px">
-      <div v-html="markdownContent" />
+    <el-dialog :title="contentTitle" :visible.sync="contentOpened" width="700px">
+      <markdown v-if="isMarkdown" :content="decodedContent" />
     </el-dialog>
   </section>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Action, State } from 'vuex-class'
-import { FETCH_REPO } from '@/middleware/store/MutationType'
-import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github'
+import { Vue, Component} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
-import { githubService } from '@/services'
-import { md } from '@/middleware'
+import { Action, State } from 'vuex-class'
 import { Base64 } from 'js-base64'
+import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github'
+import { FETCH_REPO } from '@/middleware/store/MutationType'
+import { githubService } from '@/services'
+import { Markdown } from '@/components/Code'
 
-@Component
+const components = { Markdown }
+
+@Component({ components })
 export default class Repository extends Vue {
-  @Action(FETCH_REPO) fetchRepo!: ActionMethod
+
+  //========== mapper ==========//
   @State(state => state.github.repositories) repositories!: Array<GithubRepository>
   @State(state => state.user.profile) profile!: GithubProfile
   @State(state => state.user.access_token) access_token!: string
+  @Action(FETCH_REPO) fetchRepo!: ActionMethod
 
+  //========== data ==========//
   private opened = false
   private contentOpened = false
   private selected: GithubRepository|null = null
-  private get dialogTitle (): string {
-    return this.selected !== null ? this.selected.name : ''
-  }
   private repoRoute: string[] = []
   private contents: GithubContent[] = []
   private repo: string = ''
-  private markdownContent: string = ''
+  private contentFileName: string = ''
+  private decodedContent: string = ''
 
-  created () {
-    this.fetchRepo()
+  //========== computed ==========//
+  private get dialogTitle (): string {
+    return this.selected !== null ? this.selected.name : ''
   }
+
+  private get contentTitle (): string {
+    const { repoRoute, contentFileName } = this
+    return [...repoRoute, contentFileName].join('/')
+  }
+
+  private get isMarkdown (): boolean {
+    return this.contentFileName.replace(/.*\.(.*)/, '$1') === 'md'
+  }
+
+  //========== methods ==========//
 
   showDirectory (data: GithubContent|GithubContent[]) {
     this.contents = data as GithubContent[]
@@ -97,10 +111,9 @@ export default class Repository extends Vue {
       this.showDirectory(data)
     } else {
       const githubContent: GithubContent = data as GithubContent
-      const decodedContent: string = Base64.decode(githubContent.content!)
-      // const ext = githubContent.name.replace(/.*\.(.*)/, '$1')
+      this.decodedContent = Base64.decode(githubContent.content!)
+      this.contentFileName = githubContent.name
       this.contentOpened = true
-      this.markdownContent = md.render(decodedContent)
     }
   }
 
@@ -113,6 +126,12 @@ export default class Repository extends Vue {
     githubService
       .getContent({ repo, user, path })
       .then(this.showDirectory)
+  }
+
+  //========== life cycle ==========//
+
+  created () {
+    this.fetchRepo()
   }
 }
 </script>
