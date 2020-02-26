@@ -22,6 +22,9 @@
         </li>
       </ul>
     </el-dialog>
+    <el-dialog :visible.sync="contentOpened" width="700px">
+      <div v-html="markdownContent" />
+    </el-dialog>
   </section>
 </template>
 
@@ -29,10 +32,12 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Action, State } from 'vuex-class'
-import { FETCH_REPO } from '@/middleware/store/MutationType';
-import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github';
-import { ActionMethod } from 'vuex';
-import { githubService } from '@/services';
+import { FETCH_REPO } from '@/middleware/store/MutationType'
+import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github'
+import { ActionMethod } from 'vuex'
+import { githubService } from '@/services'
+import { md } from '@/middleware'
+import { Base64 } from 'js-base64'
 
 @Component
 export default class Repository extends Vue {
@@ -42,6 +47,7 @@ export default class Repository extends Vue {
   @State(state => state.user.access_token) access_token!: string
 
   private opened = false
+  private contentOpened = false
   private selected: GithubRepository|null = null
   private get dialogTitle (): string {
     return this.selected !== null ? this.selected.name : ''
@@ -49,6 +55,7 @@ export default class Repository extends Vue {
   private repoRoute: string[] = []
   private contents: GithubContent[] = []
   private repo: string = ''
+  private markdownContent: string = ''
 
   created () {
     this.fetchRepo()
@@ -89,15 +96,19 @@ export default class Repository extends Vue {
       this.repoRoute.push(name)
       this.showDirectory(data)
     } else {
-
+      const githubContent: GithubContent = data as GithubContent
+      const decodedContent: string = Base64.decode(githubContent.content!)
+      // const ext = githubContent.name.replace(/.*\.(.*)/, '$1')
+      this.contentOpened = true
+      this.markdownContent = md.render(decodedContent)
     }
   }
 
   goToPath (path: string, key: number) {
     if (key === this.repoRoute.length - 1) return
 
+    const repo: string = this.repo
     const user: string = this.profile.login
-    const { repo } = this
 
     githubService
       .getContent({ repo, user, path })

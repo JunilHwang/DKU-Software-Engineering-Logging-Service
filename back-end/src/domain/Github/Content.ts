@@ -15,6 +15,7 @@ type Content = {
   download_url: string
   type: string
   content?: string
+  encoding?: string
   _links: ContentLink
 }
 
