@@ -9,8 +9,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Vue, Component } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 import { default as components } from '@/components/Common';
 import { SIGN_IN } from '@/middleware/store/MutationType';

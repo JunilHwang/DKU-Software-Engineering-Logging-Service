@@ -3,8 +3,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Vue, Component } from 'vue-property-decorator'
 import { Base64 } from 'js-base64'
 import { md } from '@/middleware'
 import { githubService } from '@/services'
@@ -23,7 +22,10 @@ export default class Content extends Vue {
   }
 
   created () {
-    this.loadGitContent()
+    const markdown = "```js{1}\n" +
+                     "class Demo { };\n"+
+                     "```";
+    this.content = md.render(markdown)
   }
 }
 </script>
