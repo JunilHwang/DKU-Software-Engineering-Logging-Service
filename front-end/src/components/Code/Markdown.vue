@@ -1,6 +1,6 @@
 <template>
   <div class="markdownWrapper">
-    <markdown-it-vue />
+    <div class="markdownContent" v-html="markdownContent" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default class Markdown extends Vue {
   @Prop() content!: string
 
   private get markdownContent () {
-    return md.render(this.content)
+    return md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1'))
   }
 }
 </script>

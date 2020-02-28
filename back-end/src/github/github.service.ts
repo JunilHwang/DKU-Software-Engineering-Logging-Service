@@ -3,7 +3,10 @@ import $http from 'axios'
 import { client_id, client_secret } from './secret'
 import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile } from '../domain/Github'
 
-const headers = { Accept: 'application/vnd.github.v3+json' }
+const headers = {
+  Accept: 'application/vnd.github.v3+json',
+  'User-Agent': 'request'
+}
 
 const BASE_URL = 'https://api.github.com'
 

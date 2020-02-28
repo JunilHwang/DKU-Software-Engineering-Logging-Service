@@ -17,6 +17,7 @@
     "js-base64": "^2.5.2",
     "js-cookie": "^2.2.1",
     "markdown-it": "^10.0.0",
+    "markdown-it-container": "^2.0.0",
     "markdown-it-front-matter": "^0.2.1",
     "markdown-it-highlightjs": "^3.0.0",
     "markdown-it-plantuml": "^1.4.1",
