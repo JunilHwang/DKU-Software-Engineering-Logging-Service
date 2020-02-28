@@ -18,14 +18,13 @@ export default class Content extends Vue {
     const repo = 'TIL'
     const path = 'CodeSpitz/Object-Oriented-Javascript/01-Intro/README.md'
     const result = await githubService.getContent({ user, repo, path }) as GithubContent
-    this.content = md.render(Base64.decode(result.content!))
+    const decodedContent = Base64.decode(result.content!) //.replace(/(```.*)(\{.*\})/g, '$1')
+    console.log(decodedContent)
+    this.content = md.render(decodedContent)
   }
 
   created () {
-    const markdown = "```js{1}\n" +
-                     "class Demo { };\n"+
-                     "```";
-    this.content = md.render(markdown)
+    this.loadGitContent()
   }
 }
 </script>

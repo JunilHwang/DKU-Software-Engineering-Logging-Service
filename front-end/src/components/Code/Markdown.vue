@@ -1,6 +1,6 @@
 <template>
   <div class="markdownWrapper">
-    <div class="markdownContent" v-html="markdownContent" />
+    <markdown-it-vue />
   </div>
 </template>
 
