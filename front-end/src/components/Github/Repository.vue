@@ -23,7 +23,7 @@
       </ul>
     </el-dialog>
     <el-dialog :title="contentTitle" :visible.sync="contentOpened" width="700px">
-      <markdown v-if="isMarkdown" :content="decodedContent" />
+      <markdown :content="decodedContent" />
     </el-dialog>
   </section>
 </template>
@@ -107,6 +107,8 @@ export default class Repository extends Vue {
 
     const data = await githubService.getContent({ repo, user, path })
 
+    console.log(type)
+
     if (type === 'dir') {
       this.repoRoute.push(name)
       this.showDirectory(data)
@@ -114,6 +116,10 @@ export default class Repository extends Vue {
       const githubContent: GithubContent = data as GithubContent
       this.decodedContent = Base64.decode(githubContent.content!)
       this.contentFileName = githubContent.name
+      const ext = githubContent.name.replace(/.*\.(.*)/, '$1')
+      if (ext !== 'md') {
+        this.decodedContent = '``` ' + ext + '\n' + this.decodedContent + '\n```';
+      }
       this.contentOpened = true
     }
   }

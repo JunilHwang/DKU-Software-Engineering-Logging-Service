@@ -25,12 +25,16 @@
 
 ### Repository 연동 방법
 
-
 - 사용자는 서비스에 등록할 Repository를 만든다.
 - frontmatter 문법으로 title, date, category 등의 정보를 입력할 수 있다.
 - Observing에 대한 방안
   - 방안1 : batch나 scheduling을 통해 repository를 observing 하여 지속적으로 변경 내역을 읽어온다.
   - 방안2 : 사용자가 hook을 등록하면 commit시 repository의 변경 내역을 읽어온다.
+  
+2020-02-28
+- 약간의 이슈
+  - Github API에는 시간당 요청 제한 갯수가 있음 (약 60개)
+  - API를 이용하는 방법말고 또다른 방법이 필요할 듯함
 
 ### 기타 제공 서비스
 

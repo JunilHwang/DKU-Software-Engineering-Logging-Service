@@ -8,7 +8,7 @@ const container = require('markdown-it-container')
 md.use(require('markdown-it-highlightjs'))
 md.use(require('markdown-it-front-matter'), console.log)
 md.use(require('markdown-it-plantuml'))
-md.use(require('markdown-it-container'), 'tip', {
+md.use(container, 'tip', {
 
   validate: function(params: string) {
     return params.trim().match(/^tip\s*(.*)$/);
