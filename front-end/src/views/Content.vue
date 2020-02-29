@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <markdown :content="content" />
+    <markdown v-if="content !== null" :content="content" />
   </div>
 </template>
 
