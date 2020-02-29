@@ -19,7 +19,7 @@ md.use(container, 'tip', {
 
     return `${tokens[idx].nesting === 1
       ? `<div class="markdownContainer tip">
-           <strong>${md.utils.escapeHtml(m[1] || 'tip')}</strong>`
+           <strong class="markdownContainerTitle">${md.utils.escapeHtml(m[1] || 'tip')}</strong>`
       : `</div>`
     }`
   }

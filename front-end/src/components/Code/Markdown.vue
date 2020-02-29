@@ -17,3 +17,22 @@ export default class Markdown extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.markdown {
+  &Content {
+    line-height: 160%;
+    color: #333;
+  }
+  &Container {
+    background: #f5f5f5;
+    padding: 20px;
+    border-left: 8px solid #09F;
+    margin-bottom: 20px;
+    &Title {
+      font-size: 19px;
+      color: #06F;
+    }
+  }
+}
+</style>
