@@ -112,6 +112,14 @@ export default class Repository extends Vue {
 
     this.decodedContent = this.contentImageSource = ''
 
+    const ext = path.replace(/.*\.(.*)/, '$1')
+    const imageList = ['jpg', 'jpeg', 'gif', 'png', 'svg']
+    const rawList = ['pdf', 'excel', 'doc', 'docx', 'hwp', 'ppt', 'xls']
+    if (rawList.includes(ext)) {
+      this.$message({ type: 'warning', message: `${ext} file은 조회할 수 없습니다.` })
+      return
+    }
+
     const data = await githubService.getContent({ repo, user, path })
 
     if (type === 'dir') {
@@ -120,13 +128,6 @@ export default class Repository extends Vue {
     } else {
       const githubContent: GithubContent = data as GithubContent
       this.contentFileName = githubContent.name
-      const ext = githubContent.name.replace(/.*\.(.*)/, '$1')
-      const imageList = ['jpg', 'jpeg', 'gif', 'png', 'svg']
-      const rawList = ['pdf', 'excel', 'doc', 'docx', 'hwp', 'ppt', 'xls']
-      if (rawList.includes(ext)) {
-        this.$message({ type: 'warning', message: `${ext} file은 조회할 수 없습니다.` })
-        return
-      }
 
       this.contentOpened = true
       if (imageList.includes(ext)) {
