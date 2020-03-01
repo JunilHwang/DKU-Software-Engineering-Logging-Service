@@ -23,7 +23,10 @@
       </ul>
     </el-dialog>
     <el-dialog :title="contentTitle" :visible.sync="contentOpened" width="700px">
-      <markdown :content="decodedContent" />
+      <markdown v-if="decodedContent.length" :content="decodedContent" />
+      <template v-if="contentIsImage">
+        <img :src="contentImageSource" :alt="contentTitle">
+      </template>
     </el-dialog>
   </section>
 </template>
@@ -58,6 +61,8 @@ export default class Repository extends Vue {
   private repo: string = ''
   private contentFileName: string = ''
   private decodedContent: string = ''
+  private contentIsImage: boolean = false
+  private contentImageSource: string = ''
 
   //========== computed ==========//
   private get dialogTitle (): string {
@@ -105,22 +110,36 @@ export default class Repository extends Vue {
     const user: string = this.profile.login
     const { repo } = this
 
-    const data = await githubService.getContent({ repo, user, path })
+    this.decodedContent = this.contentImageSource = ''
 
-    console.log(type)
+    const data = await githubService.getContent({ repo, user, path })
 
     if (type === 'dir') {
       this.repoRoute.push(name)
       this.showDirectory(data)
     } else {
       const githubContent: GithubContent = data as GithubContent
-      this.decodedContent = Base64.decode(githubContent.content!)
       this.contentFileName = githubContent.name
       const ext = githubContent.name.replace(/.*\.(.*)/, '$1')
-      if (ext !== 'md') {
-        this.decodedContent = '``` ' + ext + '\n' + this.decodedContent + '\n```';
+      const imageList = ['jpg', 'jpeg', 'gif', 'png', 'svg']
+      const rawList = ['pdf', 'excel', 'doc', 'docx', 'hwp', 'ppt', 'xls']
+      if (rawList.includes(ext)) {
+        this.$message({ type: 'warning', message: `${ext} file은 조회할 수 없습니다.` })
+        return
       }
+
       this.contentOpened = true
+      if (imageList.includes(ext)) {
+        console.log(githubContent)
+        this.contentIsImage = true
+        this.contentImageSource = githubContent.download_url!
+      } else {
+        this.contentIsImage = false
+        this.decodedContent = Base64.decode(githubContent.content!)
+        if (ext !== 'md') {
+          this.decodedContent = '``` ' + ext + '\n' + this.decodedContent + '\n```';
+        }
+      }
     }
   }
 
