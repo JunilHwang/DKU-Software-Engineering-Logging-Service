@@ -153,6 +153,10 @@ export default class Repository extends Vue {
     githubService
       .getContent({ repo, user, path })
       .then(this.showDirectory)
+      .then(() => {
+        // 경로 변경
+        this.repoRoute = [ ...this.repoRoute ].filter((v, k) => k <= key)
+      })
   }
 
   //========== life cycle ==========//
