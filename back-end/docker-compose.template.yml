@@ -1,0 +1,16 @@
+version: "3.2"
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: MONGO_INITDB_ROOT_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: MONGO_INITDB_ROOT_PASSWORD
+    volumes:
+      - type: bind
+        source: ./data/db
+        target: /data/db
+    container_name: "mongodb"
+    ports:
+      - CONTAINER_PORT:LOCAL_PORT
