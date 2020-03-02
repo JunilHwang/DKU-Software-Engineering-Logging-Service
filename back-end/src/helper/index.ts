@@ -1,4 +1,4 @@
-export const responseHandler = async (response: Promise<any>) => {
+export const httpResponseCheck = async (response: Promise<any>) => {
   try {
     const { statusText, status, config, data } = await response
     const { method, url } = config
