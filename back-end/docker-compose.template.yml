@@ -5,12 +5,9 @@ services:
     image: mongo
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: MONGO_INITDB_ROOT_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: MONGO_INITDB_ROOT_PASSWORD
-    volumes:
-      - type: bind
-        source: ./data/db
-        target: /data/db
-    container_name: "mongodb"
+      -MONGO_INITDB_ROOT_USERNAME="MONGO_INITDB_ROOT_USERNAME"
+      -MONGO_INITDB_ROOT_PASSWORD="MONGO_INITDB_ROOT_PASSWORD"
+      -MONGODB_DATABASE="MONGODB_DATABASE"
+    container_name: CONTAINER_NAME
     ports:
       - CONTAINER_PORT:LOCAL_PORT
