@@ -31,11 +31,11 @@ export class CatService {
   /* mysql */
   /************************************/
 
-  createByEntity(catDTO: Cat): Promise<CatEntity> {
+  createByEntity(body: CatEntity): Promise<CatEntity> {
     const cat = new CatEntity();
-    cat.name = catDTO.name;
-    cat.age = catDTO.age;
-    cat.breed = catDTO.breed;
+    cat.name = body.name;
+    cat.age = body.age;
+    cat.breed = body.breed;
 
     return this.catRepository.save(cat);
   }

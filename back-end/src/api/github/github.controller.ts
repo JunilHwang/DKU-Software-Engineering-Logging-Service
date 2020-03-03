@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Query, Redirect, Res, Request, CacheTTL } from '@nestjs/common';
 import { GithubService } from './github.service';
 import { client_id, redirectURL } from './secret'
+import { UserService } from '@/api/user/user.service';
+import {UserEntity} from "@/api/user/user.entity";
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}`
 
@@ -8,7 +10,10 @@ const context = {}
 
 @Controller('/api/github')
 export class GithubController {
-  constructor(private readonly githubService: GithubService) {}
+  constructor(
+    private readonly githubService: GithubService,
+    private readonly userService: UserService
+  ) {}
 
   @Get('repo/:user')
   @CacheTTL(60 * 60)
@@ -64,18 +69,10 @@ export class GithubController {
     const profileResult = await this.githubService.getProfile(access_token);
     if (profileResult === null) return send
 
-    context[access_token] = profileResult
+    const user: UserEntity = await this.userService.create(profileResult, access_token)
+    if (!user) return send
 
     response.cookie('access_token', access_token, { maxAge: 1000 * 60 * 60 })
     response.redirect('/')
-  }
-
-  @Get('profile')
-  @CacheTTL(0)
-  getProfile (@Query('access_token') access_token) {
-    return {
-      success: true,
-      result: context[access_token]
-    }
   }
 }

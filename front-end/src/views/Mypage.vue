@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { GithubRepository } from '@/components/Github';
+import { GithubRepository } from '@/components/Github'
 
 const components = { GithubRepository }
 

@@ -1,12 +1,12 @@
 import Cookie from 'js-cookie'
-import { githubService } from '@/services';
+import { userService } from '@/services';
 import { ActionContext, Module } from 'vuex';
 import { RootState, UserState, AccessToken } from '@/middleware/store/StateType';
 import { SIGN_IN } from '../MutationType';
 import { GithubProfile } from '@Domain/Github';
 
 const access_token: AccessToken = Cookie.get('access_token') || null
-const profileInit = {
+const profileInit: GithubProfile = {
   login: '',
   id: 0,
   node_id: '',
@@ -40,8 +40,8 @@ const mutations = {
 
 const actions = {
   [SIGN_IN]: async ({ commit, state }: ActionContext<UserState, RootState>) => {
-    const profile = await githubService.getProfile(state.access_token)
-    if (profile) commit(SIGN_IN, profile)
+    const profile: GithubProfile|undefined = await userService.getUser(state.access_token)
+    if (profile !== undefined) commit(SIGN_IN, profile)
   }
 }
 

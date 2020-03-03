@@ -1,7 +1,6 @@
 import $http from 'axios'
 import { Base64 } from 'js-base64'
-import { AccessToken } from "@/middleware/store/StateType";
-import { GithubRepository, GithubProfile, GithubContent } from '@Domain/Github';
+import { GithubRepository, GithubContent } from '@Domain/Github'
 
 const baseURI = '/api/github'
 
@@ -11,7 +10,7 @@ export interface ContentVO {
   path: string
 }
 
-const Github = class {
+const GithubService = class {
   async getRepo (user: string): Promise<GithubRepository[]> {
     const { data } = await $http.get(`${baseURI}/repo/${user}`)
     return data.result
@@ -26,14 +25,8 @@ const Github = class {
     const result = (await this.getContent(params)) as GithubContent
     return Base64.decode((result.content!))
   }
-
-  async getProfile (access_token: AccessToken): Promise<GithubProfile> {
-    const params = { access_token }
-    const { data } = await $http.get(`${baseURI}/profile`, { params })
-    return data.result
-  }
 }
 
-const githubService = new Github();
+const githubService = new GithubService();
 
 export default githubService

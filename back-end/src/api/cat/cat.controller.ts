@@ -23,8 +23,8 @@ export class CatController {
 
 
   @Post('/entity')
-  async create(@Body() catDTO: Cat) {
-    const result: CatEntity = await this.catService.createByEntity(catDTO)
+  async create(@Body() cat: CatEntity) {
+    const result: CatEntity = await this.catService.createByEntity(cat)
     return {
       success: true,
       result
