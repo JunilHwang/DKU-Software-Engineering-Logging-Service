@@ -8,6 +8,6 @@ export default TypeOrmModule.forRoot({
   username: USERNAME,
   password: PASSWORD,
   database: DBNAME,
-  entities: [],
   synchronize: true,
+  autoLoadEntities: true,
 })
