@@ -1,19 +1,15 @@
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { CacheModule, Module, CacheInterceptor } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { GithubModule } from './api/github/github.module'
-import { UserModule } from './api/user/user.module'
+import ApiModules from './api'
+import { DatabaseModule } from '@/database/database.module'
+
+const CacheProvider = {
+  provide: APP_INTERCEPTOR,
+  useClass: CacheInterceptor,
+}
 
 @Module({
-  imports: [GithubModule, UserModule, CacheModule.register()],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-  ],
+  imports: [ ...ApiModules, DatabaseModule, CacheModule.register() ],
+  providers: [ CacheProvider ],
 })
 export class AppModule {}

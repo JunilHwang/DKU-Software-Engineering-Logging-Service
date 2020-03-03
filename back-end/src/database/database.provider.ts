@@ -5,6 +5,6 @@ export const databaseProvider = [
   {
     provide: 'DATABASE_CONNECTION',
     useFactory: (): Promise<typeof mongoose> =>
-      mongoose.connect(`mongodb://${USER}:${PW}@${HOST}:${PORT}/${DBNAME}`),
+        mongoose.connect(`mongodb://${USER}:${PW}@${HOST}:${PORT}/${DBNAME}`),
   },
 ];

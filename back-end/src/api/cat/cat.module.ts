@@ -6,8 +6,8 @@ import { CatSchema } from './cat.schema';
 
 const CatModel = {
   provide: 'CAT_MODEL',
-  useFactory: (connection: Connection) => connection.model('Cat', CatSchema),
   inject: ['DATABASE_CONNECTION'],
+  useFactory: (connection: Connection) => connection.model('Cat', CatSchema),
 }
 
 @Module({
