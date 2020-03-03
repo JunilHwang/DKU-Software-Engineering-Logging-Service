@@ -1,15 +1,17 @@
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { CacheModule, Module, CacheInterceptor } from '@nestjs/common'
 import ApiModules from './api'
-import { DatabaseModule } from '@/database'
+import { MysqlModule, MongoModule } from '@/database'
 
-const CacheProvider = {
-  provide: APP_INTERCEPTOR,
-  useClass: CacheInterceptor,
+const moduleMetaData = {
+  imports: [ ...ApiModules, MysqlModule, MongoModule, CacheModule.register() ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    }
+  ],
 }
 
-@Module({
-  imports: [ ...ApiModules, DatabaseModule, CacheModule.register() ],
-  providers: [ CacheProvider ],
-})
+@Module(moduleMetaData)
 export class AppModule {}

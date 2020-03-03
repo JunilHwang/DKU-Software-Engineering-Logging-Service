@@ -1,0 +1,5 @@
+export const USERNAME = ''
+export const PASSWORD = ''
+export const HOST = ''
+export const PORT = ''
+export const DBNAME = ''
