@@ -5,7 +5,7 @@ import { RootState, UserState, AccessToken } from '@/middleware/store/StateType'
 import { SIGN_IN } from '../MutationType';
 import { GithubProfile } from '@Domain/Github';
 
-const access_token: AccessToken = Cookie.get('access_token') || localStorage.getItem('access_token') || null
+const access_token: AccessToken = Cookie.get('access_token') || null
 const profileInit: GithubProfile = {
   login: '',
   id: 0,
@@ -42,7 +42,6 @@ const actions = {
   [SIGN_IN]: async ({ commit, state }: ActionContext<UserState, RootState>) => {
     const profile: GithubProfile|null = await userService.getUser(state.access_token)
     if (profile !== null) {
-      localStorage.setItem('access_token', state.access_token!)
       commit(SIGN_IN, profile)
     }
   }
