@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <site-header />
+    <github-factory />
     <div class="siteContent">
       <router-view />
     </div>
@@ -11,13 +12,12 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import { SiteHeader, SiteFooter } from '@/components/Common'
+import { GithubFactory, SiteHeader, SiteFooter } from '@/components'
 import { SIGN_IN } from '@/middleware/store/types/MutationType'
-import { AccessToken } from '@/middleware/store/types/StateType'
+import { AccessToken } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
-import $http from 'axios'
 
-const components = { SiteHeader, SiteFooter }
+const components = { GithubFactory, SiteHeader, SiteFooter }
 
 @Component({ components })
 export default class App extends Vue {
@@ -29,10 +29,6 @@ export default class App extends Vue {
   created () {
     const { token, signIn } = this
     token && signIn && signIn(token)
-
-    $http.get('https://api.github.com').then(response => {
-      console.log(response)
-    })
   }
 }
 </script>

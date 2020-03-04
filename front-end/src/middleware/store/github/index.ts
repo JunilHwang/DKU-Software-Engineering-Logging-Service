@@ -4,7 +4,6 @@ import { ActionContext, Module } from 'vuex'
 import { GithubRepository } from '@Domain/Github'
 
 const state: GithubState = {
-  repositoryListOpened: false,
   repositories: [],
   content: ''
 }

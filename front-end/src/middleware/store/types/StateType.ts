@@ -8,7 +8,6 @@ export type UserState = {
   profile: GithubProfile
 }
 export type GithubState = {
-  repositoryListOpened: boolean
   repositories: GithubRepository[]
   content: string
 }
