@@ -17,9 +17,9 @@
             <img :src="profile.avatar_url" :alt="profile.login" />
           </figure>
         </a>
-        <ul ref="submenu" @click.stop>
-          <li><a href="#" @click.prevent="logout"><i class="el-icon-close" /> 로그아웃</a></li>
-          <li><a href="#"><i class="el-icon-user-solid" /> 마이페이지</a></li>
+        <ul ref="submenu">
+          <li><a href="#" @click.stop.prevent="logout"><i class="el-icon-close" /> 로그아웃</a></li>
+          <li><router-link to="/mypage"><i class="el-icon-user-solid" /> 마이페이지</router-link></li>
         </ul>
       </li>
     </ul>

@@ -15,6 +15,7 @@ import { SiteHeader, SiteFooter } from '@/components/Common'
 import { SIGN_IN } from '@/middleware/store/types/MutationType'
 import { AccessToken } from '@/middleware/store/types/StateType'
 import { ActionMethod } from 'vuex'
+import $http from 'axios'
 
 const components = { SiteHeader, SiteFooter }
 
@@ -28,6 +29,10 @@ export default class App extends Vue {
   created () {
     const { token, signIn } = this
     token && signIn && signIn(token)
+
+    $http.get('https://api.github.com').then(response => {
+      console.log(response)
+    })
   }
 }
 </script>
