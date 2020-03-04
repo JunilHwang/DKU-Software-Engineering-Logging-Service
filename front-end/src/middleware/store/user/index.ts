@@ -1,8 +1,7 @@
 import Cookie from 'js-cookie'
 import { userService } from '@/services';
 import { ActionContext, Module } from 'vuex';
-import { RootState, UserState, AccessToken } from '@/middleware/store/StateType';
-import { SIGN_IN } from '../MutationType';
+import { RootState, UserState, AccessToken, SIGN_IN } from '@/middleware/store/Types';
 import { GithubProfile } from '@Domain/Github';
 
 const access_token: AccessToken = Cookie.get('access_token') || null

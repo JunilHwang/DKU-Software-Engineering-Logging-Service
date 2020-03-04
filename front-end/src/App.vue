@@ -11,10 +11,10 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import { default as components } from '@/components/Common';
-import { SIGN_IN } from '@/middleware/store/MutationType';
-import {ActionMethod} from "vuex";
-import {AccessToken} from "@/middleware/store/StateType";
+import * as components from '@/components/Common'
+import { SIGN_IN } from '@/middleware/store/MutationType'
+import { AccessToken } from '@/middleware/store/StateType'
+import { ActionMethod } from 'vuex'
 
 @Component({ components })
 export default class App extends Vue {

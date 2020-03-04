@@ -1,19 +1,7 @@
 <template>
-  <main id="repository">
+  <main id="mypage">
     <div class="container">
-      <github-repository />
+      this is mypage
     </div>
   </main>
 </template>
-
-<script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import { GithubRepository } from '@/components/Github'
-
-const components = { GithubRepository }
-
-@Component({ components })
-export default class Mypage extends Vue {
-
-}
-</script>

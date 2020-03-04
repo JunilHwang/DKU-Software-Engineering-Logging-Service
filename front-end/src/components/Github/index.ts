@@ -1,3 +1,1 @@
-export const GithubRepository = () => import('./Repository.vue')
-
-export default { GithubRepository }
+export { default as GithubRepositoryList } from './RepositoryList.vue'

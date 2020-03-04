@@ -8,5 +8,6 @@ export type UserState = {
   profile: GithubProfile
 }
 export type GithubState = {
-  repositories: Array<GithubRepository>
+  repositories: GithubRepository[]
+  content: string
 }

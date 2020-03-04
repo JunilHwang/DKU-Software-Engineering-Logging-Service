@@ -14,11 +14,14 @@
         </ul>
         <ul v-else>
           <li>
-            <router-link to="/mypage" class="siteHeaderProfile">
+            <el-button icon="el-icon-edit-outline" type="default" size="mini" plain circle />
+          </li>
+          <li>
+            <el-link class="siteHeaderProfile">
               <figure class="img-wrap">
                 <img :src="profile.avatar_url" :alt="profile.login" />
               </figure>
-            </router-link>
+            </el-link>
           </li>
         </ul>
       </nav>

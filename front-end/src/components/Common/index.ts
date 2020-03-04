@@ -1,4 +1,2 @@
-export const SiteHeader = () => import('./SiteHeader.vue')
-export const SiteFooter = () => import('./SiteFooter.vue')
-
-export default { SiteHeader, SiteFooter }
+export { default as SiteHeader } from './SiteHeader.vue'
+export { default as SiteFooter } from './SiteFooter.vue'

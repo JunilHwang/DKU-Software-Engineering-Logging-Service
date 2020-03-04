@@ -1,7 +1,3 @@
-import Common from './Common'
-import Github from './Github'
-
-export default {
-  ...Common,
-  ...Github,
-}
+export * from './Common'
+export * from './Github'
+export * from './Code'

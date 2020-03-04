@@ -6,7 +6,7 @@
         <el-link type="primary" @click.native="showContents(repository)" v-html="repository.name" />
       </li>
     </ul>
-    <el-dialog :visible.sync="opened" class="repositoryContent">
+    <el-dialog :visible.sync="repositoryOpened" class="repositoryContent">
       <h3 class="repositoryContentHeader" slot="title" v-html="dialogTitle" />
       <el-breadcrumb separator="/">
         <el-breadcrumb-item v-for="(v, k) in repoRoute" :key="k">
@@ -23,10 +23,8 @@
       </ul>
     </el-dialog>
     <el-dialog :title="contentTitle" :visible.sync="contentOpened" width="700px">
-      <markdown v-if="decodedContent.length" :content="decodedContent" />
-      <template v-if="contentIsImage">
-        <img :src="contentImageSource" :alt="contentTitle">
-      </template>
+      <markdown />
+      <img v-if="contentIsImage" :src="contentImageSource" :alt="contentTitle">
     </el-dialog>
   </section>
 </template>
@@ -37,9 +35,9 @@ import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { Base64 } from 'js-base64'
 import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github'
-import { FETCH_REPO } from '@/middleware/store/MutationType'
+import { FETCH_GITHUB_REPO, FETCH_GITHUB_CONTENT } from '@/middleware/store/MutationType'
 import { githubService } from '@/services'
-import { Markdown } from '@/components/Code'
+import { Markdown } from '@/components'
 
 const components = { Markdown }
 
@@ -50,17 +48,16 @@ export default class Repository extends Vue {
   @State(state => state.github.repositories) repositories!: Array<GithubRepository>
   @State(state => state.user.profile) profile!: GithubProfile
   @State(state => state.user.access_token) access_token!: string
-  @Action(FETCH_REPO) fetchRepo!: ActionMethod
+  @Action(FETCH_GITHUB_REPO) fetchRepo!: ActionMethod
 
   //========== data ==========//
-  private opened = false
+  private repositoryOpened = false
   private contentOpened = false
   private selected: GithubRepository|null = null
   private repoRoute: string[] = []
   private contents: GithubContent[] = []
   private repo: string = ''
   private contentFileName: string = ''
-  private decodedContent: string = ''
   private contentIsImage: boolean = false
   private contentImageSource: string = ''
 
@@ -90,7 +87,7 @@ export default class Repository extends Vue {
   showContents (repository: GithubRepository) {
     const user: string = this.profile.login
     const repo: string = this.repo = repository.name
-    this.opened = true
+    this.repositoryOpened = true
     this.selected = repository
 
     this.repoRoute = ['']
@@ -106,7 +103,7 @@ export default class Repository extends Vue {
     const user: string = this.profile.login
     const { repo } = this
 
-    this.decodedContent = this.contentImageSource = ''
+    this.contentImageSource = ''
 
     const ext = path.replace(/.*\.(.*)/, '$1')
     const imageList = ['jpg', 'jpeg', 'gif', 'png', 'svg']
@@ -127,15 +124,15 @@ export default class Repository extends Vue {
 
       this.contentOpened = true
       if (imageList.includes(ext)) {
-        console.log(githubContent)
         this.contentIsImage = true
         this.contentImageSource = githubContent.download_url!
       } else {
         this.contentIsImage = false
-        this.decodedContent = Base64.decode(githubContent.content!)
+        let content = Base64.decode(githubContent.content!)
         if (ext !== 'md') {
-          this.decodedContent = '``` ' + ext + '\n' + this.decodedContent + '\n```';
+          content = '``` ' + ext + '\n' + content + '\n```';
         }
+        this.$store.commit(FETCH_GITHUB_CONTENT, content)
       }
     }
   }
