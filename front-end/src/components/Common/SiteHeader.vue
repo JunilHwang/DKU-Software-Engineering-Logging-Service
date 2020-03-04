@@ -11,7 +11,7 @@
 
 <script>
 import { Vue, Component } from 'vue-property-decorator'
-import SiteHeaderGnb from './SiteHeaderGnb'
+import { SiteHeaderGnb } from './index'
 
 const components = { SiteHeaderGnb  }
 @Component({ components })

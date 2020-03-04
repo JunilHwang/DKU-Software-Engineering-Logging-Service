@@ -1,1 +1,1 @@
-export { default as Markdown } from './Markdown.vue'
+export const Markdown = () => import('./Markdown.vue')

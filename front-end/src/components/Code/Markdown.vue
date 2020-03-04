@@ -5,12 +5,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { md } from '@/middleware'
+import { State} from 'vuex-class';
 
 @Component
 export default class Markdown extends Vue {
-  @Prop() content!: string
+  @State(state => state.github.content) content!: string
 
   private get markdownContent () {
     return md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')

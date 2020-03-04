@@ -1,3 +1,3 @@
-export { default as SiteHeader } from './SiteHeader.vue'
-export { default as SiteHeaderGnb } from './SiteHeaderGnb.vue'
-export { default as SiteFooter } from './SiteFooter.vue'
+export const SiteHeader = () => import('./SiteHeader.vue')
+export const SiteHeaderGnb = () => import('./SiteHeaderGnb.vue')
+export const SiteFooter = () => import('./SiteFooter.vue')

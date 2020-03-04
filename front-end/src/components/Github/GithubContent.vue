@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="contentTitle" :visible.sync="opened" width="700px">
+  <el-dialog :title="contentTitle" :visible.sync="opened" width="800px">
     <markdown />
     <img v-if="contentIsImage" :src="contentImageSource" :alt="contentTitle" style="max-width: 100%" />
   </el-dialog>
@@ -7,12 +7,12 @@
 
 <script lang="ts">
   import { Vue, Component} from 'vue-property-decorator'
-  import {Mutation, State} from 'vuex-class'
+  import { Mutation } from 'vuex-class'
   import { Base64 } from 'js-base64'
   import { GithubContent as GithubContentType } from '@Domain/Github'
   import { FETCH_GITHUB_CONTENT } from '@/middleware/store/types/MutationType'
   import { MutationMethod } from 'vuex'
-  import { Markdown } from '@/components'
+  import { Markdown } from '@/components/Code'
 
   const components = { Markdown }
 
@@ -37,6 +37,7 @@
       if (imageList.includes(ext)) {
         this.contentIsImage = true
         this.contentImageSource = githubContent.download_url!
+        this.fetch('')
       } else {
         this.contentIsImage = false
         let content = Base64.decode(githubContent.content!)

@@ -9,7 +9,7 @@
     </ul>
     <ul v-else>
       <li>
-        <el-button icon="el-icon-edit-outline" type="default" size="mini" plain circle />
+        <el-button @click="repositoryListOpen" icon="el-icon-edit-outline" type="default" size="mini" plain circle />
       </li>
       <li>
         <a href="#" class="siteHeaderProfile" @click.prevent.stop="menuToggle">
@@ -31,6 +31,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { GithubProfile } from '@Domain/Github'
 import { SIGN_OUT } from '@/middleware/store/types'
+import { eventBus } from '@/helper'
 
 @Component
 export default class SiteHeader extends Vue {
@@ -51,6 +52,10 @@ export default class SiteHeader extends Vue {
     this.$store.commit(SIGN_OUT)
     const target: HTMLElement = this.$refs.submenu as HTMLElement
     target.classList.remove('active')
+  }
+
+  repositoryListOpen () {
+    eventBus.$emit('repositoryListOpen')
   }
 
   created () {

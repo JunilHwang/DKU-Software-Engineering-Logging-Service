@@ -1,3 +1,4 @@
-export { default as GithubRepositoryList } from './GithubRepositoryList.vue'
-export { default as GithubRepository } from './GithubRepository.vue'
-export { default as GithubFactory } from './GithubFactory.vue'
+export const GithubRepositoryList = () => import('./GithubRepositoryList.vue')
+export const GithubRepository = () => import('./GithubRepository.vue')
+export const GithubContent = () => import('./GithubContent.vue')
+export const GithubFactory = () => import('./GithubFactory.vue')

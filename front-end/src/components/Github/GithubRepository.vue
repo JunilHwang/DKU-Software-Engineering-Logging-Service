@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="opened" class="repositoryContent">
+  <el-dialog :visible.sync="opened" class="repositoryContent" width="600px">
     <h3 class="repositoryContentHeader" slot="title" v-html="dialogTitle" />
     <el-breadcrumb separator="/">
       <el-breadcrumb-item v-for="(v, k) in repoRoute" :key="k">
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Vue, Component} from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { GithubProfile, GithubContent, GithubRepository as GithubRepositoryType } from '@Domain/Github'
+import { GithubContent, GithubRepository as GithubRepositoryType } from '@Domain/Github'
 import { githubService } from '@/services'
 import { Markdown } from '@/components'
 

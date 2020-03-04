@@ -8,13 +8,13 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { GithubRepositoryList, GithubRepository } from '@/components';
+import { GithubRepositoryList, GithubRepository, GithubContent } from './index';
 import { GithubRepository as GithubRepositoryType } from '@Domain/github'
 
-const components = { GithubRepositoryList, GithubRepository }
+const components = { GithubRepositoryList, GithubRepository, GithubContent }
 
 @Component({ components })
-export default class Factory extends Vue {
+export default class GithubFactory extends Vue {
   showRepository (repository: GithubRepositoryType) {
     const target: any = this.$refs.repository
     target.open(repository)

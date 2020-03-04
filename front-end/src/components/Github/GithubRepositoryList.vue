@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="Repository List" visible.sync="opened">
+  <el-dialog title="Repository List" :visible.sync="opened" width="500px">
     <ul>
       <li v-for="(repository, k) in repositories" :key="k">
         <el-link type="primary" @click.native="showContents(repository)" v-html="repository.name" />
@@ -30,11 +30,11 @@ export default class GithubRepositoryList extends Vue {
 
   open () {
     this.opened = true
+    this.fetchRepo()
   }
 
   created () {
     eventBus.$on('repositoryListOpen', this.open)
-    this.fetchRepo()
   }
 }
 </script>
