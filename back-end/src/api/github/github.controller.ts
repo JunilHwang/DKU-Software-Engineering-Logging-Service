@@ -2,7 +2,7 @@ import { Controller, Get, Param, Query, Redirect, Res, Request, CacheTTL } from 
 import { GithubService } from './github.service';
 import { client_id, redirectURL } from './secret'
 import { UserService } from '@/api/user/user.service';
-import {UserEntity} from "@/api/user/user.entity";
+import {UserEntity} from "@/entity/UserEntity";
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}`
 

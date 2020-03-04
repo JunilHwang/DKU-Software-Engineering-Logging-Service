@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { UserEntity } from '@/api/user/user.entity'
+import { UserEntity } from '@/entity/UserEntity'
 import { GithubProfile } from '@/domain/Github'
 import { Repository } from 'typeorm';
 

@@ -1,6 +1,6 @@
 import {CacheTTL, Controller, Get, Query} from '@nestjs/common'
 import { UserService } from './user.service'
-import { UserEntity } from './user.entity';
+import { UserEntity } from '../../entity/user.entity';
 
 @Controller('/api/user')
 export class UserController {
