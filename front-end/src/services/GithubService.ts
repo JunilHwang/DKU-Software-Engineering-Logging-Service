@@ -16,14 +16,9 @@ const GithubService = class {
     return data.result
   }
 
-   async getContent (params: ContentVO): Promise<GithubContent|GithubContent[]> {
+  async getContent (params: ContentVO): Promise<GithubContent|GithubContent[]> {
     const { data } = await $http.get(`${baseURI}/content`, { params })
     return data.result
-  }
-
-  async getMD (params: ContentVO): Promise<string> {
-    const result = (await this.getContent(params)) as GithubContent
-    return Base64.decode((result.content!))
   }
 }
 

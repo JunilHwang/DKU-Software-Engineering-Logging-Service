@@ -74,10 +74,6 @@ export default class Repository extends Vue {
     return [...repoRoute, contentFileName].join('/')
   }
 
-  private get isMarkdown (): boolean {
-    return this.contentFileName.replace(/.*\.(.*)/, '$1') === 'md'
-  }
-
   //========== methods ==========//
 
   showDirectory (data: GithubContent|GithubContent[]) {

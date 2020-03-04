@@ -8,6 +8,9 @@ export class UserEntity {
   idx: number
 
   @Column()
+  id: string
+
+  @Column()
   access_token: string
 
   @Column('simple-json')
