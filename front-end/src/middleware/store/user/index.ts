@@ -1,7 +1,7 @@
 import Cookie from 'js-cookie'
 import { userService } from '@/services';
 import { ActionContext, Module } from 'vuex';
-import { RootState, UserState, AccessToken, SIGN_IN } from '@/middleware/store/Types';
+import { RootState, UserState, AccessToken, SIGN_IN, SIGN_OUT } from '@/middleware/store/types';
 import { GithubProfile } from '@Domain/Github';
 
 const access_token: AccessToken = Cookie.get('access_token') || null
@@ -34,7 +34,11 @@ const state: UserState = {
 const mutations = {
   [SIGN_IN]: (state: UserState, profile: GithubProfile) => {
     state.profile = profile
-  }
+  },
+  [SIGN_OUT]: (state: UserState) => {
+    state.profile = { ...profileInit }
+    Cookie.remove('access_token')
+  },
 }
 
 const actions = {

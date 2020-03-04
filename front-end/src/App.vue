@@ -11,10 +11,12 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import * as components from '@/components/Common'
-import { SIGN_IN } from '@/middleware/store/MutationType'
-import { AccessToken } from '@/middleware/store/StateType'
+import { SiteHeader, SiteFooter } from '@/components/Common'
+import { SIGN_IN } from '@/middleware/store/types/MutationType'
+import { AccessToken } from '@/middleware/store/types/StateType'
 import { ActionMethod } from 'vuex'
+
+const components = { SiteHeader, SiteFooter }
 
 @Component({ components })
 export default class App extends Vue {

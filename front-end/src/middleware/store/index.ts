@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { default as Vuex, StoreOptions } from 'vuex'
 import user from './user'
 import github from './github'
-import { RootState } from './Types';
+import { RootState } from './types';
 
 Vue.use(Vuex)
 

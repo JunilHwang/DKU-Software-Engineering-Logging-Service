@@ -35,7 +35,7 @@ import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { Base64 } from 'js-base64'
 import { GithubProfile, GithubRepository, GithubContent } from '@Domain/Github'
-import { FETCH_GITHUB_REPO, FETCH_GITHUB_CONTENT } from '@/middleware/store/MutationType'
+import { FETCH_GITHUB_REPO, FETCH_GITHUB_CONTENT } from '@/middleware/store/types/MutationType'
 import { githubService } from '@/services'
 import { Markdown } from '@/components'
 
