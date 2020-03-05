@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Vue, Component} from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { GithubRepository, GithubTrees, GithubTree } from '@Domain/Github'
+import { GithubRepository, GithubTrees, GithubTree, GithubBlob } from '@Domain/Github'
 import { githubService } from '@/services'
 import { Markdown } from '@/components'
 import {ContentVO} from "@/services/GithubService";
@@ -82,14 +82,15 @@ export default class Repository extends Vue {
     this.showDirectory({ repo, user, sha })
   }
 
-  showContent (tree: GithubTree) {
+  async showContent (tree: GithubTree) {
     const { type, path, sha } = tree
     const repo: string = this.repository!.name
     const user: string = this.user
+    const params = { user, repo, sha }
 
     if (type === 'tree') {
       this.route.push({ path, sha })
-      this.showDirectory({ repo, user, sha })
+      this.showDirectory(params)
       return
     }
 
@@ -98,11 +99,10 @@ export default class Repository extends Vue {
       this.$message({ type: 'warning', message: `Markdown File만 조회할 수 있습니다` })
       return
     }
-    // const route = [
-    //   ...this.repository!.full_name.split('/'),
-    //   ...this.route.splice(1)
-    // ]
-    // this.$emit('show-content', [data, path, ext, route])
+    const data: GithubBlob = await githubService.getBlob(params)
+    const route = this.route.map(({ path }) => path)
+    route.push(path)
+    this.$emit('show-content', [data, route])
   }
 
   goToPath (sha: string|null, key: number) {
