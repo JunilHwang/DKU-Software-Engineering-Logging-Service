@@ -64,7 +64,6 @@ export default class Repository extends Vue {
           }
         })
         this.trees = tree
-        console.log(tree)
       })
   }
 
