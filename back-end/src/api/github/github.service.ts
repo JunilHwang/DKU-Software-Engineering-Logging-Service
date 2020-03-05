@@ -32,4 +32,7 @@ export class GithubService {
     const headers = { Authorization: `token ${token}` }
     return await httpResponseCheck($http.get(`${BASE_URL}/user`, { headers }))
   }
+  // async getTree (user: string, repo: string, sha: string): Promise<GithubTree> {
+  //
+  // }
 }
