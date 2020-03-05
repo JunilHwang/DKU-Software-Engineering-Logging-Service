@@ -59,6 +59,7 @@ export class GithubController {
   @Get('blob')
   @CacheTTL(60 * 60)
   async getBlob (@Query() { user, repo, sha }) {
+    console.log(user, repo, sha)
     return {
       success: true,
       result: await this.githubService.getBlob(user, repo, sha)

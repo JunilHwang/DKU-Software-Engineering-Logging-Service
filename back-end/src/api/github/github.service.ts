@@ -43,6 +43,6 @@ export class GithubService {
     return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/trees/${sha}`))
   }
   async getBlob (user: string, repo: string, sha: string): Promise<GithubBlob> {
-    return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blob/${sha}`))
+    return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`))
   }
 }
