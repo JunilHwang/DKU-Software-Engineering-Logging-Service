@@ -17,12 +17,12 @@ export default class Markdown extends Vue {
   @State(state => state.github.route) route!: string[]
   @State(state => state.user.profile.login) user!: string
 
+  private frontMatter: any = {}
+
   private get markdownContent () {
     if (this.content.length === 0) return ''
     const div = document.createElement('div')
     div.innerHTML = md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')
-
-    console.log(frontMatter.get())
 
     const head = [...this.route].splice(0, 2).join('/')
     const tail = [...this.route].splice(2).join('/')
@@ -35,6 +35,8 @@ export default class Markdown extends Vue {
           v.setAttribute('src', `${rawURL}/${head}/master/${tail}/../${src}`)
         }
       })
+
+    this.frontMatter = frontMatter.get()
 
     return div.innerHTML
   }

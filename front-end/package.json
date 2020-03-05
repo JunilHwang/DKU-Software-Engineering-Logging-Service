@@ -13,6 +13,7 @@
     "element-ui": "^2.13.0",
     "js-base64": "^2.5.2",
     "js-cookie": "^2.2.1",
+    "js-yaml": "^3.13.1",
     "markdown-it": "^10.0.0",
     "markdown-it-container": "^2.0.0",
     "markdown-it-front-matter": "^0.2.1",
@@ -20,7 +21,6 @@
     "markdown-it-plantuml": "^1.4.1",
     "markdown-it-underline": "^1.0.1",
     "markdown-it-vue": "^1.0.11",
-    "parser-front-matter": "^1.6.4",
     "vue": "^2.6.10",
     "vue-class-component": "^7.2.2",
     "vue-property-decorator": "^8.4.0",
@@ -29,10 +29,11 @@
     "vuex-class": "^0.3.2"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.19",
     "@types/js-base64": "^2.3.1",
     "@types/js-cookie": "^2.2.4",
+    "@types/js-yaml": "^3.12.2",
     "@types/markdown-it": "^0.0.9",
-    "@types/jest": "^24.0.19",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-router": "^4.1.0",
     "@vue/cli-plugin-typescript": "^4.1.0",

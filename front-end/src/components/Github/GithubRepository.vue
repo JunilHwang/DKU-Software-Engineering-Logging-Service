@@ -7,7 +7,7 @@
       </el-breadcrumb-item>
     </el-breadcrumb>
     <ul class="repositoryContentItem" v-if="trees !== null">
-      <li v-for="(tree, k) in trees.tree" :key="k">
+      <li v-for="(tree, k) in trees" :key="k">
         <el-link @click.native="showContent(tree)">
           <i :class="`el-icon-${tree.type === 'blob' ? 'document' : 'folder'}`"></i>
           {{ tree.path }}
@@ -43,7 +43,7 @@ export default class Repository extends Vue {
   private opened = false
   private repository: GithubRepository|null = null
   private route: RepoRoute[] = []
-  private trees: GithubTrees|null = null
+  private trees: GithubTree[]|null = null
 
   //========== computed ==========//
   private get dialogTitle (): string {
@@ -55,16 +55,17 @@ export default class Repository extends Vue {
   showDirectory (params: ContentVO) {
     return githubService
       .getTrees(params)
-      .then(trees => {
-        this.trees = trees
+      .then(({ tree }: GithubTrees) => {
+        tree.sort((a: GithubTree, b: GithubTree) => {
+          if (a.type !== b.type) {
+            return a.type === 'blob' ? 1 : -1
+          } else {
+            return a.path < b.path ? -1 : 1
+          }
+        })
+        this.trees = tree
+        console.log(tree)
       })
-    // this.contents.sort((a: GithubContent, b: GithubContent) => {
-    //   if (a.type !== b.type) {
-    //     return a.type === 'file' ? 1 : -1
-    //   } else {
-    //     return a.name < b.name ? -1 : 1
-    //   }
-    // })
   }
 
   async open (repository: GithubRepository) {
