@@ -17,7 +17,7 @@ import { FETCH_GITHUB_REPO } from '@/middleware/store/types/MutationType'
 import { eventBus } from '@/helper';
 
 @Component
-export default class GithubRepositoryList extends Vue {
+export default class RepositoryList extends Vue {
 
   @State(state => state.github.repositories) repositories!: Array<GithubRepository>
   @Action(FETCH_GITHUB_REPO) fetchRepo!: ActionMethod

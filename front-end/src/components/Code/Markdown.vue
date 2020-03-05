@@ -1,20 +1,36 @@
 <template>
   <div class="markdownWrapper">
-    <div class="markdownContent" v-html="markdownContent" />
+    <div ref="markdownContent" class="markdownContent" v-html="markdownContent" />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { State} from 'vuex-class'
 import { md } from '@/middleware'
-import { State} from 'vuex-class';
 
 @Component
 export default class Markdown extends Vue {
   @State(state => state.github.content) content!: string
+  @State(state => state.github.route) route!: string
+  @State(state => state.user.profile.login) user!: string
 
   private get markdownContent () {
-    return md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')
+    if (this.content.length === 0) return ''
+    const before = md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')
+    const div = document.createElement('div')
+    const route = [ ...this.route ]
+    route[0] = this.user
+    console.log(route.join('/'))
+    div.innerHTML = before
+
+    // div.querySelectorAll('img').forEach((v: HTMLElement) => {
+    //   const src = v.getAttribute('src')!
+    //   if (src.indexOf('http') === -1) {
+    //     v.setAttribute('src', `${src}`)
+    //   }
+    // })
+    return div.innerHTML
   }
 }
 </script>

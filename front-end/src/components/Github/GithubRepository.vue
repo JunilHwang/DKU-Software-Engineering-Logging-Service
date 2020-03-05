@@ -20,14 +20,14 @@
 <script lang="ts">
 import { Vue, Component} from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { GithubContent, GithubRepository as GithubRepositoryType } from '@Domain/Github'
+import { GithubContent, GithubRepository } from '@Domain/Github'
 import { githubService } from '@/services'
 import { Markdown } from '@/components'
 
 const components = { Markdown }
 
 @Component({ components })
-export default class GithubRepository extends Vue {
+export default class Repository extends Vue {
 
   //========== mapper ==========//
   @State(state => state.user.profile.login) user!: string
@@ -35,7 +35,7 @@ export default class GithubRepository extends Vue {
 
   //========== data ==========//
   private opened = false
-  private repository: GithubRepositoryType|null = null
+  private repository: GithubRepository|null = null
   private repoRoute: string[] = []
   private contents: GithubContent[] = []
 
@@ -57,7 +57,7 @@ export default class GithubRepository extends Vue {
     })
   }
 
-  open (repository: GithubRepositoryType) {
+  open (repository: GithubRepository) {
     this.opened = true
     this.repository = repository
 
@@ -90,7 +90,11 @@ export default class GithubRepository extends Vue {
       this.repoRoute.push(name)
       this.showDirectory(data)
     } else {
-      this.$emit('show-content', [data as GithubContent, path, ext, this.repoRoute])
+      const route = [
+        ...this.repository!.full_name.split('/'),
+        ...this.repoRoute.splice(1)
+      ]
+      this.$emit('show-content', [data, path, ext, route])
     }
   }
 

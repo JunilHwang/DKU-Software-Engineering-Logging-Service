@@ -10,4 +10,5 @@ export type UserState = {
 export type GithubState = {
   repositories: GithubRepository[]
   content: string
+  route: string
 }

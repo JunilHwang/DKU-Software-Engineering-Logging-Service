@@ -3,17 +3,23 @@ import { FETCH_GITHUB_REPO, FETCH_GITHUB_CONTENT, GithubState, RootState } from
 import { ActionContext, Module } from 'vuex'
 import { GithubRepository } from '@Domain/Github'
 
+interface ContentPayload {
+  content: string
+  route: string
+}
+
 const state: GithubState = {
   repositories: [],
-  content: ''
+  content: '',
+  route: '',
 }
 
 const mutations = {
   [FETCH_GITHUB_REPO]: (state: GithubState, repositories: Array<GithubRepository>) => {
     state.repositories = repositories
   },
-  [FETCH_GITHUB_CONTENT]: (state: GithubState, content: string) => {
-    state.content = content
+  [FETCH_GITHUB_CONTENT]: (state: GithubState, { content, route }: ContentPayload) => {
+    Object.assign(state, { content, route })
   }
 }
 
