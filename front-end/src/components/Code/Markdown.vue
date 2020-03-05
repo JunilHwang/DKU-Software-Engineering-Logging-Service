@@ -9,27 +9,32 @@ import { Vue, Component } from 'vue-property-decorator'
 import { State} from 'vuex-class'
 import { md } from '@/middleware'
 
+const rawURL = 'https://raw.githubusercontent.com'
+
 @Component
 export default class Markdown extends Vue {
   @State(state => state.github.content) content!: string
-  @State(state => state.github.route) route!: string
+  @State(state => state.github.route) route!: string[]
   @State(state => state.user.profile.login) user!: string
 
   private get markdownContent () {
     if (this.content.length === 0) return ''
     const before = md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')
     const div = document.createElement('div')
-    const route = [ ...this.route ]
-    route[0] = this.user
-    console.log(route.join('/'))
+    const head = [...this.route].splice(0, 2).join('/')
+    const tail = [...this.route].splice(2).join('/')
+
     div.innerHTML = before
 
-    // div.querySelectorAll('img').forEach((v: HTMLElement) => {
-    //   const src = v.getAttribute('src')!
-    //   if (src.indexOf('http') === -1) {
-    //     v.setAttribute('src', `${src}`)
-    //   }
-    // })
+    // img 치환
+    div.querySelectorAll('img')
+      .forEach((v: HTMLElement) => {
+        const src = v.getAttribute('src')!
+        if (src.indexOf('http') !== 0) {
+          v.setAttribute('src', `${rawURL}/${head}/master/${tail}/../${src}`)
+        }
+      })
+
     return div.innerHTML
   }
 }
@@ -73,6 +78,10 @@ export default class Markdown extends Vue {
 
     li {
       line-height: 1.7
+    }
+
+    img {
+      max-width: 100%
     }
 
   }
