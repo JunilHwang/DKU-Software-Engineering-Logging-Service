@@ -3,10 +3,21 @@ import 'highlight.js/styles/atom-one-dark.css'
 
 const md = new MarkdownIt();
 const container = require('markdown-it-container')
+const frontMatterParser = require('parser-front-matter')
+
+export const frontMatter = {
+  _value: null,
+  get: () => frontMatter._value,
+  set: (val: string) => {
+    frontMatterParser.parse(val, (err: any, res: any) => {
+      frontMatter._value = res
+    })
+  }
+}
 
 
 md.use(require('markdown-it-highlightjs'))
-md.use(require('markdown-it-front-matter'), console.log)
+md.use(require('markdown-it-front-matter'), frontMatter.set)
 md.use(require('markdown-it-plantuml'))
 md.use(require('markdown-it-underline'))
 md.use(container, 'tip', {

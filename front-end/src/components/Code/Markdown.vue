@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { State} from 'vuex-class'
-import { md } from '@/middleware'
+import { md, frontMatter } from '@/middleware'
 
 const rawURL = 'https://raw.githubusercontent.com'
 
@@ -19,12 +19,13 @@ export default class Markdown extends Vue {
 
   private get markdownContent () {
     if (this.content.length === 0) return ''
-    const before = md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')
     const div = document.createElement('div')
+    div.innerHTML = md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')
+
+    console.log(frontMatter.get())
+
     const head = [...this.route].splice(0, 2).join('/')
     const tail = [...this.route].splice(2).join('/')
-
-    div.innerHTML = before
 
     // img 치환
     div.querySelectorAll('img')
