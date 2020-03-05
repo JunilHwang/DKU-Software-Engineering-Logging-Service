@@ -61,7 +61,7 @@ export default class SiteHeader extends Vue {
   created () {
     document.body.onclick = () => {
       const target: HTMLElement = this.$refs.submenu as HTMLElement
-      if (target.classList.contains('active')) {
+      if (target && target.classList.contains('active')) {
         target.classList.remove('active');
       }
     }
