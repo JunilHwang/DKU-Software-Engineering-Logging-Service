@@ -1,7 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import $http from 'axios'
 import { client_id, client_secret } from './secret'
-import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees } from '@/domain/Github'
+import {
+  GithubRepository,
+  GithubContent,
+  GithubResponseToken,
+  GithubProfile,
+  GithubTrees,
+  GithubBlob
+} from '@/domain/Github'
 import { httpResponseCheck } from '@/helper';
 
 const headers = {
@@ -34,5 +41,8 @@ export class GithubService {
   }
   async getTrees (user: string, repo: string, sha: string): Promise<GithubTrees> {
     return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/trees/${sha}`))
+  }
+  async getBlob (user: string, repo: string, sha: string): Promise<GithubBlob> {
+    return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blob/${sha}`))
   }
 }

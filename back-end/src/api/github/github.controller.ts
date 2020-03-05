@@ -55,4 +55,13 @@ export class GithubController {
       result: await this.githubService.getTrees(user, repo, sha)
     }
   }
+
+  @Get('blob')
+  @CacheTTL(60 * 60)
+  async getBlob (@Query() { user, repo, sha }) {
+    return {
+      success: true,
+      result: await this.githubService.getBlob(user, repo, sha)
+    }
+  }
 }

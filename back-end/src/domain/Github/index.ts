@@ -4,6 +4,7 @@ export { default as GithubContent } from './Content'
 export { default as GithubResponseToken } from './ResponseToken'
 export {
   Tree as GithubTree,
-  Trees as GithubTrees
+  Trees as GithubTrees,
+  Blob as GithubBlob
 } from './Tree'
 

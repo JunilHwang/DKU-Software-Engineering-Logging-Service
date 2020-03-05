@@ -23,6 +23,7 @@ import { State } from 'vuex-class'
 import { GithubContent, GithubRepository, GithubTrees, GithubTree } from '@Domain/Github'
 import { githubService } from '@/services'
 import { Markdown } from '@/components'
+import {ContentVO} from "@/services/GithubService";
 
 const components = { Markdown }
 
@@ -46,8 +47,12 @@ export default class Repository extends Vue {
 
   //========== methods ==========//
 
-  showDirectory (trees: GithubTrees) {
-    this.trees = trees
+  showDirectory (params: ContentVO) {
+    githubService
+      .getTrees(params)
+      .then(trees => {
+        this.trees = trees
+      })
     // this.contents.sort((a: GithubContent, b: GithubContent) => {
     //   if (a.type !== b.type) {
     //     return a.type === 'file' ? 1 : -1
@@ -66,35 +71,30 @@ export default class Repository extends Vue {
 
     this.repoRoute = ['']
 
-    githubService
-      .getTrees({ repo, user })
-      .then(this.showDirectory)
+    const sha = await githubService.getCommitSha({ repo, user })
+    this.showDirectory({ repo, user, sha })
   }
 
-  async showContent (content: GithubTree) {
-    const { type, path, sha } = content
+  showContent (tree: GithubTree) {
+    const { type, path, sha } = tree
     const repo: string = this.repository!.name
     const user: string = this.user
 
-    const ext = path.replace(/.*\.(.*)/, '$1')
-    const rawList = ['pdf', 'excel', 'doc', 'docx', 'hwp', 'ppt', 'xls']
-    if (rawList.includes(ext)) {
-      this.$message({ type: 'warning', message: `${ext} file은 조회할 수 없습니다.` })
+    if (type === 'trees') {
+      this.showDirectory({ repo, user, sha })
       return
     }
 
-    /*const data = await githubService.getContent({ repo, user, path })
-
-    if (type === 'dir') {
-      this.repoRoute.push(name)
-      this.showDirectory(data)
-    } else {
-      const route = [
-        ...this.repository!.full_name.split('/'),
-        ...this.repoRoute.splice(1)
-      ]
-      this.$emit('show-content', [data, path, ext, route])
-    }*/
+    const ext = path.replace(/.*\.(.*)/, '$1')
+    if (ext !== 'md') {
+      this.$message({ type: 'warning', message: `Markdown File만 조회할 수 있습니다` })
+      return
+    }
+    // const route = [
+    //   ...this.repository!.full_name.split('/'),
+    //   ...this.repoRoute.splice(1)
+    // ]
+    // this.$emit('show-content', [data, path, ext, route])
   }
 
   goToPath (path: string, key: number) {
@@ -104,13 +104,13 @@ export default class Repository extends Vue {
     const user: string = this.user
     const route: string[] = [ ...this.repoRoute ]
 
-    githubService
-      .getContent({ repo, user, path })
-      .then(this.showDirectory)
-      .then(() => {
-        // 경로 변경
-        this.repoRoute = route.filter((v, k) => k <= key)
-      })
+    // githubService
+    //   .getContent({ repo, user, path })
+    //   .then(this.showDirectory)
+    //   .then(() => {
+    //     // 경로 변경
+    //     this.repoRoute = route.filter((v, k) => k <= key)
+    //   })
   }
 }
 </script>
