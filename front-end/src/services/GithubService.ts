@@ -1,6 +1,5 @@
 import $http from 'axios'
-import { Base64 } from 'js-base64'
-import { GithubRepository, GithubContent } from '@Domain/Github'
+import { GithubRepository, GithubContent, GithubTrees } from '@Domain/Github'
 
 const githubURL = 'https://api.github.com'
 const baseURI = '/api/github'
@@ -22,11 +21,11 @@ const GithubService = class {
     return data.result
   }
 
-  async getTree ({ user, repo }: ContentVO): Promise<GithubContent|GithubContent[]> {
+  async getTrees ({ user, repo }: ContentVO): Promise<GithubTrees> {
     const { data: commits } = await $http.get(`${githubURL}/repos/${user}/${repo}/commits`)
     const [ sha ] = commits
     const params = { user, repo, sha }
-    const { data } = await $http.get(`${baseURI}/tree`, { params })
+    const { data } = await $http.get(`${baseURI}/trees`, { params })
     return data.result
   }
 }

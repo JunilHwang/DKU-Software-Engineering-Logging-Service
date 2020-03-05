@@ -1,9 +1,7 @@
-import { Controller, Get, Param, Query, Redirect, Res, Request, CacheTTL } from '@nestjs/common'
+import { Controller, Get, Param, Query, Redirect, Response, Request, CacheTTL } from '@nestjs/common'
 import { GithubService } from './github.service'
 import { client_id, redirectURL } from './secret'
 import { UserService } from '@/api/user/user.service'
-import { UserEntity } from '@/entity/UserEntity'
-import { GithubProfile, GithubTrees, GithubRepository, GithubContent } from '@/domain/Github'
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}`
 
@@ -33,18 +31,17 @@ export class GithubController {
   }
 
   @Get('sign-in')
-  @CacheTTL(0)
-  @Redirect(githubAuthURL)
-  signIn () {
-    return { success: true }
+  signIn (@Response() res) {
+    res.redirect(githubAuthURL)
   }
 
   @Get('authentication')
-  @CacheTTL(0)
-  async authentication (@Query('code') code, @Res() response) {
+  async authentication (@Query('code') code, @Response() response) {
     const { access_token } = await this.githubService.getToken(code)
-    const profileResult: GithubProfile = await this.githubService.getProfile(access_token);
-    await this.userService.create(profileResult, access_token)
+    await this.userService.create(
+      await this.githubService.getProfile(access_token),
+      access_token
+    )
 
     response.cookie('access_token', access_token, { maxAge: 1000 * 60 * 60 })
     response.redirect('/')
