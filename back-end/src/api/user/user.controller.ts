@@ -22,7 +22,7 @@ export class UserController {
     const user: User = await this.userService.find(cookies.access_token)
     return {
       success: true,
-      result: user.posts
+      result: await user.posts
     }
   }
 }

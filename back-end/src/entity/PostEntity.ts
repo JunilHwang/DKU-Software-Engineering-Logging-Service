@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {Column, CreateDateColumn, Entity, JoinTable, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
 import { UserEntity as User } from './UserEntity'
 
 @Entity({ name: 'post' })
@@ -22,14 +22,7 @@ export class PostEntity {
   @CreateDateColumn()
   reg_date: Date
 
-  @ManyToOne(type => User, writer => writer.posts)
+  @ManyToOne(type => User, writer => writer.posts, { eager: true })
+  @JoinTable()
   writer: User
-
-  set ({ writer, title, content, repository, sha }) {
-    this.writer = writer
-    this.title = title
-    this.content = content
-    this.repository = repository
-    this.sha = sha
-  }
 }

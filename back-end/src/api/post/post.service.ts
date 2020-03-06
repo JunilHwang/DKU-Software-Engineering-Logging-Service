@@ -9,13 +9,17 @@ export class PostService {
 
   constructor (@InjectRepository(Post) private readonly postRepository: Repository<Post>) {}
 
-  public async create (writer: User, postVO: PostVO): Promise<boolean> {
-    const { sha } = postVO
+  public async create (writer: User, { content, title, sha, repository }: PostVO): Promise<boolean> {
     const cnt = await this.postRepository.count({ sha })
     if (cnt !== 0) return false
 
     const post: Post = new Post()
-    post.set({ writer, ...postVO })
+
+    post.title = title
+    post.content = content
+    post.sha = sha
+    post.repository = repository
+    post.writer = writer
 
     return (await this.postRepository.save(post)) === post
   }

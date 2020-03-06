@@ -1,4 +1,4 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { GithubProfile } from '@/domain/Github';
 import { PostEntity as Post } from './PostEntity';
 
@@ -11,12 +11,13 @@ export class UserEntity {
   @Column()
   id: string
 
-  @Column()
+  @Column({ select: false })
   access_token: string
 
   @Column('simple-json')
   profile: GithubProfile
 
   @OneToMany(type => Post, post => post.writer)
-  posts: Post[]
+  @JoinTable()
+  posts: Promise<Post[]>
 }
