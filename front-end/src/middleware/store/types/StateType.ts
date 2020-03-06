@@ -1,4 +1,4 @@
-import { GithubProfile, GithubRepository } from '@Domain';
+import { GithubProfile, GithubRepository, Post } from '@Domain';
 
 export type AccessToken = string|null
 
@@ -11,4 +11,8 @@ export type GithubState = {
   repositories: GithubRepository[]
   content: string
   route: string
+}
+export type PostState = {
+  selectedPost: Post|null
+  postList: Post[]
 }

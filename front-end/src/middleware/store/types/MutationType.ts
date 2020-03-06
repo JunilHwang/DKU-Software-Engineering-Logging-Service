@@ -9,4 +9,4 @@ export const FETCH_GITHUB_CONTENT = 'github/fetchContent'
 // Post
 export const ADD_POST = 'post/add'
 export const FETCH_POST = 'post/fetchOne'
-export const FETCH_POST_LIST = 'post/fetchAll'
+export const FETCH_POST_ALL = 'post/fetchAll'
