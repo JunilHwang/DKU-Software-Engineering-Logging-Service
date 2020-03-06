@@ -9,7 +9,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { State} from 'vuex-class'
-import { md, frontMatter } from '@/middleware'
+import { md } from '@/middleware'
+import { getContentWithoutFrontmatter } from '@/helper'
 
 const rawURL = 'https://raw.githubusercontent.com'
 
@@ -19,12 +20,10 @@ export default class Markdown extends Vue {
   @State(state => state.github.route) route!: string[]
   @State(state => state.user.profile.login) user!: string
 
-  private frontMatter: any = {}
-
   private get markdownContent () {
     if (this.content.length === 0) return ''
     const div = document.createElement('div')
-    div.innerHTML = md.render(this.content.replace(/(```.*)(\{.*\})/g, '$1') || '')
+    div.innerHTML = md.render(getContentWithoutFrontmatter(this.content))
 
     const head = [...this.route].splice(0, 2).join('/')
     const tail = [...this.route].splice(2).join('/')
@@ -37,8 +36,6 @@ export default class Markdown extends Vue {
           v.setAttribute('src', `${rawURL}/${head}/master/${tail}/../${src}`)
         }
       })
-
-    this.frontMatter = frontMatter.get()
 
     return div.innerHTML
   }

@@ -1,18 +1,8 @@
 import MarkdownIt from 'markdown-it'
 import 'highlight.js/styles/atom-one-dark.css'
-import { safeLoad } from 'js-yaml'
-
-export const frontMatter = {
-  _value: {},
-  get: () => frontMatter._value,
-  set: (val: string) => {
-    frontMatter._value = safeLoad(val)
-  }
-}
 
 const md = new MarkdownIt();
 md.use(require('markdown-it-highlightjs'))
-md.use(require('markdown-it-front-matter'), frontMatter.set)
 md.use(require('markdown-it-plantuml'))
 md.use(require('markdown-it-underline'))
 md.use(require('markdown-it-container'), 'tip', {

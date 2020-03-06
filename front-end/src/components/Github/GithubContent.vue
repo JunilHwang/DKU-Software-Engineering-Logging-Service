@@ -3,7 +3,7 @@
     <markdown>
       <template slot="footer">
         <div class="btnGroup right">
-          <el-button type="primary" size="mini" @click="save">
+          <el-button type="primary" size="mini" @click="saveEditing">
             컨텐츠 등록하기
           </el-button>
         </div>
@@ -14,11 +14,11 @@
 
 <script lang="ts">
 import { Vue, Component} from 'vue-property-decorator'
+import { MutationMethod } from 'vuex'
 import { Mutation, State } from 'vuex-class'
 import { Base64 } from 'js-base64'
 import { GithubBlob, ContentVO } from '@Domain'
-import { FETCH_GITHUB_CONTENT } from '@/middleware/store/types/MutationType'
-import { MutationMethod } from 'vuex'
+import { ADD_POST, FETCH_GITHUB_CONTENT } from '@/middleware/store/types'
 import { Markdown } from '@/components/Code'
 
 const components = { Markdown }
@@ -28,26 +28,27 @@ export default class Content extends Vue {
 
   @State(state => state.github.content) rawContent!: string
   @Mutation(FETCH_GITHUB_CONTENT) fetch!: MutationMethod
+  @Mutation(ADD_POST) addPost!: MutationMethod
 
   private opened: boolean = false
   private contentTitle: string = ''
   private repository: string = ''
   private sha: string = ''
+  private content: string = ''
 
   open (blob: GithubBlob, route: string[], { user, repo, sha }: ContentVO) {
     this.repository = `${user}/${repo}`
     this.sha = sha!
     this.opened = true
     this.contentTitle = route.join('/')
-
-    const content = Base64.decode(blob.content)
+    const content = this.content = Base64.decode(blob.content)
 
     this.fetch({ content, route })
   }
 
-  save () {
-    const { repository, sha } = this
-    console.log(repository, sha)
+  saveEditing () {
+    const { content, repository, sha } = this
+    this.$emit('save-editing', { content, repository, sha })
   }
 }
 </script>
