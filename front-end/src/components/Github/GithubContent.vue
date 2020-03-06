@@ -22,6 +22,7 @@ import { ADD_POST, FETCH_GITHUB_CONTENT } from '@/middleware/store/types'
 import { Markdown } from '@/components/Code'
 
 const components = { Markdown }
+const rawURL = 'https://raw.githubusercontent.com'
 
 @Component({ components })
 export default class Content extends Vue {
@@ -41,7 +42,15 @@ export default class Content extends Vue {
     this.sha = sha!
     this.opened = true
     this.contentTitle = route.join('/')
-    const content = this.content = Base64.decode(blob.content)
+
+    const head = [...route].splice(0, 2).join('/')
+    const tail = [...route].splice(2).join('/')
+    const reg = /!\[(.*)\]\(([.|/].*)\)/gim
+    const content = Base64.decode(blob.content).replace(reg,`![$1](${rawURL}/${head}/master/${tail}/../$2)`)
+
+    console.log(content)
+
+    this.content = content
 
     this.fetch({ content, route })
   }

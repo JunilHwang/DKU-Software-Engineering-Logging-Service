@@ -1,0 +1,1 @@
+export const PostList = () => import('./PostList.vue')

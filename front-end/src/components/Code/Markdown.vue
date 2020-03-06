@@ -12,8 +12,6 @@ import { State} from 'vuex-class'
 import { md } from '@/middleware'
 import { getContentWithoutFrontmatter } from '@/helper'
 
-const rawURL = 'https://raw.githubusercontent.com'
-
 @Component
 export default class Markdown extends Vue {
   @State(state => state.github.content) content!: string
@@ -22,22 +20,7 @@ export default class Markdown extends Vue {
 
   private get markdownContent () {
     if (this.content.length === 0) return ''
-    const div = document.createElement('div')
-    div.innerHTML = md.render(getContentWithoutFrontmatter(this.content))
-
-    const head = [...this.route].splice(0, 2).join('/')
-    const tail = [...this.route].splice(2).join('/')
-
-    // img 치환
-    div.querySelectorAll('img')
-      .forEach((v: HTMLElement) => {
-        const src = v.getAttribute('src')!
-        if (src.indexOf('http') !== 0) {
-          v.setAttribute('src', `${rawURL}/${head}/master/${tail}/../${src}`)
-        }
-      })
-
-    return div.innerHTML
+    return md.render(getContentWithoutFrontmatter(this.content))
   }
 }
 </script>

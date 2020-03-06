@@ -10,7 +10,7 @@ export class PostEntity {
   @Column()
   title: string
 
-  @Column()
+  @Column({ type: 'longtext' })
   content: string
 
   @Column()

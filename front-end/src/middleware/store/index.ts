@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { default as Vuex, StoreOptions } from 'vuex'
 import user from './user'
 import github from './github'
+import post from './post'
 import { RootState } from './types';
 
 Vue.use(Vuex)
@@ -9,7 +10,7 @@ Vue.use(Vuex)
 const state: RootState = { }
 const mutations = { }
 const actions = { }
-const modules = { user, github }
+const modules = { user, github, post }
 
 const store: StoreOptions<RootState> = { state, mutations, actions, modules }
 

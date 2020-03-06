@@ -16,7 +16,8 @@
     ],
     "paths": {
       "@/*": ["src/*"],
-      "@Domain": ["../back-end/src/domain/index.ts"]
+      "@Domain": ["../back-end/src/domain/index.ts"],
+      "@Domain/*": ["../back-end/src/domain/*"]
     },
     "lib": [
       "esnext",

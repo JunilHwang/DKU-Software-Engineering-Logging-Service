@@ -13,11 +13,17 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { ActionMethod } from 'vuex'
+import { Action } from 'vuex-class'
 import { PostVO } from '@Domain'
-import { getFrontMatter } from '@/helper'
+import {eventBus, getFrontMatter} from '@/helper'
+import { ADD_POST } from '@/middleware/store/types'
 
 @Component
 export default class GithubContentSaveEditor extends Vue {
+
+  @Action(ADD_POST) addPost!: ActionMethod
+
   private opened: boolean = false
   private postData: PostVO = {
     title: '',
@@ -32,8 +38,16 @@ export default class GithubContentSaveEditor extends Vue {
     this.postData = { title, ...postVO }
   }
 
-  private save () {
-    console.log(this.postData)
+  private async save () {
+    const isSuccess = await this.addPost(this.postData)
+
+    this.$message({ type: 'info', message: isSuccess ? '포스트가 등록되었습니다.' : '이미 등록된 포스트입니다.' })
+
+    if (isSuccess) {
+      eventBus.$emit('fetchPostAll')
+    }
+
+    this.opened = false
   }
 }
 </script>

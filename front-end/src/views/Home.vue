@@ -1,15 +1,18 @@
 <template>
   <main id="home">
     <div class="container">
-      this is home
+      <post-list />
     </div>
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { PostList } from '@/components'
 
-@Component
+const components = { PostList }
+
+@Component({ components })
 export default class Home extends Vue {
 }
 </script>
