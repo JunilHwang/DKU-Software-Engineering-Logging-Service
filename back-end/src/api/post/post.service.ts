@@ -10,7 +10,8 @@ export class PostService {
   constructor (@InjectRepository(Post) private readonly postRepository: Repository<Post>) {}
 
   public async create (writer: User, postVO: PostVO): Promise<boolean> {
-    const post: Post = new Post({ writer, ...postVO })
+    const post: Post = new Post()
+    post.set({ writer, ...postVO })
     return (await this.postRepository.save(post)) === post
   }
 

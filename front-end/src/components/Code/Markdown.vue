@@ -1,6 +1,8 @@
 <template>
   <div class="markdownWrapper">
+    <slot name="header" />
     <div ref="markdownContent" class="markdownContent" v-html="markdownContent" />
+    <slot name="footer" />
   </div>
 </template>
 

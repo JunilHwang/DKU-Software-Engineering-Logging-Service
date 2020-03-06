@@ -1,6 +1,10 @@
 <template>
   <el-dialog :title="contentTitle" :visible.sync="opened" width="800px">
-    <markdown />
+    <markdown>
+      <template slot="footer">
+        this is content test
+      </template>
+    </markdown>
   </el-dialog>
 </template>
 

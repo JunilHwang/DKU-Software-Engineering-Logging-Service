@@ -1,6 +1,6 @@
 import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { GithubProfile } from '@/domain/Github';
-import { PostEntity } from './PostEntity';
+import { PostEntity as Post } from './PostEntity';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -17,6 +17,6 @@ export class UserEntity {
   @Column('simple-json')
   profile: GithubProfile
 
-  @OneToMany(type => PostEntity, post => post.writer)
-  posts: Promise<PostEntity[]>
+  @OneToMany(type => Post, post => post.writer)
+  posts: Post[]
 }

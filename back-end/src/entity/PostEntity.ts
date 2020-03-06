@@ -1,16 +1,8 @@
 import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import { UserEntity } from './UserEntity';
+import { UserEntity as User } from './UserEntity';
 
-@Entity()
+@Entity({ name: 'post' })
 export class PostEntity {
-
-  constructor ({ writer, title, content, repository, sha }) {
-    this.writer = writer
-    this.title = title
-    this.content = content
-    this.repository = repository
-    this.sha = sha
-  }
 
   @PrimaryGeneratedColumn()
   idx: number
@@ -30,6 +22,14 @@ export class PostEntity {
   @CreateDateColumn()
   reg_date: Date
 
-  @ManyToOne(type => UserEntity, writer => writer.posts)
-  writer: UserEntity
+  @ManyToOne(type => User, writer => writer.posts)
+  writer: User
+
+  set ({ writer, title, content, repository, sha }) {
+    this.writer = writer
+    this.title = title
+    this.content = content
+    this.repository = repository
+    this.sha = sha
+  }
 }
