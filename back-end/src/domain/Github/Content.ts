@@ -4,7 +4,7 @@ export type ContentLink = {
   html: string
 }
 
-type Content = {
+export type Content = {
   name: string
   path: string
   sha: string
@@ -19,4 +19,9 @@ type Content = {
   _links: ContentLink
 }
 
-export default Content
+export interface ContentVO {
+  user: string
+  repo: string
+  path?: string
+  sha?: string
+}

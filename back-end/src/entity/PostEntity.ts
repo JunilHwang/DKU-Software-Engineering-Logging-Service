@@ -1,5 +1,5 @@
-import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import { UserEntity as User } from './UserEntity';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { UserEntity as User } from './UserEntity'
 
 @Entity({ name: 'post' })
 export class PostEntity {

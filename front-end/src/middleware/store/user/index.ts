@@ -2,7 +2,7 @@ import Cookie from 'js-cookie'
 import { userService } from '@/services';
 import { ActionContext, Module } from 'vuex';
 import { RootState, UserState, AccessToken, SIGN_IN, SIGN_OUT } from '@/middleware/store/types';
-import { GithubProfile } from '@Domain/Github';
+import { GithubProfile } from '@Domain';
 
 const access_token: AccessToken = Cookie.get('access_token') || null
 const profileInit: GithubProfile = {

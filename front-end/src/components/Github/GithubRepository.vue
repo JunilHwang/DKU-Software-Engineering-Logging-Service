@@ -20,10 +20,9 @@
 <script lang="ts">
 import { Vue, Component} from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { GithubRepository, GithubTrees, GithubTree, GithubBlob } from '@Domain/Github'
+import { GithubRepository, GithubTrees, GithubTree, GithubBlob, ContentVO } from '@Domain'
 import { githubService } from '@/services'
 import { Markdown } from '@/components'
-import {ContentVO} from "@/services/GithubService";
 
 const components = { Markdown }
 
@@ -102,7 +101,7 @@ export default class Repository extends Vue {
     const data: GithubBlob = await githubService.getBlob(params)
     const route = this.route.map(({ path }) => path)
     route.push(path)
-    this.$emit('show-content', [data, route])
+    this.$emit('show-content', [data, route, params])
   }
 
   goToPath (sha: string|null, key: number) {

@@ -29,7 +29,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { GithubProfile } from '@Domain/Github'
+import { GithubProfile } from '@Domain'
 import { SIGN_OUT } from '@/middleware/store/types'
 import { eventBus } from '@/helper'
 

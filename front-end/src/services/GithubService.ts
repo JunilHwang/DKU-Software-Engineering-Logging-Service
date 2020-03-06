@@ -1,16 +1,8 @@
 import $http from 'axios'
-import { GithubRepository, GithubContent, GithubTrees, GithubBlob } from '@Domain/Github'
+import { GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO } from '@Domain'
 
 const githubURL = 'https://api.github.com'
 const baseURI = '/api/github'
-
-
-export interface ContentVO {
-  user: string
-  repo: string
-  path?: string
-  sha?: string
-}
 
 export default Object.freeze({
 

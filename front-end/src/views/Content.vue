@@ -8,7 +8,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { Base64 } from 'js-base64'
 import { githubService } from '@/services'
-import { GithubContent } from '@Domain/Github';
+import { GithubContent } from '@Domain';
 import { Markdown } from '@/components/Code';
 
 const components = { Markdown }

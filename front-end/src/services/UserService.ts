@@ -1,6 +1,6 @@
 import $http from 'axios'
 import { AccessToken } from '@/middleware/store/types/StateType';
-import { GithubProfile } from '@Domain/Github';
+import { GithubProfile } from '@Domain';
 
 const baseURI = '/api/user'
 

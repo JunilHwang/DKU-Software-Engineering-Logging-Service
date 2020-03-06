@@ -9,7 +9,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { GithubRepositoryList, GithubRepository, GithubContent } from './index';
-import { GithubRepository as GithubRepositoryType } from '@Domain/github'
+import { GithubRepository as GithubRepositoryType } from '@Domain'
 
 const components = { GithubRepositoryList, GithubRepository, GithubContent }
 

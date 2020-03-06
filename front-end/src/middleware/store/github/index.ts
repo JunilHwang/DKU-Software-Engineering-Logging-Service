@@ -1,7 +1,7 @@
 import { githubService } from '@/services'
 import { FETCH_GITHUB_REPO, FETCH_GITHUB_CONTENT, GithubState, RootState } from '@/middleware/store/types'
 import { ActionContext, Module } from 'vuex'
-import { GithubRepository } from '@Domain/Github'
+import { GithubRepository } from '@Domain'
 
 interface ContentPayload {
   content: string

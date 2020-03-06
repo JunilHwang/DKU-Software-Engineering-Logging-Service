@@ -12,7 +12,7 @@
 import { Vue, Component} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
-import { GithubRepository } from '@Domain/Github'
+import { GithubRepository } from '@Domain'
 import { FETCH_GITHUB_REPO } from '@/middleware/store/types/MutationType'
 import { eventBus } from '@/helper';
 

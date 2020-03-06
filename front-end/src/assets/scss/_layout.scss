@@ -1,4 +1,4 @@
-/* <사이트 상단> */
+// <사이트 상단>
 .siteHeader {
   position: fixed;
   top: 0;
@@ -37,9 +37,9 @@
     }
   }
 }
-/* </사이트 상단> */
+// </사이트 상단>
 
-/* <사이트 하단> */
+// <사이트 하단>
 .siteFooter {
   padding: 20px 0;
   background: #424242;
@@ -71,9 +71,9 @@
     }
   }
 }
-/* </사이트 하단> */
+// </사이트 하단>
 
-/* <사이트 컨텐츠 영역> */
+// <사이트 컨텐츠 영역>
 .siteContent {
   padding:100px 0 20px;
 }
@@ -90,4 +90,18 @@
     }
   }
 }
-/* </사이트 컨텐츠 영역> */
+// </사이트 컨텐츠 영역>
+
+// <버튼 영역>
+.btnGroup {
+  margin-top: 20px;
+  &.center {
+    text-align: center;
+  }
+  &.left {
+    text-align: left;
+  }
+  &.right {
+    text-align: right;
+  }
+}
