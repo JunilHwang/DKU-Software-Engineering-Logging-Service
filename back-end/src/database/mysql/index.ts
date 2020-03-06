@@ -10,5 +10,6 @@ export default TypeOrmModule.forRoot({
   database: DBNAME,
   synchronize: true,
   autoLoadEntities: true,
+  timezone: 'Asia/Seoul'
   // logging: 'all'
 })

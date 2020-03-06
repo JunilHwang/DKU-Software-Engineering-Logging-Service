@@ -19,8 +19,11 @@ export class PostEntity {
   @Column()
   sha: string
 
-  @CreateDateColumn()
-  reg_date: Date
+  @Column({ name: 'created_at', type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  createdAt: string
+
+  @Column({ name: 'updated_at', type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  updatedAt: string
 
   @ManyToOne(type => User, writer => writer.posts, { eager: true })
   @JoinTable()

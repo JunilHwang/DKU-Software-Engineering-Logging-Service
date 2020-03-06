@@ -1,6 +1,9 @@
 <template>
   <section class="postWrapper">
-    posts: {{ postList.length }}
+    <article v-for="(v, k) in postList" :key="k">
+      <h2>{{ v.title }}</h2>
+      <p>{{ v.createdAt }}</p>
+    </article>
   </section>
 </template>
 

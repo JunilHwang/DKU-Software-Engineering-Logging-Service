@@ -3,6 +3,7 @@ import App from './App.vue'
 import { router, store } from './middleware'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import './filter'
 
 Vue.config.productionTip = false
 

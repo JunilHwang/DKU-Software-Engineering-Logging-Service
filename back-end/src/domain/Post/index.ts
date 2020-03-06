@@ -6,7 +6,8 @@ export interface Post {
   content: string
   repository: string
   sha: string
-  reg_date: Date
+  createdAt: string
+  updatedAt: string
   writer: User
 }
 
