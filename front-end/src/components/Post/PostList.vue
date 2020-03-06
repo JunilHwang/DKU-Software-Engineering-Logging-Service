@@ -3,6 +3,12 @@
     <article v-for="(v, k) in postList" :key="k">
       <h2>{{ v.title }}</h2>
       <p>{{ v.createdAt }}</p>
+      <p>
+        <figure>
+          <img :src="v.writer.profile.avatar_url" :alt="v.writer.id">
+        </figure>
+        {{ v.writer.id }}
+      </p>
     </article>
   </section>
 </template>
