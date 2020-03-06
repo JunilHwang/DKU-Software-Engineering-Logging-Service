@@ -10,5 +10,5 @@ export default TypeOrmModule.forRoot({
   database: DBNAME,
   synchronize: true,
   autoLoadEntities: true,
-  logging: 'all'
+  // logging: 'all'
 })
