@@ -7,9 +7,9 @@ import { UserEntity as entity } from '@/entity/UserEntity'
 const UserEntity = TypeOrmModule.forFeature([ entity ])
 
 @Module({
-  imports: [UserEntity],
-  controllers: [UserController],
-  providers: [UserService],
-  exports: [UserService]
+  imports: [ UserEntity ],
+  controllers: [ UserController ],
+  providers: [ UserService ],
+  exports: [ UserService ]
 })
 export class UserModule {}

@@ -9,7 +9,7 @@ export class UserService {
 
   constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
-  async create (profile: GithubProfile, access_token: string): Promise<UserEntity> {
+  public async create (profile: GithubProfile, access_token: string): Promise<UserEntity> {
     const [users, cnt] = await this.userRepository.findAndCount({ id: profile.login })
     const user = cnt === 0 ? new UserEntity() : users[0]
     if (cnt === 0) {
@@ -20,7 +20,8 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  find (access_token: string): Promise<UserEntity|undefined> {
+  public find (access_token: string): Promise<UserEntity|undefined> {
     return this.userRepository.findOne({ access_token })
   }
+
 }

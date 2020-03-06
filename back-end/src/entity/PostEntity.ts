@@ -3,6 +3,15 @@ import { UserEntity } from './UserEntity';
 
 @Entity()
 export class PostEntity {
+
+  constructor ({ writer, title, content, repository, sha }) {
+    this.writer = writer
+    this.title = title
+    this.content = content
+    this.repository = repository
+    this.sha = sha
+  }
+
   @PrimaryGeneratedColumn()
   idx: number
 
