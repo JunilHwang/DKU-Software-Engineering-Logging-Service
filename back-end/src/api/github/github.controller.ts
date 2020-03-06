@@ -14,7 +14,7 @@ export class GithubController {
 
   @Get('repo/:user')
   @CacheTTL(60 * 60)
-  async getRepo (@Param('user') user: string, @Request() { cookies } ) {
+  public async getRepo (@Param('user') user: string, @Request() { cookies } ) {
     return {
       success: true,
       result: await this.githubService.getRepo(user, cookies.access_token)
@@ -23,7 +23,7 @@ export class GithubController {
 
   @Get('content')
   @CacheTTL(60 * 60)
-  async getContent (@Query() { user, repo, path }) {
+  public async getContent (@Query() { user, repo, path }) {
     return {
       success: true,
       result: await this.githubService.getContent(user, repo, path)
@@ -31,12 +31,12 @@ export class GithubController {
   }
 
   @Get('sign-in')
-  signIn (@Response() res) {
+  public signIn (@Response() res) {
     res.redirect(githubAuthURL)
   }
 
   @Get('authentication')
-  async authentication (@Query('code') code, @Response() response) {
+  public async authentication (@Query('code') code, @Response() response) {
     const { access_token } = await this.githubService.getToken(code)
     await this.userService.create(
       await this.githubService.getProfile(access_token),
@@ -49,7 +49,7 @@ export class GithubController {
 
   @Get('trees')
   @CacheTTL(60 * 60)
-  async getTrees (@Query() { user, repo, sha }) {
+  public async getTrees (@Query() { user, repo, sha }) {
     return {
       success: true,
       result: await this.githubService.getTrees(user, repo, sha)
@@ -58,8 +58,7 @@ export class GithubController {
 
   @Get('blob')
   @CacheTTL(60 * 60)
-  async getBlob (@Query() { user, repo, sha }) {
-    console.log(user, repo, sha)
+  public async getBlob (@Query() { user, repo, sha }) {
     return {
       success: true,
       result: await this.githubService.getBlob(user, repo, sha)
