@@ -1,6 +1,6 @@
 <template>
   <section class="postWrapper">
-    <article v-for="(v, k) in postList" :key="k">
+    <article v-for="(v, k) in data" :key="k">
       <h2>{{ v.title }}</h2>
       <p>{{ v.createdAt }}</p>
       <p>
@@ -14,23 +14,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
-import { ActionMethod } from 'vuex'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Post } from '@Domain'
-import { FETCH_POST_ALL } from '@/middleware/store/types'
-import { eventBus } from '@/helper'
 
 @Component
 export default class PostList extends Vue {
-  @State(state => state.post.postList) postList!: Post[]
-  @Action(FETCH_POST_ALL) fetchAll!: ActionMethod
-
-  created () {
-    this.fetchAll()
-
-    eventBus.$on('fetchPostAll', this.fetchAll)
-
-  }
+  @Prop({ type: Array, default: [] }) private data!: Post[]
 }
 </script>
