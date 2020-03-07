@@ -6,6 +6,7 @@ export type RootState = { }
 export type UserState = {
   access_token: AccessToken
   profile: GithubProfile
+  posts: Post[]
 }
 export type GithubState = {
   repositories: GithubRepository[]
