@@ -105,3 +105,34 @@
     text-align: right;
   }
 }
+// </버튼 영역>
+
+.post {
+  &Wrapper {}
+
+  &Article {
+    margin-bottom: 50px;
+
+    &Subject {
+
+    }
+    &Date {
+
+    }
+    &Writer {
+      display: flex;
+      align-items: center;
+      &Avatar {
+        margin: 0;
+        pdding: 0;
+        overflow: hidden;
+        @include circle(30px);
+        @include img-wrap();
+      }
+      &Label {
+        margin-left: 10px;
+      }
+    }
+  }
+
+}

@@ -7,16 +7,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import { State} from 'vuex-class'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { md } from '@/middleware'
 import { getContentWithoutFrontmatter } from '@/helper'
 
 @Component
 export default class Markdown extends Vue {
-  @State(state => state.github.content) content!: string
-  @State(state => state.github.route) route!: string[]
-  @State(state => state.user.profile.login) user!: string
+  @Prop({ type: String, default: '' }) content!: string
 
   private get markdownContent () {
     if (this.content.length === 0) return ''
@@ -46,9 +43,10 @@ export default class Markdown extends Vue {
     }
 
     code:not(.hljs) {
+      display: inline-block;
       background: #f9f1f3;
       color: #ff3860;
-      padding: .25rem .5rem;
+      padding: 0 .25rem;
       font-size: 0.85em;
       border-radius: 3px;
       margin: 0;
@@ -78,6 +76,11 @@ export default class Markdown extends Vue {
     &Title {
       font-size: 19px;
       color: #06F;
+    }
+
+    code:not(.hljs) {
+      box-shadow: 0 0 1px #777;
+      margin: 0 0.25rem
     }
   }
 }

@@ -1,14 +1,16 @@
 <template>
   <section class="postWrapper">
-    <article v-for="(v, k) in data" :key="k">
-      <h2>{{ v.title }}</h2>
-      <p>{{ v.createdAt }}</p>
-      <p v-if="v.writer">
-        <figure>
-          <img :src="v.writer.profile.avatar_url" :alt="v.writer.id">
+    <article class="postArticle" v-for="(v, k) in data" :key="k">
+      <h2 class="postArticleSubject">
+        <router-link :to="`/post/${v.idx}`" v-html="v.title" />
+      </h2>
+      <p class="postArticleDate">{{ v.createdAt }}</p>
+      <div class="postArticleWriter" v-if="v.writer">
+        <figure class="postArticleWriterAvatar">
+          <img :src="`${v.writer.profile.avatar_url}&s=30`" :alt="v.writer.id">
         </figure>
-        {{ v.writer.id }}
-      </p>
+        <span class="postArticleWriterLabel" v-html="v.writer.id" />
+      </div>
     </article>
   </section>
 </template>

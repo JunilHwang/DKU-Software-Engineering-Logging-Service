@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="contentTitle" :visible.sync="opened" width="800px">
-    <markdown>
+    <markdown :content="content">
       <template slot="footer">
         <div class="btnGroup right">
           <el-button type="primary" size="mini" @click="saveEditing">
@@ -14,22 +14,16 @@
 
 <script lang="ts">
 import { Vue, Component} from 'vue-property-decorator'
-import { MutationMethod } from 'vuex'
-import { Mutation, State } from 'vuex-class'
 import { Base64 } from 'js-base64'
 import { GithubBlob, ContentVO } from '@Domain'
-import { ADD_POST, FETCH_GITHUB_CONTENT } from '@/middleware/store/types'
 import { Markdown } from '@/components/Code'
 
 const components = { Markdown }
 const rawURL = 'https://raw.githubusercontent.com'
+const githubURL = 'https://github.com'
 
 @Component({ components })
 export default class Content extends Vue {
-
-  @State(state => state.github.content) rawContent!: string
-  @Mutation(FETCH_GITHUB_CONTENT) fetch!: MutationMethod
-  @Mutation(ADD_POST) addPost!: MutationMethod
 
   private opened: boolean = false
   private contentTitle: string = ''
@@ -45,14 +39,15 @@ export default class Content extends Vue {
 
     const head = [...route].splice(0, 2).join('/')
     const tail = [...route].splice(2).join('/')
-    const reg = /!\[(.*)\]\(([.|/].*)\)/gim
-    const content = Base64.decode(blob.content).replace(reg,`![$1](${rawURL}/${head}/master/${tail}/../$2)`)
 
-    console.log(content)
+    this.content = Base64.decode(blob.content)
+                    .replace(
+                      /!\[(.*)\]\(([.|/].*)\)/gim,
+                      `![$1](${rawURL}/${head}/master/${tail}/../$2)`)
+                    .replace(
+                      /\[(.*)\]\(([.|/].*)\)/gim,
+                      `[$1](${githubURL}/${head}/tree/master/${tail}/../$2)`)
 
-    this.content = content
-
-    this.fetch({ content, route })
   }
 
   saveEditing () {
