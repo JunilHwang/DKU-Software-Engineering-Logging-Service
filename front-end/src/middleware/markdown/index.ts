@@ -5,6 +5,12 @@ const md = new MarkdownIt();
 md.use(require('markdown-it-highlightjs'))
 md.use(require('markdown-it-plantuml'))
 md.use(require('markdown-it-underline'))
+md.use(require('markdown-it-anchor').default, {
+  permalinkClass: 'header-anchor',
+  permalink: true,
+  permalinkBefore: true,
+  permalinkSymbol: '#'
+})
 md.use(require('markdown-it-container'), 'tip', {
 
   validate: function(params: string) {

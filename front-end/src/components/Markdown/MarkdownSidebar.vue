@@ -38,3 +38,33 @@ export default class MarkdownSidebar extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.markdownSidebar {
+  position: fixed;
+  left: calc(50% + 440px);
+  top: 100px;
+
+  ul, li {
+    list-style: none
+  }
+
+  ul ul {
+    padding-inline-start: 15px;
+  }
+
+  a {
+    display: block;
+    line-height: 1.8;
+    color: #aaa;
+    font-size: 13px;
+
+    + ul {
+      margin: 5px 0 10px;
+      a {
+        font-size: 11px;
+      }
+    }
+  }
+}
+</style>
