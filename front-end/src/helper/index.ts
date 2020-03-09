@@ -12,3 +12,31 @@ export const getContentWithoutFrontmatter = (content: string) => (
     .replace(/^-{3}((.|\n)*?)-{3}((.|\n)*?)/gi, '$2').trim()
     .replace(/(```.*)(\{.*\})/g, '$1')
 )
+
+const sidebarAutoActiveWrapper = () => {
+  let isLoaded = false
+  return () => {
+    if (isLoaded === false) {
+      isLoaded = true
+      window.addEventListener('scroll', e => {
+        const sidebar = document.querySelector<HTMLElement>('#markdown-sidebar')
+        if (!sidebar) return
+
+        const heading = document.querySelector<HTMLElement>('.markdownContent')!.querySelectorAll<HTMLElement>('h2, h3')
+
+        sidebar!.querySelectorAll('a').forEach((v: HTMLElement) => {
+          const idx: number = parseInt(`${v.dataset!.idx}`)
+          if (idx === undefined) return
+
+          const wt = window.scrollY
+          const from = heading[idx].offsetTop
+          const to = heading[idx + 1] ? heading[idx + 1].offsetTop : wt + window.innerHeight
+
+          v.classList[from <= wt && wt <= to ? 'add' : 'remove']('active')
+        })
+      })
+    }
+  }
+}
+
+export const sidebarAutoActive = sidebarAutoActiveWrapper()

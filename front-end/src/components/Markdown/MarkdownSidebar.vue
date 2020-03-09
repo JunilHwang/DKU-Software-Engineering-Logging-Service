@@ -1,11 +1,11 @@
 <template>
-  <nav class="markdownSidebar">
+  <nav id="markdown-sidebar" class="markdownSidebar">
     <ul>
-      <li v-for="(dep1, k) in sidebar" :key="k">
-        <a href="#">{{ dep1.name }}</a>
-        <ul v-if="dep1.children.length">
-          <li v-for="(dep2, k2) in dep1.children" :key="k2">
-            <a href="#">{{ dep2.name }}</a>
+      <li v-for="({ name, href, idx, children }, k) in sidebar" :key="k">
+        <a :href="href" :data-idx="idx" v-html="name" />
+        <ul v-if="children.length">
+          <li v-for="({ name, href, idx }, k2) in children" :key="k2">
+            <a :href="href" :data-idx="idx" v-html="name" />
           </li>
         </ul>
       </li>
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { sidebarAutoActive } from '@/helper'
 
 @Component
 export default class MarkdownSidebar extends Vue {
@@ -25,16 +26,24 @@ export default class MarkdownSidebar extends Vue {
     const head = wrap.querySelectorAll<HTMLElement>('h2,h3')
     const sidebar: any = []
     let prev: any = {}
-    head.forEach((v: HTMLElement) => {
+    head.forEach((v: HTMLElement, idx: number) => {
       const n = ~~v.nodeName.toLowerCase().replace('h', '')
+      const name = v.textContent!.replace('# ', '')
+      const link = v.querySelector('a')!
+      const href = link.getAttribute('href')
+      const params = { name, href, idx }
       if (n === 2) {
-        prev = { name: v.textContent, children: [] }
+        prev = { ...params, children: [] }
         sidebar.push(prev)
       } else {
-        prev.children.push({ name: v.textContent })
+        prev.children.push(params)
       }
     })
     return sidebar
+  }
+
+  mounted () {
+    sidebarAutoActive()
   }
 }
 </script>
@@ -58,6 +67,10 @@ export default class MarkdownSidebar extends Vue {
     line-height: 1.8;
     color: #aaa;
     font-size: 13px;
+
+    &.active {
+      color: #06F
+    }
 
     + ul {
       margin: 5px 0 10px;
