@@ -16,7 +16,7 @@
 import { Vue, Component} from 'vue-property-decorator'
 import { Base64 } from 'js-base64'
 import { GithubBlob, ContentVO } from '@Domain'
-import { Markdown } from '@/components/Code'
+import { Markdown } from '@/components/Markdown'
 
 const components = { Markdown }
 const rawURL = 'https://raw.githubusercontent.com'

@@ -2,6 +2,7 @@
   <div class="markdownWrapper">
     <slot name="header" />
     <div ref="markdownContent" class="markdownContent" v-html="markdownContent" />
+    <markdown-sidebar v-if="isSidebar" :content="markdownContent" />
     <slot name="footer" />
   </div>
 </template>
@@ -10,10 +11,14 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { md } from '@/middleware'
 import { getContentWithoutFrontmatter } from '@/helper'
+import { MarkdownSidebar } from './index'
 
-@Component
+const components = { MarkdownSidebar }
+
+@Component({ components })
 export default class Markdown extends Vue {
   @Prop({ type: String, default: '' }) content!: string
+  @Prop({ type: Boolean, default: false }) isSidebar!: boolean
 
   private get markdownContent () {
     if (this.content.length === 0) return ''
@@ -26,6 +31,10 @@ export default class Markdown extends Vue {
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR&display=swap');
 
 .markdown {
+  &Wrapper {
+    position: relative;
+  }
+
   &Content {
     font-family: 'Noto Serif KR', serif, Nanum Gothic, Malgun Gothic, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue';
     line-height: 1.6;
