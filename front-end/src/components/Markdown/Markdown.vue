@@ -81,7 +81,6 @@ export default class Markdown extends Vue {
       margin-top: -60px;
       padding-top: 80px;
       margin-bottom: 0;
-      position: relative;
       &:hover .header-anchor {
         opacity: 1
       }
