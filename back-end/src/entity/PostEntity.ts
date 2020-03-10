@@ -10,6 +10,9 @@ export class PostEntity {
   @Column()
   title: string
 
+  @Column()
+  description: string
+
   @Column({ type: 'longtext' })
   content: string
 
@@ -19,11 +22,14 @@ export class PostEntity {
   @Column()
   sha: string
 
-  @Column({ name: 'created_at', type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: string
+  @Column({ name: 'created_at', type: 'bigint' })
+  createdAt: number
 
-  @Column({ name: 'updated_at', type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  updatedAt: string
+  @Column({ name: 'updated_at', type: 'bigint' })
+  updatedAt: number
+
+  @Column()
+  thumbnail: string
 
   @ManyToOne(type => User, writer => writer.posts, { eager: true })
   @JoinTable()

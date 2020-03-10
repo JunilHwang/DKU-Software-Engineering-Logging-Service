@@ -20,6 +20,9 @@ export class PostService {
     post.sha = sha
     post.repository = repository
     post.writer = writer
+    post.createdAt = post.updatedAt = Date.now()
+    post.description = ''
+    post.thumbnail = ''
 
     return (await this.postRepository.save(post)) === post
   }

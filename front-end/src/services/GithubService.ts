@@ -16,17 +16,6 @@ export default Object.freeze({
     return data.result
   },
 
-  async getCommitSha ({ user, repo }: ContentVO) {
-    const cache = localStorage.getItem(`${user}/${repo}/sha`)
-    if (cache) return cache
-
-    const { data: commits } = await $http.get(`${githubURL}/repos/${user}/${repo}/commits`)
-    const sha = commits[0].sha
-
-    localStorage.setItem(`${user}/${repo}/sha`, sha)
-    return sha
-  },
-
   async getTrees (params: ContentVO): Promise<GithubTrees> {
     const { data } = await $http.get(`${baseURI}/trees`, { params })
     return data.result

@@ -23,7 +23,7 @@
 import { Vue, Component} from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { GithubRepository, GithubTrees, GithubTree, GithubBlob, ContentVO } from '@Domain'
-import { githubService } from '@/services'
+import { githubService, githubClientService } from '@/services'
 import { Markdown } from '@/components'
 
 const components = { Markdown }
@@ -75,7 +75,7 @@ export default class Repository extends Vue {
     const repo: string = this.repository.name
     const user: string = this.user
 
-    const sha: string = await githubService.getCommitSha({ repo, user })
+    const sha: string = await githubClientService.getCommitSha({ repo, user })
     this.route = [
       { path: user, sha: null },
       { path: repo, sha }

@@ -47,6 +47,11 @@ export default class GithubLinkEditor extends Vue {
     const [user, repo] = match[2].split('/')
     const path = match[4] || 'README.md'
 
+    if (!path.includes('.md')) {
+      this.$message({ type, message: 'Markdown 파일만 가져올 수 있습니다.' })
+      return
+    }
+
     if (user !== this.user) {
       this.$message({ type, message: '다른 사용자의 컨텐츠는 가져올 수 없습니다.' })
       return

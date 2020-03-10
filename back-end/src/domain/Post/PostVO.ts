@@ -3,4 +3,6 @@ export interface PostVO {
   title: string
   repository: string
   sha: string
+  description: string
+  thumbnail: string
 }

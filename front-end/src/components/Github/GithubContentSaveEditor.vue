@@ -1,8 +1,18 @@
 <template>
-  <el-dialog title="포스트 저장하기" :visible.sync="opened">
-    <el-form v-if="opened" :model="postData" label-width="100px" @submit.native.prevent="save">
+  <el-dialog title="포스트 저장하기" :visible.sync="opened" width="600px">
+    <el-form v-if="opened" :model="postData" ref="frm" label-width="100px" @submit.native.prevent="save">
       <el-form-item label="제목" size="small" prop="title" required>
         <el-input v-model="postData.title" />
+      </el-form-item>
+      <el-form-item label="간단한 설명" size="small" prop="description" required>
+        <el-input type="textarea" v-model="postData.description" rows="5" cols="80" />
+      </el-form-item>
+      <el-form-item label="썸네일" size="small" prop="thumbnail" required>
+        <el-input v-model="postData.thumbnail" v-show="false" />
+        <label class="fileUploadLabel">
+          <input id="thumbnail" type="file" />
+          <span>썸네일 이미지 업로드</span>
+        </label>
       </el-form-item>
       <el-form-item>
         <el-button native-type="submit" type="primary" size="small">저장</el-button>
@@ -29,7 +39,9 @@ export default class GithubContentSaveEditor extends Vue {
     title: '',
     content: '',
     sha: '',
-    repository: ''
+    repository: '',
+    thumbnail: '',
+    description: ''
   }
 
   public open (postVO: PostVO) {
@@ -38,16 +50,45 @@ export default class GithubContentSaveEditor extends Vue {
     this.postData = { title, ...postVO }
   }
 
-  private async save () {
-    const isSuccess = await this.addPost(this.postData)
+  private save () {
+    const frm: any = this.$refs.frm
+    frm.validate(async (valid: boolean) => {
+      if (!valid) return false
 
-    this.$message({ type: 'info', message: isSuccess ? '포스트가 등록되었습니다.' : '이미 등록된 포스트입니다.' })
+      const isSuccess = await this.addPost(this.postData)
 
-    if (isSuccess) {
-      eventBus.$emit('fetchPostAll')
-    }
+      this.$message({ type: 'info', message: isSuccess ? '포스트가 등록되었습니다.' : '이미 등록된 포스트입니다.' })
 
-    this.opened = false
+      if (isSuccess) {
+        eventBus.$emit('fetchPostAll')
+      }
+
+      this.opened = false
+    })
   }
 }
 </script>
+
+<style lang="scss">
+.fileUploadLabel {
+  input {
+    display: none
+  }
+  span {
+    display: inline-block;
+    border-radius: 3px;
+    background: #f0f9eb;
+    color: #67c23a;
+    border: 1px solid #c2e7b0;
+    font-size: 13px;
+    padding: 0 10px;
+    cursor: pointer;
+
+    &:hover {
+      background: #67c23a;
+      border-color: #67c23a;
+      color: #fff;
+    }
+  }
+}
+</style>

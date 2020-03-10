@@ -4,7 +4,7 @@
       <h2 class="postArticleSubject">
         <router-link :to="`/post/${v.idx}`" v-html="v.title" />
       </h2>
-      <p class="postArticleDate">{{ v.createdAt }}</p>
+      <p class="postArticleDate">{{ v.createdAt * 1 | dateformat }}</p>
       <div class="postArticleWriter" v-if="v.writer">
         <figure class="postArticleWriterAvatar">
           <img :src="`${v.writer.profile.avatar_url}&s=30`" :alt="v.writer.id">
