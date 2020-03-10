@@ -35,7 +35,7 @@ export default class MarkdownSidebar extends Vue {
       if (n === 2 || prev === null) {
         const properties = { ...params, children: [] }
         sidebar.push(properties)
-        if (prev !== null) prev = { ...properties }
+        if (n === 2) prev = { ...properties }
       } else {
         prev.children.push(params)
       }

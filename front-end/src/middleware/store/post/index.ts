@@ -22,6 +22,7 @@ const actions = {
     return await postService.create(postVO)
   },
   [FETCH_POST]: ({ commit }: ActionContext<PostState, RootState>, idx: number) => {
+    commit(FETCH_POST, null)
     postService.fetch(idx).then((selectedPost: Post) => {
       commit(FETCH_POST, selectedPost)
     })
