@@ -33,6 +33,7 @@ export default class Markdown extends Vue {
 .markdown {
   &Wrapper {
     position: relative;
+    padding: 0 10px;
   }
 
   &Content {
