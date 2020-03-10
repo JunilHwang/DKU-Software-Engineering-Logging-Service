@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-if="opened" :visible.sync="opened" title="마크다운 파일 링크 입력" width="600px">
     <el-form :model="formData"  label-width="100px" @submit.native.prevent="previewContent" v-if="opened">
-      <el-form-item label="링크 입력" prop="link" size="small" required>
+      <el-form-item label="링크 입력" prop="link" size="small" required autofocus>
         <el-input v-model="formData.link" />
       </el-form-item>
       <el-form-item size="small">
@@ -13,12 +13,15 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import { eventBus } from '@/helper'
 import { githubClientService } from '@/services'
 import { Response, GithubContent } from '@Domain'
 
 @Component
 export default class GithubLinkEditor extends Vue {
+  @State(state => state.user.profile.login) user!: string
+
   private opened = false
   private formData = {
     link: ''
@@ -26,6 +29,7 @@ export default class GithubLinkEditor extends Vue {
 
   private open () {
     this.opened = true
+    this.formData.link = ''
   }
 
   private async previewContent () {
@@ -42,6 +46,11 @@ export default class GithubLinkEditor extends Vue {
     const match: any = this.formData.link.match(reg)
     const [user, repo] = match[2].split('/')
     const path = match[4] || 'README.md'
+
+    if (user !== this.user) {
+      this.$message({ type, message: '다른 사용자의 컨텐츠는 가져올 수 없습니다.' })
+      return
+    }
 
     if ([user, repo, path].includes(undefined)) {
       this.$message({ type, message })
