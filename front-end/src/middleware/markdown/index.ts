@@ -1,7 +1,9 @@
 import MarkdownIt from 'markdown-it'
 import 'highlight.js/styles/atom-one-dark.css'
 
-const md = new MarkdownIt();
+const md = new MarkdownIt({
+  html: true
+});
 md.use(require('markdown-it-highlightjs'))
 md.use(require('markdown-it-plantuml'))
 md.use(require('markdown-it-underline'))

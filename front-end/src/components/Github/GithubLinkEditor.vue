@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-if="opened" :visible.sync="opened" title="마크다운 파일 링크 입력" width="600px">
-    <el-form :model="formData"  label-width="100px" @submit.native.prevent="previewContent">
+    <el-form :model="formData"  label-width="100px" @submit.native.prevent="previewContent" v-if="opened">
       <el-form-item label="링크 입력" prop="link" size="small" required>
         <el-input v-model="formData.link" />
       </el-form-item>

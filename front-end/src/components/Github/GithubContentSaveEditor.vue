@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="포스트 저장하기" :visible.sync="opened">
-    <el-form :model="postData" label-width="100px" @submit.native.prevent="save">
+    <el-form v-if="opened" :model="postData" label-width="100px" @submit.native.prevent="save">
       <el-form-item label="제목" size="small" prop="title" required>
         <el-input v-model="postData.title" />
       </el-form-item>

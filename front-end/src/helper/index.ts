@@ -16,26 +16,26 @@ export const getContentWithoutFrontmatter = (content: string) => (
 const sidebarAutoActiveWrapper = () => {
   let isLoaded = false
   return () => {
-    if (isLoaded === false) {
-      isLoaded = true
-      window.addEventListener('scroll', e => {
-        const sidebar = document.querySelector<HTMLElement>('#markdown-sidebar')
-        if (!sidebar) return
+    if (isLoaded === true) return
+    isLoaded = true
+    window.addEventListener('scroll', e => {
+      const markdownContent = document.querySelector<HTMLElement>('#markdown-content')
+      const sidebar = document.querySelector<HTMLElement>('#markdown-sidebar')
+      if (!sidebar) return
 
-        const heading = document.querySelector<HTMLElement>('.markdownContent')!.querySelectorAll<HTMLElement>('h2, h3')
+      const heading = markdownContent!.querySelectorAll<HTMLElement>('h2, h3')
 
-        sidebar!.querySelectorAll('a').forEach((v: HTMLElement) => {
-          const idx: number = parseInt(`${v.dataset!.idx}`)
-          if (idx === undefined) return
+      sidebar!.querySelectorAll('a').forEach((v: HTMLElement) => {
+        const idx: number = parseInt(`${v.dataset!.idx}`)
+        if (idx === undefined) return
 
-          const wt = window.scrollY
-          const from = heading[idx].offsetTop
-          const to = heading[idx + 1] ? heading[idx + 1].offsetTop : wt + window.innerHeight
+        const wt = window.scrollY
+        const from = heading[idx].offsetTop
+        const to = heading[idx + 1] ? heading[idx + 1].offsetTop : wt + window.innerHeight
 
-          v.classList[from <= wt && wt <= to ? 'add' : 'remove']('active')
-        })
+        v.classList[from <= wt && wt <= to ? 'add' : 'remove']('active')
       })
-    }
+    })
   }
 }
 

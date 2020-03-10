@@ -1,6 +1,6 @@
 <template>
   <main class="postContainer" v-if="post !== null">
-    <markdown :content="post.content" :is-sidebar="true" />
+    <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
   </main>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="contentTitle" :visible.sync="opened" width="800px">
-    <markdown :content="content">
+    <markdown :content="content" v-if="opened">
       <template slot="footer">
         <div class="btnGroup right">
           <el-button type="primary" size="mini" @click="saveEditing">
@@ -15,7 +15,6 @@
 <script lang="ts">
 import { Vue, Component} from 'vue-property-decorator'
 import { Base64 } from 'js-base64'
-import { GithubBlob, ContentVO } from '@Domain'
 import { Markdown } from '@/components/Markdown'
 
 const components = { Markdown }

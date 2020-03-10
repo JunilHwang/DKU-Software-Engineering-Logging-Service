@@ -1,5 +1,5 @@
 <template>
-  <div class="markdownWrapper">
+  <div id="markdown-content" class="markdownWrapper">
     <slot name="header" />
     <div ref="markdownContent" class="markdownContent" v-html="markdownContent" />
     <markdown-sidebar v-if="isSidebar" :content="markdownContent" />
@@ -17,6 +17,7 @@ const components = { MarkdownSidebar }
 
 @Component({ components })
 export default class Markdown extends Vue {
+  @Prop({ type: String, default: '' }) title!: string
   @Prop({ type: String, default: '' }) content!: string
   @Prop({ type: Boolean, default: false }) isSidebar!: boolean
 

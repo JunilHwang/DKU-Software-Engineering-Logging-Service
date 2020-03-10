@@ -25,16 +25,17 @@ export default class MarkdownSidebar extends Vue {
     wrap.innerHTML = this.content
     const head = wrap.querySelectorAll<HTMLElement>('h2,h3')
     const sidebar: any = []
-    let prev: any = {}
+    let prev: any = null
     head.forEach((v: HTMLElement, idx: number) => {
       const n = ~~v.nodeName.toLowerCase().replace('h', '')
       const name = v.textContent!.replace('# ', '')
       const link = v.querySelector('a')!
       const href = link.getAttribute('href')
       const params = { name, href, idx }
-      if (n === 2) {
-        prev = { ...params, children: [] }
-        sidebar.push(prev)
+      if (n === 2 || prev === null) {
+        const properties = { ...params, children: [] }
+        sidebar.push(properties)
+        if (prev !== null) prev = { ...properties }
       } else {
         prev.children.push(params)
       }

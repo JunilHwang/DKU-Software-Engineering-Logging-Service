@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="Repository List" :visible.sync="opened" width="500px">
-    <ul>
+    <ul v-if="opened">
       <li v-for="(repository, k) in repositories" :key="k">
         <el-link type="primary" @click.native="showContents(repository)" v-html="repository.name" />
       </li>

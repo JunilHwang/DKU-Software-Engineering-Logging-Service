@@ -1,19 +1,21 @@
 <template>
   <el-dialog :visible.sync="opened" class="repositoryContent" width="600px">
-    <h3 class="repositoryContentHeader" slot="title" v-html="dialogTitle" />
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item v-for="({ sha, path }, k) in route" :key="k">
-        <a href="#" @click.prevent="goToPath(sha, k)" v-html="path" />
-      </el-breadcrumb-item>
-    </el-breadcrumb>
-    <ul class="repositoryContentItem" v-if="trees !== null">
-      <li v-for="(tree, k) in trees" :key="k">
-        <el-link @click.native="showContent(tree)">
-          <i :class="`el-icon-${tree.type === 'blob' ? 'document' : 'folder'}`"></i>
-          {{ tree.path }}
-        </el-link>
-      </li>
-    </ul>
+    <template v-if="opened">
+      <h3 class="repositoryContentHeader" slot="title" v-html="dialogTitle" />
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item v-for="({ sha, path }, k) in route" :key="k">
+          <a href="#" @click.prevent="goToPath(sha, k)" v-html="path" />
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+      <ul class="repositoryContentItem" v-if="trees !== null">
+        <li v-for="(tree, k) in trees" :key="k">
+          <el-link @click.native="showContent(tree)">
+            <i :class="`el-icon-${tree.type === 'blob' ? 'document' : 'folder'}`"></i>
+            {{ tree.path }}
+          </el-link>
+        </li>
+      </ul>
+    </template>
   </el-dialog>
 </template>
 
