@@ -98,10 +98,10 @@ export default class Repository extends Vue {
       this.$message({ type: 'warning', message: `Markdown File만 조회할 수 있습니다` })
       return
     }
-    const data: GithubBlob = await githubService.getBlob(params)
+    const { content }: GithubBlob = await githubService.getBlob(params)
     const route = this.route.map(({ path }) => path)
     route.push(path)
-    this.$emit('show-content', [data, route, params])
+    this.$emit('show-content', [content, route, sha])
   }
 
   goToPath (sha: string|null, key: number) {

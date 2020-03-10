@@ -4,18 +4,18 @@
     <github-repository @show-content="showContent" ref="repository" />
     <github-content @save-editing="showSaveEditor" ref="content" />
     <github-content-save-editor ref="saveEditor" />
-    <github-link-editor />
+    <github-link-editor @show-content="showContent" ref="linkEditor" />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { components } from './index';
-import { GithubRepository as GithubRepositoryType, PostVO } from '@Domain'
+import { GithubRepository, PostVO } from '@Domain'
 
 @Component({ components })
 export default class GithubFactory extends Vue {
-  showRepository (repository: GithubRepositoryType) {
+  showRepository (repository: GithubRepository) {
     const target: any = this.$refs.repository
     target.open(repository)
   }

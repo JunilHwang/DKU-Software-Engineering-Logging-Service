@@ -54,7 +54,8 @@ export default class GithubLinkEditor extends Vue {
       return
     }
 
-
+    const { content, sha } = result!
+    this.$emit('show-content', [content, [user, repo, path], sha])
   }
 
   created () {

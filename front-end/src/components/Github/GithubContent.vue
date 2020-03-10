@@ -31,16 +31,16 @@ export default class Content extends Vue {
   private sha: string = ''
   private content: string = ''
 
-  open (blob: GithubBlob, route: string[], { user, repo, sha }: ContentVO) {
-    this.repository = `${user}/${repo}`
+  open (content: string, route: string[], sha: string) {
     this.sha = sha!
     this.opened = true
     this.contentTitle = route.join('/')
-
     const head = [...route].splice(0, 2).join('/')
+
     const tail = [...route].splice(2).join('/')
 
-    this.content = Base64.decode(blob.content)
+    this.repository = head
+    this.content = Base64.decode(content)
                     .replace(
                       /!\[(.*)\]\(([.|/].*)\)/gim,
                       `![$1](${rawURL}/${head}/master/${tail}/../$2)`)
