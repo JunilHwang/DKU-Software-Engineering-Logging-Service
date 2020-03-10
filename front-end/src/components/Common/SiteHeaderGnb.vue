@@ -9,6 +9,9 @@
     </ul>
     <ul v-else>
       <li>
+        <el-button @click="openLinkEditor" icon="el-icon-link" type="default" size="mini" plain circle />
+      </li>
+      <li>
         <el-button @click="repositoryListOpen" icon="el-icon-edit-outline" type="default" size="mini" plain circle />
       </li>
       <li>
@@ -58,6 +61,10 @@ export default class SiteHeader extends Vue {
     eventBus.$emit('repositoryListOpen')
   }
 
+  openLinkEditor () {
+    eventBus.$emit('openLinkEditor')
+  }
+
   created () {
     document.body.onclick = () => {
       const target: HTMLElement = this.$refs.submenu as HTMLElement
@@ -89,7 +96,7 @@ export default class SiteHeader extends Vue {
 
     > li {
       float: left;
-      margin-left: 30px;
+      margin-left: 15px;
       position: relative;
 
       a {
