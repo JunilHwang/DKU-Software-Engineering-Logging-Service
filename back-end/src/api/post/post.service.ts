@@ -9,7 +9,7 @@ export class PostService {
 
   constructor (@InjectRepository(Post) private readonly postRepository: Repository<Post>) {}
 
-  public async create (writer: User, { content, title, sha, repository }: PostVO): Promise<boolean> {
+  public async create (writer: User, { content, title, sha, repository, description, thumbnail }: PostVO): Promise<boolean> {
     const cnt = await this.postRepository.count({ sha })
     if (cnt !== 0) return false
 
@@ -21,8 +21,13 @@ export class PostService {
     post.repository = repository
     post.writer = writer
     post.createdAt = post.updatedAt = Date.now()
-    post.description = ''
-    post.thumbnail = ''
+    post.description = description
+
+    if (thumbnail.length) {
+      post.thumbnail = `post_thumbnail_${sha}`
+      const blob = thumbnail.split(',')[1]
+      const thumbnailFile: File = new File([blob], post.thumbnail, { lastModified: Date.now() })
+    }
 
     return (await this.postRepository.save(post)) === post
   }

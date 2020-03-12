@@ -58,7 +58,7 @@ export default class GithubContentSaveEditor extends Vue {
   public open (postVO: PostVO) {
     const title = getFrontMatter(postVO.content).title || ''
     this.opened = true
-    this.postData = { title, ...postVO }
+    this.postData = { ...postVO, title, thumbnail: '', description: '' }
   }
 
   private save () {
