@@ -1,9 +1,9 @@
 <template>
   <div>
-    <github-repository-list @show-repository="showRepository" />
+    <github-repository-list ref="repositories" @show-repository="showRepository" />
     <github-repository @show-content="showContent" ref="repository" />
     <github-content @save-editing="showSaveEditor" ref="content" />
-    <github-content-save-editor ref="saveEditor" />
+    <github-content-save-editor ref="saveEditor" @all-close="allClose" />
     <github-link-editor @show-content="showContent" ref="linkEditor" />
   </div>
 </template>
@@ -28,6 +28,12 @@ export default class GithubFactory extends Vue {
   showSaveEditor (postVO: PostVO) {
     const target: any = this.$refs.saveEditor
     target.open(postVO)
+  }
+
+  allClose () {
+    Object.values(this.$refs).forEach((v: any) => {
+      v.opened = false
+    })
   }
 }
 </script>

@@ -75,6 +75,7 @@ export default class GithubContentSaveEditor extends Vue {
       }
 
       this.opened = false
+      this.$emit('all-close')
     })
   }
 

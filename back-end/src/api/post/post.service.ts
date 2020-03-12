@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { PostEntity as Post, UserEntity as User } from '@/entity'
 import { PostVO } from '@/domain/Post';
+import { saveBlob } from '@/helper'
 
 @Injectable()
 export class PostService {
@@ -14,6 +15,7 @@ export class PostService {
     if (cnt !== 0) return false
 
     const post: Post = new Post()
+    const isThumbnail = thumbnail.length
 
     post.title = title
     post.content = content
@@ -22,11 +24,10 @@ export class PostService {
     post.writer = writer
     post.createdAt = post.updatedAt = Date.now()
     post.description = description
+    post.thumbnail = isThumbnail ? sha : ''
 
-    if (thumbnail.length) {
-      post.thumbnail = `post_thumbnail_${sha}`
-      const blob = thumbnail.split(',')[1]
-      const thumbnailFile: File = new File([blob], post.thumbnail, { lastModified: Date.now() })
+    if (isThumbnail) {
+      saveBlob(thumbnail, sha)
     }
 
     return (await this.postRepository.save(post)) === post

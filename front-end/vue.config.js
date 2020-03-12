@@ -4,7 +4,10 @@ module.exports = {
     proxy: {
       '^/api': {
         target: 'http://0.0.0.0:3000'
-      }
+      },
+      '^/uploaded': {
+        target: 'http://0.0.0.0:3000'
+      },
     }
   }
 }
