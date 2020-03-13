@@ -119,41 +119,72 @@
     margin-bottom: 20px;
     margin-left: 20px;
     float: left;
-    width: 235px;
+    width: 320px;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 10px fade-out(#aaa, 1);
+    transition: box-shadow 0.3s;
 
-    &:nth-child(4n + 1) {
+    &:hover {
+      box-shadow: 0 0 10px fade-out(#aaa, 0.7);
+    }
+
+    &:nth-child(3n + 1) {
       margin-left: 0
     }
 
     &Thumbnail {
       @include img-wrap();
-      height: (3 / 4) * 235px;
-      margin: -10px -10px 10px;
+      height: (9 / 16) * 320px;
+      margin: -20px -20px 20px;
+    }
+
+    &NoneThumbnail {
+      height: 100%;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 25px;
+      color: #aaa;
+      i {
+        font-size: 35px;
+        margin: 2px 10px 0 0;
+      }
     }
 
     &Subject {
+      display: -webkit-box;
       font-size: 17px;
+      line-height: 1;
+      height: 17px;
       font-weight: 600;
       margin: 0 0 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
     }
 
     &Description {
-      font-size: 13px;
-      height: 13px * (3 * 1.5);
-      overflow: hidden;
-      overflow-wrap: break-word;
-      word-break: break-word;
-      line-height: 1.5;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 3;
-      -moz-box-orient: vertical;
       display: -webkit-box;
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      word-break: break-all;
+      overflow-wrap: break-word;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 13px * 4.5;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      color: #666;
     }
 
     &Date {
-
+      font-size: 13px;
+      color: #aaa;
     }
     &Writer {
       display: flex;

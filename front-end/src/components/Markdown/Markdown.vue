@@ -43,6 +43,19 @@ export default class Markdown extends Vue {
     color: #333;
     letter-spacing: -0.5px;
 
+    h1, h2, h3, h4, h5 ,h6 {
+      margin-top: -60px;
+      padding-top: 80px;
+      margin-bottom: 0;
+      &:hover .header-anchor {
+        opacity: 1
+      }
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
     h2 {
       padding-bottom: 10px;
       border-bottom: 1px solid #ddd;
@@ -77,15 +90,6 @@ export default class Markdown extends Vue {
       float: left;
       margin-left: -0.75em;
       opacity: 0
-    }
-
-    h1, h2, h3, h4, h5 ,h6 {
-      margin-top: -60px;
-      padding-top: 80px;
-      margin-bottom: 0;
-      &:hover .header-anchor {
-        opacity: 1
-      }
     }
   }
 
