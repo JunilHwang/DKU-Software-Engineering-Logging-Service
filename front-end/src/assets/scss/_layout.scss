@@ -108,14 +108,50 @@
 // </버튼 영역>
 
 .post {
-  &Wrapper {}
+  &Wrapper {
+    @include clear-fix();
+    max-width: 1000px;
+    margin: 0 auto;
+  }
 
   &Article {
-    margin-bottom: 50px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    float: left;
+    width: 235px;
+    box-sizing: border-box;
+    padding: 10px;
+
+    &:nth-child(4n + 1) {
+      margin-left: 0
+    }
+
+    &Thumbnail {
+      @include img-wrap();
+      height: (3 / 4) * 235px;
+      margin: -10px -10px 10px;
+    }
 
     &Subject {
-
+      font-size: 17px;
+      font-weight: 600;
+      margin: 0 0 10px;
     }
+
+    &Description {
+      font-size: 13px;
+      height: 13px * (3 * 1.5);
+      overflow: hidden;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      line-height: 1.5;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 3;
+      -moz-box-orient: vertical;
+      display: -webkit-box;
+    }
+
     &Date {
 
     }

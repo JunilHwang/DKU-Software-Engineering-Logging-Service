@@ -1,12 +1,13 @@
 <template>
   <section class="postWrapper">
     <article class="postArticle" v-for="(v, k) in data" :key="k">
-      <figure v-if="v.thumbnail.length">
+      <figure class="postArticleThumbnail" v-if="v.thumbnail.length">
         <img :src="`/uploaded/${v.sha}`" :alt="v.title" />
       </figure>
       <h2 class="postArticleSubject">
         <router-link :to="`/post/${v.idx}`" v-html="v.title" />
       </h2>
+      <p class="postArticleDescription" v-html="v.description +v.description +v.description +v.description +v.description" />
       <p class="postArticleDate">{{ v.createdAt * 1 | dateformat }}</p>
       <div class="postArticleWriter" v-if="v.writer">
         <figure class="postArticleWriterAvatar">
