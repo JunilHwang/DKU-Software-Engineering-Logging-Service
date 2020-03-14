@@ -56,7 +56,8 @@ export default class GithubContentSaveEditor extends Vue {
   private thumbnailLoaded: boolean = false
 
   public open (postVO: PostVO) {
-    const title = getFrontMatter(postVO.content).title || ''
+    const frontMatter = getFrontMatter(postVO.content)
+    const title = frontMatter ? frontMatter.title : ''
     this.opened = true
     this.postData = { ...postVO, title, thumbnail: '', description: '' }
   }

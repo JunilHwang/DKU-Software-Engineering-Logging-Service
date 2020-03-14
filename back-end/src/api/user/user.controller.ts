@@ -9,7 +9,7 @@ export class UserController {
   @Get()
   @CacheTTL(60 * 60 * 24)
   public async getProfile (@Query('access_token') access_token) {
-    const user: User|undefined = await this.userService.find(access_token);
+    const user: User|undefined = await this.userService.find({ access_token })
     return {
       success: true,
       result: user !== undefined ? user.profile : null
@@ -30,9 +30,10 @@ export class UserController {
   @CacheTTL(60 * 60 * 24)
   public async getUserPosts (@Param('id') id: string) {
     const user: User = await this.userService.find({ id })
+    const posts = await user.posts
     return {
       success: true,
-      result: await user.posts
+      result: posts.map(v => ({ ...v, writer: user}))
     }
   }
 }

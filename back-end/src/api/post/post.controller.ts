@@ -28,8 +28,8 @@ export class PostController {
   }
 
   @Post()
-  public async createPost (@Body() postVO: PostVO, @Request() { cookies }) {
-    const writer = await this.userService.find(cookies.access_token)
+  public async createPost (@Body() postVO: PostVO, @Request() { cookies: { access_token } }) {
+    const writer = await this.userService.find({ access_token })
     return {
       success: true,
       result: await this.postService.create(writer, postVO)

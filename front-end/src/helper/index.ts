@@ -3,9 +3,12 @@ import jsYaml from 'js-yaml'
 
 export const eventBus: Vue = new Vue()
 
-export const getFrontMatter = (content: string) => (
-  jsYaml.safeLoad(content.trim().replace(/^-{3}((.|\n)*?)-{3}((.|\n)*)/gi, '$1').trim())
-)
+export const getFrontMatter = (content: string) => {
+  const patterns = content.trim().match(/^-{3}((.|\n)*?)-{3}/)
+  if (patterns === null) return null
+
+  return jsYaml.safeLoad(patterns[1])
+}
 
 export const getContentWithoutFrontmatter = (content: string) => (
   content.trim()
