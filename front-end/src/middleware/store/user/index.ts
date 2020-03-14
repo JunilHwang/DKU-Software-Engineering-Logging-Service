@@ -53,6 +53,7 @@ const actions = {
     }
   },
   [FETCH_USER_POST]: async ({ commit, state }: ActionContext<UserState, RootState>, userId: string) => {
+    commit(FETCH_USER_POST, [])
     userService.getUserPosts(userId).then((posts: Post[]) => {
       commit(FETCH_USER_POST, posts)
     })
