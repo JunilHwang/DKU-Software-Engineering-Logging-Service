@@ -10,8 +10,8 @@ class UserService {
     const { data } = await $http.get(baseURI, { params })
     return data.result
   }
-  async getUserPosts (): Promise<Post[]> {
-    const { data } = await $http.get(`${baseURI}/posts`)
+  async getUserPosts (userId: string): Promise<Post[]> {
+    const { data } = await $http.get(`${baseURI}/${userId}/posts`)
     return data.result
   }
 }

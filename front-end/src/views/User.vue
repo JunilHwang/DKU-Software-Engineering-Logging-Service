@@ -10,7 +10,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { PostList } from '@/components'
 import { Action, State } from 'vuex-class'
-import { Post,  GithubProfile } from '@Domain'
+import { Post } from '@Domain'
 import { FETCH_USER_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { eventBus } from '@/helper'
@@ -18,15 +18,19 @@ import { eventBus } from '@/helper'
 const components = { PostList }
 
 @Component({ components })
-export default class Mypage extends Vue {
+export default class User extends Vue {
 
   @State(state => state.user.posts) postList!: Post[]
   @Action(FETCH_USER_POST) fetchUserPost!: ActionMethod
 
-  created () {
-    this.fetchUserPost()
+  fetchAll () {
+    this.fetchUserPost(this.$route.params.userId)
+  }
 
-    eventBus.$on('fetchPostAll', this.fetchUserPost)
+  created () {
+    this.fetchAll()
+
+    eventBus.$on('fetchPostAll', this.fetchAll)
 
   }
 

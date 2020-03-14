@@ -12,12 +12,12 @@
         <h2 class="postArticleSubject" v-html="v.title" />
         <p class="postArticleDescription" v-html="v.description" />
         <p class="postArticleDate">{{ v.createdAt * 1 | dateformat }}</p>
-        <div class="postArticleWriter" v-if="v.writer">
+        <router-link v-if="v.writer" :to="`/user/${v.writer.id}`" class="postArticleWriter">
           <figure class="postArticleWriterAvatar">
             <img :src="`${v.writer.profile.avatar_url}&s=30`" :alt="v.writer.id">
           </figure>
           <span class="postArticleWriterLabel" v-html="v.writer.id" />
-        </div>
+        </router-link>
       </router-link>
     </article>
   </section>

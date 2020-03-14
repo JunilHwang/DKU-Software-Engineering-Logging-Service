@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Home, Content, Mypage, Post } from '@/views'
+import { Home, Content, User, Post } from '@/views'
 
 Vue.use(VueRouter)
 
@@ -14,8 +14,8 @@ const routes = [
     component: Content
   },
   {
-    path: '/mypage',
-    component: Mypage
+    path: '/user/:userId',
+    component: User
   },
   {
     path: '/post/:idx',
