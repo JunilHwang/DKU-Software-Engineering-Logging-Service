@@ -20,8 +20,8 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  public find (access_token: string): Promise<UserEntity|undefined> {
-    return this.userRepository.findOne({ access_token })
+  public find (params): Promise<UserEntity|undefined> {
+    return this.userRepository.findOne(params)
   }
 
 }

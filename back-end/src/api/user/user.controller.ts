@@ -1,4 +1,4 @@
-import { CacheTTL, Controller, Get, Query, Request } from '@nestjs/common'
+import { CacheTTL, Controller, Get, Query, Request, Param } from '@nestjs/common'
 import { UserService } from './user.service'
 import { UserEntity as User } from '@/entity';
 
@@ -18,8 +18,18 @@ export class UserController {
 
   @Get('/posts')
   @CacheTTL(60 * 60 * 24)
-  public async getUserPosts (@Request() { cookies }) {
-    const user: User = await this.userService.find(cookies.access_token)
+  public async getMyPosts (@Request() { cookies: { access_token } }) {
+    const user: User = await this.userService.find({ access_token })
+    return {
+      success: true,
+      result: await user.posts
+    }
+  }
+
+  @Get('/:id/posts')
+  @CacheTTL(60 * 60 * 24)
+  public async getUserPosts (@Param('id') id: string) {
+    const user: User = await this.userService.find({ id })
     return {
       success: true,
       result: await user.posts
