@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, Entity, JoinTable, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
+import {Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
 import { UserEntity as User } from './UserEntity'
 
 @Entity({ name: 'post' })
@@ -34,4 +34,8 @@ export class PostEntity {
   @ManyToOne(type => User, writer => writer.posts, { eager: true })
   @JoinTable()
   writer: User
+
+  @ManyToMany(type => User)
+  @JoinTable()
+  likeUsers: User[]
 }
