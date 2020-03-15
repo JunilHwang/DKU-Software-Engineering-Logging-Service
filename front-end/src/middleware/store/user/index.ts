@@ -44,6 +44,9 @@ const mutations = {
   [FETCH_USER_POST]: (state: UserState, posts: Post[]) => {
     state.posts = posts
   },
+  [FETCH_USER]: (state: UserState, user: User) => {
+    state.user = user
+  },
 }
 
 const actions = {
