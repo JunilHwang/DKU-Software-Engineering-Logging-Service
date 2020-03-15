@@ -23,7 +23,8 @@ const profileInit: GithubProfile = {
   events_url: '',
   received_events_url: '',
   type: '',
-  site_admin: false
+  site_admin: false,
+  email: ''
 }
 
 const state: UserState = {

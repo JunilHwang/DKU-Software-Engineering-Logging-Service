@@ -5,9 +5,10 @@
         <figure class="userProfileImage">
           <img :src="user.profile.avatar_url" :alt="user.profile.login" width="100" />
         </figure>
-        <h3 class="userProfileId">
-
-        </h3>
+        <div class="userProfileInfo">
+          <p v-html="user.id" />
+          <p v-html="user.profile.email" />
+        </div>
       </header>
       <post-list :data="postList" />
     </div>
