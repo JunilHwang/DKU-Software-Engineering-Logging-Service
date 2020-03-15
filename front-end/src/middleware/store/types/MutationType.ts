@@ -2,6 +2,7 @@
 export const SIGN_IN = 'user/signIn'
 export const SIGN_OUT = 'user/signOut'
 export const FETCH_USER_POST = 'user/fetchPost'
+export const FETCH_USER = 'user/fetch'
 
 // Github
 export const FETCH_GITHUB_REPO = 'github/fetchRepo'

@@ -36,4 +36,13 @@ export class UserController {
       result: posts.map(v => ({ ...v, writer: user}))
     }
   }
+
+  @Get('/:id')
+  @CacheTTL(60 * 60 * 24)
+  public async getUserInfo (@Param('id') id: string) {
+    return {
+      success: true,
+      result: await this.userService.find({ id })
+    }
+  }
 }

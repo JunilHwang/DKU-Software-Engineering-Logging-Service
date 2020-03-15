@@ -1,8 +1,8 @@
 import Cookie from 'js-cookie'
 import { userService } from '@/services';
 import { ActionContext, Module } from 'vuex';
-import { RootState, UserState, AccessToken, SIGN_IN, SIGN_OUT, FETCH_USER_POST } from '../types';
-import { GithubProfile, Post } from '@Domain';
+import { RootState, UserState, AccessToken, SIGN_IN, SIGN_OUT, FETCH_USER_POST, FETCH_USER } from '../types';
+import { GithubProfile, Post, User } from '@Domain';
 
 const access_token: AccessToken = Cookie.get('access_token') || null
 const profileInit: GithubProfile = {
@@ -29,7 +29,8 @@ const profileInit: GithubProfile = {
 const state: UserState = {
   access_token,
   profile: { ...profileInit },
-  posts: []
+  posts: [],
+  user: null
 }
 
 const mutations = {
@@ -47,7 +48,7 @@ const mutations = {
 
 const actions = {
   [SIGN_IN]: async ({ commit, state }: ActionContext<UserState, RootState>) => {
-    const profile: GithubProfile|null = await userService.getUser(state.access_token)
+    const profile: GithubProfile|null = await userService.getMe(state.access_token)
     if (profile !== null) {
       commit(SIGN_IN, profile)
     }
@@ -56,6 +57,12 @@ const actions = {
     commit(FETCH_USER_POST, [])
     userService.getUserPosts(userId).then((posts: Post[]) => {
       commit(FETCH_USER_POST, posts)
+    })
+  },
+  [FETCH_USER]: async ({ commit, state }: ActionContext<UserState, RootState>, userId: string) => {
+    commit(FETCH_USER_POST, [])
+    userService.getUser(userId).then((user: User) => {
+      commit(FETCH_USER, user)
     })
   },
 }
