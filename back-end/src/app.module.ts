@@ -3,6 +3,7 @@ import {CacheModule, Module, CacheInterceptor } from '@nestjs/common'
 import ApiModules from './api'
 import { MysqlModule, MongoModule } from '@/database'
 
+
 const moduleMetaData = {
   imports: [ ...ApiModules, MysqlModule, MongoModule, CacheModule.register() ],
   providers: [

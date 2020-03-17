@@ -11,7 +11,7 @@ async function bootstrap() {
   app.use('/', express.static(`${__dirname}/static`))
   app.use(cookieParser())
   app.use((req: Request, res: Response, next: Function) => {
-    console.log(`Request ${req.method}:  ${req.path}`);
+    console.log(`${req.method}:  ${req.path}`);
     next();
   })
   await app.listen(3000)
