@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from '@/entity/UserEntity'
 import { GithubProfile } from '@/domain/Github'
 import { Repository } from 'typeorm';
+import {PostEntity} from "@/entity";
 
 @Injectable()
 export class UserService {
@@ -22,6 +23,12 @@ export class UserService {
 
   public find (params): Promise<UserEntity|undefined> {
     return this.userRepository.findOne(params)
+  }
+
+  public async findPosts (params): Promise<PostEntity[]> {
+    const user = await this.find(params)
+    const posts = await user.posts
+    return posts.map(v => ({ ...v, writer: user}))
   }
 
 }

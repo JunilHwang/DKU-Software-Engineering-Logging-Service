@@ -1,4 +1,4 @@
-import {Body, CacheTTL, Controller, Get, Param, Post, Request} from '@nestjs/common'
+import { Body, CACHE_MANAGER, CacheTTL, Controller, Get, HttpCode, HttpStatus, Inject, Param, Post, Request } from '@nestjs/common'
 import { PostService } from './post.service'
 import { UserService } from '@/api/user/user.service'
 import { PostVO } from '@/domain/Post';
@@ -7,32 +7,30 @@ import { PostVO } from '@/domain/Post';
 export class PostController {
   constructor (
     private readonly postService: PostService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager
   ) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
+  @CacheTTL(60 * 60)
   public async getPosts () {
-    return {
-      success: true,
-      result: await this.postService.findAll()
-    }
+    return await this.postService.findAll()
   }
 
   @Get('/:idx')
+  @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getPost (@Param('idx') idx: number) {
-    return {
-      success: true,
-      result: await this.postService.find(idx)
-    }
+    return await this.postService.find(idx)
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   public async createPost (@Body() postVO: PostVO, @Request() { cookies: { access_token } }) {
     const writer = await this.userService.find({ access_token })
-    return {
-      success: true,
-      result: await this.postService.create(writer, postVO)
-    }
+    const result = await this.postService.create(writer, postVO)
+    if (result) this.cacheManager.del('/api/post')
+    return result;
   }
 }
