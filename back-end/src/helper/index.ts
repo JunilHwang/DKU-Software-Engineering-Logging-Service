@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import { InternalServerErrorException } from '@nestjs/common'
 
 export const UPLOADED_PATH = `${__dirname}/../static/uploaded`
 
@@ -9,8 +10,7 @@ export const httpResponseCheck = async (response: Promise<any>) => {
     console.log(method, url, status, statusText)
     return data
   } catch (e) {
-    console.log('========== this is axios error ==========');
-    throw e
+    throw new InternalServerErrorException()
   }
 }
 
