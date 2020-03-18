@@ -18,7 +18,7 @@ const mutations = {
 }
 
 const actions = {
-  [ADD_POST]: async ({ commit }: ActionContext<PostState, RootState>, postVO: PostVO): Promise<Post> => {
+  [ADD_POST]: async ({ commit }: ActionContext<PostState, RootState>, postVO: PostVO): Promise<true|undefined> => {
     return await postService.create(postVO)
   },
   [FETCH_POST]: ({ commit }: ActionContext<PostState, RootState>, idx: number) => {
