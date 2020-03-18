@@ -32,7 +32,6 @@ export class PostController {
       await this.userService.find({ access_token }),
       postVO
     )
-    this.cacheManager.del('/api/post')
     return true
   }
 }

@@ -62,11 +62,7 @@ export default class GithubLinkEditor extends Vue {
       return
     }
 
-    const { success, result }: Response<GithubContent> = await githubClientService.getContent({ user, repo, path })
-    if (!success) {
-      this.$message({ type, message })
-      return
-    }
+    const result = await githubClientService.getContent({ user, repo, path })
 
     const { content, sha } = result!
     this.$emit('show-content', [content, [user, repo, path], sha])

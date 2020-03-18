@@ -6,20 +6,20 @@ const baseURI = '/api/github'
 
 export default Object.freeze({
 
-  async getRepo (user: string): Promise<GithubRepository[]|undefined> {
-    return await responseProcessor<GithubRepository[]>($http.get(`${baseURI}/repo/${user}`), 200)
+  async getRepo (user: string): Promise<GithubRepository[]> {
+    return (await responseProcessor<GithubRepository[]>($http.get(`${baseURI}/repo/${user}`), 200))!
   },
 
-  async getContent (params: ContentVO): Promise<GithubContent|undefined> {
-    return await responseProcessor<GithubContent>($http.get(`${baseURI}/content`, { params }), 200)
+  async getContent (params: ContentVO): Promise<GithubContent> {
+    return (await responseProcessor<GithubContent>($http.get(`${baseURI}/content`, { params }), 200))!
   },
 
-  async getTrees (params: ContentVO): Promise<GithubTrees|undefined> {
-    return await responseProcessor<GithubTrees>($http.get(`${baseURI}/trees`, { params }), 200)
+  async getTrees (params: ContentVO): Promise<GithubTrees> {
+    return (await responseProcessor<GithubTrees>($http.get(`${baseURI}/trees`, { params }), 200))!
   },
 
-  async getBlob (params: ContentVO): Promise<GithubBlob|undefined> {
-    return await responseProcessor<GithubBlob>($http.get(`${baseURI}/blob`, { params }), 200)
+  async getBlob (params: ContentVO): Promise<GithubBlob> {
+    return (await responseProcessor<GithubBlob>($http.get(`${baseURI}/blob`, { params }), 200))!
   }
 
 })

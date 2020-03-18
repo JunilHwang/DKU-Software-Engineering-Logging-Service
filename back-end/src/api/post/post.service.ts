@@ -32,10 +32,12 @@ export class PostService {
     if (isThumbnail) {
       saveBlob(thumbnail, sha)
     }
+
+    await this.postRepository.save(post)
   }
 
   public async findAll (): Promise<Post[]> {
-    return await this.postRepository.find()
+    return await this.postRepository.find({ order: { idx: 'DESC' } })
   }
 
   public async find (idx: number): Promise<Post> {
