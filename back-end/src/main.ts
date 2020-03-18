@@ -10,20 +10,21 @@ async function bootstrap() {
     logger: ['error', 'debug', 'warn', 'log', 'verbose']
   })
   const cookieParser = require('cookie-parser')
-  app.use(cookieParser())
-
-  if (process.env.NODE_ENV === 'develop') {
-    app.use((req: Request, res: Response, next: Function) => {
-      console.log(`${req.method}:  ${req.path}`);
-      next();
-    })
-  }
 
   app.useStaticAssets(join(__dirname, '/resources/static'))
   app.setBaseViewsDir(join(__dirname, '/resources/static'))
   app.setViewEngine('hbs')
 
   app.use('/uploaded', express.static(`${__dirname}/resources/uploaded`))
-  await app.listen(3000)
+  app.use(cookieParser())
+
+  if (process.env.NODE_ENV === 'development') {
+    app.use((req: Request, res: Response, next: Function) => {
+      if (req.path.includes('/api')) console.log(`${req.method}:  ${req.path}`);
+      next();
+    })
+  }
+
+  await app.listen(process.env.NODE_ENV === 'production' ? 8080 : 3000)
 }
 bootstrap()

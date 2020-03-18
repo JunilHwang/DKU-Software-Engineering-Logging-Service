@@ -5,9 +5,8 @@ export const UPLOADED_PATH = `${__dirname}/../static/uploaded`
 
 export const httpResponseCheck = async (response: Promise<any>) => {
   try {
-    const { statusText, status, config, data } = await response
-    const { method, url } = config
-    console.log(method, url, status, statusText)
+    const { statusText, status, config: { method, url }, data } = await response
+    if (process.env.NODE_ENV !== 'production') console.log(method, url, status, statusText)
     return data
   } catch (e) {
     throw new InternalServerErrorException()
