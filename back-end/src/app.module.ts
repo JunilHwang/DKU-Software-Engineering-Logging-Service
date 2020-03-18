@@ -10,11 +10,11 @@ const moduleMetaData = {
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
+      useClass: ResponseInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
+      useClass: CacheInterceptor,
     },
     {
       provide: APP_FILTER,
