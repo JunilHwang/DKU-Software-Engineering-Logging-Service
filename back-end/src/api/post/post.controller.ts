@@ -33,5 +33,6 @@ export class PostController {
       postVO
     )
     this.cacheManager.del('/api/post')
+    return true
   }
 }

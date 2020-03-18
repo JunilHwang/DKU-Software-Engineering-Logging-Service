@@ -1,23 +1,21 @@
 import $http from 'axios'
 import { Post, PostVO } from '@Domain'
+import { responseProcessor } from '@/helper'
 
 const baseURI = '/api/post'
 
 export default Object.freeze({
 
-  async create (postVO: PostVO): Promise<Post> {
-    const { data } = await $http.post(baseURI, postVO)
-    return data.result
+  async create (postVO: PostVO): Promise<true|undefined> {
+    return await responseProcessor<true>($http.post(baseURI, postVO), 201)
   },
 
   async fetch (idx: number): Promise<Post> {
-    const { data } = await $http.get(`${baseURI}/${idx}`)
-    return data.result
+    return (await responseProcessor<Post>($http.get(`${baseURI}/${idx}`), 200))!
   },
 
   async fetchAll (): Promise<Post[]> {
-    const { data } = await $http.get(baseURI)
-    return data.result
+    return (await responseProcessor<Post[]>($http.get(baseURI), 200))!
   },
 
 })

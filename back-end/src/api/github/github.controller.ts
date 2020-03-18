@@ -38,13 +38,11 @@ export class GithubController {
   }
 
   @Get('sign-in')
-  @HttpCode(HttpStatus.MOVED_PERMANENTLY)
   public signIn (@Response() res) {
-    res.redirect(githubAuthURL)
+    res.status(HttpStatus.MOVED_PERMANENTLY).redirect(githubAuthURL)
   }
 
   @Get('authentication')
-  @HttpCode(HttpStatus.MOVED_PERMANENTLY)
   public async authentication (@Query('code') code, @Response() response) {
 
     const { access_token } = await this.githubService.getToken(code)
@@ -55,7 +53,7 @@ export class GithubController {
     )
 
     response.cookie('access_token', access_token, { maxAge: 1000 * 60 * 60 })
-    response.redirect('/')
+    response.status(HttpStatus.MOVED_PERMANENTLY).redirect('/')
 
   }
 

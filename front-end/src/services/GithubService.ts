@@ -1,29 +1,25 @@
 import $http from 'axios'
 import { GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO } from '@Domain'
+import { responseProcessor } from '@/helper'
 
-const githubURL = 'https://api.github.com'
 const baseURI = '/api/github'
 
 export default Object.freeze({
 
-  async getRepo (user: string): Promise<GithubRepository[]> {
-    const { data } = await $http.get(`${baseURI}/repo/${user}`)
-    return data.result
+  async getRepo (user: string): Promise<GithubRepository[]|undefined> {
+    return await responseProcessor<GithubRepository[]>($http.get(`${baseURI}/repo/${user}`), 200)
   },
 
-  async getContent (params: ContentVO): Promise<GithubContent|GithubContent[]> {
-    const { data } = await $http.get(`${baseURI}/content`, { params })
-    return data.result
+  async getContent (params: ContentVO): Promise<GithubContent|undefined> {
+    return await responseProcessor<GithubContent>($http.get(`${baseURI}/content`, { params }), 200)
   },
 
-  async getTrees (params: ContentVO): Promise<GithubTrees> {
-    const { data } = await $http.get(`${baseURI}/trees`, { params })
-    return data.result
+  async getTrees (params: ContentVO): Promise<GithubTrees|undefined> {
+    return await responseProcessor<GithubTrees>($http.get(`${baseURI}/trees`, { params }), 200)
   },
 
-  async getBlob (params: ContentVO): Promise<GithubBlob> {
-    const { data } = await $http.get(`${baseURI}/blob`, { params })
-    return data.result
+  async getBlob (params: ContentVO): Promise<GithubBlob|undefined> {
+    return await responseProcessor<GithubBlob>($http.get(`${baseURI}/blob`, { params }), 200)
   }
 
 })

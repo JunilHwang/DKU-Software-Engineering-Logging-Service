@@ -5,13 +5,13 @@ const githubURL = 'https://api.github.com'
 
 export default Object.freeze({
 
-  async getContent ({ user, repo, path }: ContentVO): Promise<Response<GithubContent>> {
+  async getContent ({ user, repo, path }: ContentVO): Promise<GithubContent> {
     try {
-      const success = true
-      const { data: result } = await $http.get(`${githubURL}/repos/${user}/${repo}/contents/${path}`)
-      return { success, result }
-    } catch (e) {
-      return { success: false }
+      const { data: content } = await $http.get(`${githubURL}/repos/${user}/${repo}/contents/${path}`)
+      return content
+    } catch ({ code, request }) {
+      console.error(code, request)
+      throw 'GithubClientService.getContent error'
     }
   },
 
