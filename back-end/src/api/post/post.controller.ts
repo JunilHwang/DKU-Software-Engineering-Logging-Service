@@ -7,8 +7,7 @@ import { PostVO } from '@/domain/Post';
 export class PostController {
   constructor (
     private readonly postService: PostService,
-    private readonly userService: UserService,
-    @Inject(CACHE_MANAGER) private readonly cacheManager
+    private readonly userService: UserService
   ) {}
 
   @Get()
