@@ -2,6 +2,7 @@ import { Injectable, NestInterceptor, ExecutionContext, CallHandler, BadGatewayE
 import { Observable, throwError } from 'rxjs'
 import { map, catchError } from 'rxjs/operators'
 import { Response } from '@/domain'
+import { APP_INTERCEPTOR } from "@nestjs/core";
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
@@ -15,5 +16,9 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
               map(result => ({ result, success })),
             )
   }
+}
 
+export const appResponseInterceptor = {
+  provide: APP_INTERCEPTOR,
+  useClass: ResponseInterceptor,
 }

@@ -1,5 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common'
 import { Request, Response } from 'express'
+import { APP_FILTER } from '@nestjs/core'
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -17,4 +18,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
         path: request.url,
       })
   }
+}
+
+export const appExceptionFilter = {
+  provide: APP_FILTER,
+  useClass: HttpExceptionFilter
 }

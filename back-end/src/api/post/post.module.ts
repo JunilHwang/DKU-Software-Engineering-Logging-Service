@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { CacheModule, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { PostController } from './post.controller'
 import { PostService } from './post.service'
@@ -8,7 +8,7 @@ import { UserModule } from '@/api/user/user.module'
 const PostEntity = TypeOrmModule.forFeature([ entity ])
 
 @Module({
-  imports: [ PostEntity, UserModule ],
+  imports: [ PostEntity, UserModule, CacheModule.register() ],
   controllers: [ PostController ],
   providers: [ PostService ],
 })
