@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import {HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { PostEntity as Post, UserEntity as User } from '@/entity'
@@ -10,9 +10,12 @@ export class PostService {
 
   constructor (@InjectRepository(Post) private readonly postRepository: Repository<Post>) {}
 
-  public async create (writer: User, { content, title, sha, repository, description, thumbnail }: PostVO): Promise<boolean> {
+  public async create (writer: User, { content, title, sha, repository, description, thumbnail }: PostVO): Promise<void> {
     const cnt = await this.postRepository.count({ sha })
-    if (cnt !== 0) return false
+
+    if (cnt !== 0) {
+      throw new HttpException('', HttpStatus.NO_CONTENT);
+    }
 
     const post: Post = new Post()
     const isThumbnail = thumbnail.length
@@ -29,8 +32,6 @@ export class PostService {
     if (isThumbnail) {
       saveBlob(thumbnail, sha)
     }
-
-    return (await this.postRepository.save(post)) === post
   }
 
   public async findAll (): Promise<Post[]> {
@@ -38,6 +39,8 @@ export class PostService {
   }
 
   public async find (idx: number): Promise<Post> {
-    return await this.postRepository.findOne(idx)
+    const post = await this.postRepository.findOne(idx)
+    if (post === undefined) throw new NotFoundException()
+    return post
   }
 }

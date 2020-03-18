@@ -1,6 +1,6 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, BadGatewayException } from '@nestjs/common'
-import { Observable, throwError } from 'rxjs'
-import { map, catchError } from 'rxjs/operators'
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
 import { Response } from '@/domain'
 import { APP_INTERCEPTOR } from "@nestjs/core";
 
@@ -8,12 +8,10 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
-    const success: boolean = true
     return next
             .handle()
             .pipe(
-              catchError(err => throwError(new BadGatewayException())),
-              map(result => ({ result, success })),
+              map(result => ({ result, success: true })),
             )
   }
 }

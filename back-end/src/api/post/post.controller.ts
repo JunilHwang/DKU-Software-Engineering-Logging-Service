@@ -28,9 +28,10 @@ export class PostController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   public async createPost (@Body() postVO: PostVO, @Request() { cookies: { access_token } }) {
-    const writer = await this.userService.find({ access_token })
-    const result = await this.postService.create(writer, postVO)
-    if (result) this.cacheManager.del('/api/post')
-    return result;
+    await this.postService.create(
+      await this.userService.find({ access_token }),
+      postVO
+    )
+    this.cacheManager.del('/api/post')
   }
 }
