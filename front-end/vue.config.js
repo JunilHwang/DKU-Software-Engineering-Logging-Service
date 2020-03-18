@@ -6,5 +6,7 @@ module.exports = {
         target: 'http://0.0.0.0:3000'
       },
     }
-  }
+  },
+  outputDir: '../back-end/dist/resources/static',
+  indexPath: 'index.hbs'
 }

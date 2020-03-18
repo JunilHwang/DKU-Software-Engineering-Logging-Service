@@ -26,9 +26,9 @@ export class UserService {
   }
 
   public async findPosts (params): Promise<PostEntity[]> {
-    const user = await this.find(params)
-    const posts = await user.posts
-    return posts.map(v => ({ ...v, writer: user}))
+    const writer = await this.find(params)
+    const posts = await writer.posts
+    return posts.map(v => (v.content = '', { ...v, writer }))
   }
 
 }
