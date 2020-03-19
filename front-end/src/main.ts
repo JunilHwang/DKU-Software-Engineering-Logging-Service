@@ -4,6 +4,7 @@ import { router, store } from './middleware'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './filter'
+import './middleware/icon'
 
 Vue.config.productionTip = false
 

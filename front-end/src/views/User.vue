@@ -6,9 +6,15 @@
           <img :src="user.profile.avatar_url" :alt="user.profile.login" width="100" />
         </figure>
         <div class="userProfileInfo">
-          <p class="userProfileName" v-html="`@ ${user.id}`" />
-          <p class="userProfileEmail" v-html="user.profile.email" />
-          <p class="userProfileGithub" v-html="user.profile.html_url" />
+          <p class="userProfileName">
+            @{{ user.id }}
+          </p>
+          <p class="userProfileEmail">
+            <fa :icon="['far', 'envelope']" /> {{ user.profile.email }}
+          </p>
+          <a :href="user.profile.html_url" target="_blank" class="userProfileGithub">
+            <fa :icon="['fab', 'github']" /> {{ user.profile.html_url }}
+          </a>
         </div>
       </header>
       <post-list :data="postList" />
@@ -54,6 +60,7 @@ export default class User extends Vue {
 @import "../assets/scss/lib";
 .user {
   &Profile {
+    font-family: enFont();
     display: flex;
     align-items: center;
     margin-bottom: 25px;
@@ -75,9 +82,11 @@ export default class User extends Vue {
     }
 
     &Name {
-      font-size: 21px;
-      font-weight: 600;
+      font-size: 25px;
+      font-weight: 300;
       padding-bottom: 10px;
+      transform: translateX(-3px);
+      color: #06F
     }
 
     &Email {
