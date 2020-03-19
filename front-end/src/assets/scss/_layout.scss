@@ -110,8 +110,6 @@
 .post {
   &Wrapper {
     @include clear-fix();
-    max-width: 1000px;
-    margin: 0 auto;
   }
 
   &Article {

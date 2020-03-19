@@ -65,10 +65,12 @@ export default class Markdown extends Vue {
       display: inline-block;
       background: #f9f1f3;
       color: #ff3860;
+      border: 1px solid #ff3860;
       padding: 0 .25rem;
       font-size: 0.85em;
       border-radius: 3px;
       margin: 0;
+      transform: translateY(-1px);
     }
 
     a {

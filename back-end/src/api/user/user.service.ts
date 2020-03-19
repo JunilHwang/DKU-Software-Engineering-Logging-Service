@@ -28,7 +28,7 @@ export class UserService {
   public async findPosts (params): Promise<PostEntity[]> {
     const writer = await this.find(params)
     const posts = await writer.posts
-    return posts.map(v => (v.content = '', { ...v, writer }))
+    return posts.map(v => (v.content = '', { ...v, writer })).sort((a, b) => b.idx - a.idx)
   }
 
 }

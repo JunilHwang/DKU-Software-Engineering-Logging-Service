@@ -6,8 +6,9 @@
           <img :src="user.profile.avatar_url" :alt="user.profile.login" width="100" />
         </figure>
         <div class="userProfileInfo">
-          <p v-html="user.id" />
-          <p v-html="user.profile.email" />
+          <p class="userProfileName" v-html="`@ ${user.id}`" />
+          <p class="userProfileEmail" v-html="user.profile.email" />
+          <p class="userProfileGithub" v-html="user.profile.html_url" />
         </div>
       </header>
       <post-list :data="postList" />
@@ -53,10 +54,34 @@ export default class User extends Vue {
 @import "../assets/scss/lib";
 .user {
   &Profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px dotted #ddd;
+
+    p {
+      line-height: 1;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
     &Image {
       @include img-wrap();
       @include circle(100px);
       overflow: hidden;
+      margin: 0 20px 0 0;
+      padding: 0;
+    }
+
+    &Name {
+      font-size: 21px;
+      font-weight: 600;
+      padding-bottom: 10px;
+    }
+
+    &Email {
+      padding-bottom: 5px;
     }
   }
 }
