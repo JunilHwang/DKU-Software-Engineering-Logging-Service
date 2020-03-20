@@ -5,7 +5,7 @@ export type AccessToken = string|null
 export type RootState = { }
 export type UserState = {
   access_token: AccessToken
-  profile: GithubProfile
+  profile: GithubProfile|null
   posts: Post[]
   user: User|null
 }

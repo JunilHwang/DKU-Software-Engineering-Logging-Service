@@ -5,31 +5,10 @@ import { RootState, UserState, AccessToken, SIGN_IN, SIGN_OUT, FETCH_USER_POST, 
 import { GithubProfile, Post, User } from '@Domain';
 
 const access_token: AccessToken = Cookie.get('access_token') || null
-const profileInit: GithubProfile = {
-  login: '',
-  id: 0,
-  node_id: '',
-  avatar_url: '',
-  gravatar_id: '',
-  url: '',
-  html_url: '',
-  followers_url: '',
-  following_url: '',
-  gists_url: '',
-  starred_url: '',
-  subscriptions_url: '',
-  organizations_url: '',
-  repos_url: '',
-  events_url: '',
-  received_events_url: '',
-  type: '',
-  site_admin: false,
-  email: ''
-}
 
 const state: UserState = {
   access_token,
-  profile: { ...profileInit },
+  profile: null,
   posts: [],
   user: null
 }
@@ -39,7 +18,7 @@ const mutations = {
     state.profile = profile
   },
   [SIGN_OUT]: (state: UserState) => {
-    state.profile = { ...profileInit }
+    state.profile = null
     Cookie.remove('access_token')
   },
   [FETCH_USER_POST]: (state: UserState, posts: Post[]) => {

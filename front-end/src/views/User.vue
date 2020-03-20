@@ -15,6 +15,9 @@
           <a :href="user.profile.html_url" target="_blank" class="userProfileGithub">
             <fa :icon="['fab', 'github']" /> {{ user.profile.html_url }}
           </a>
+          <a :href="user.profile.blog" target="_blank" class="userProfileGithub">
+            <fa :icon="['fab', 'github']" /> {{ user.profile.blog }}
+          </a>
         </div>
       </header>
       <post-list :data="postList" />
@@ -62,7 +65,6 @@ export default class User extends Vue {
   &Profile {
     font-family: enFont();
     display: flex;
-    align-items: center;
     margin-bottom: 25px;
     padding-bottom: 25px;
     border-bottom: 1px dotted #ddd;
@@ -71,6 +73,16 @@ export default class User extends Vue {
       line-height: 1;
       margin: 0;
       letter-spacing: -0.5px;
+    }
+
+    svg {
+      display: inline-block;
+      margin-right: 5px;
+      transform: translateY(1px);
+    }
+
+    &Info {
+      margin-top: 10px;
     }
 
     &Image {

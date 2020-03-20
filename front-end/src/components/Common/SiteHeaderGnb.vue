@@ -1,6 +1,6 @@
 <template>
   <nav class="gnb">
-    <ul v-if="profile.login.length === 0">
+    <ul v-if="!profile">
       <li>
         <el-button type="default" size="small" @click="signIn" round>
           Login With <strong>GitHub</strong>
@@ -38,7 +38,7 @@ import { eventBus } from '@/helper'
 
 @Component
 export default class SiteHeader extends Vue {
-  @State(state => state.user.profile) profile!: GithubProfile
+  @State(state => state.user.profile) profile!: GithubProfile|null
 
   signIn () {
     location.replace('/api/github/sign-in')
