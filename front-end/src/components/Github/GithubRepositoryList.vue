@@ -1,8 +1,15 @@
 <template>
-  <el-dialog title="Repository List" :visible.sync="opened" width="500px">
+  <el-dialog :visible.sync="opened" width="500px">
+    <h3 slot="title">
+      <i class="el-icon-coin" />
+      Repository List
+    </h3>
     <ul v-if="opened">
       <li v-for="(repository, k) in repositories" :key="k">
-        <el-link type="primary" @click.native="showContents(repository)" v-html="repository.name" />
+        <a href="#" type="primary" @click.prevent="showContents(repository)">
+          <i class="el-icon-unlock" />
+          {{ repository.name }}
+        </a>
       </li>
     </ul>
   </el-dialog>
@@ -38,3 +45,51 @@ export default class RepositoryList extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../assets/scss/lib";
+
+h3 {
+  margin: 0;
+  padding: 0;
+  font-weight: 100;
+  font-family: enFont();
+  font-size: 25px;
+  line-height: 1;
+}
+
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+li {
+  line-height: 160%;
+  font-size: 17px;
+  font-family: enFont();
+}
+a {
+  display: inline-block;
+  position: relative;
+  transition: color 0.3s;
+
+  &:after {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 0;
+    position: absolute;
+    bottom: 0;
+    background: #06F;
+    transition: width 0.3s;
+  }
+
+  &:hover {
+    color: #06F;
+
+    &:after {
+      width: 100%;
+    }
+  }
+}
+</style>

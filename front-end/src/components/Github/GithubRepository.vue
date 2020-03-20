@@ -1,18 +1,20 @@
 <template>
-  <el-dialog :visible.sync="opened" class="repositoryContent" width="600px">
+  <el-dialog :visible.sync="opened" class="repositoryContent" width="800px">
     <template v-if="opened">
-      <h3 class="repositoryContentHeader" slot="title" v-html="dialogTitle" />
-      <el-breadcrumb separator="/">
+      <h3 class="repositoryContentHeader" slot="title">
+        <i class="el-icon-document-copy" /> {{ dialogTitle }}
+      </h3>
+      <el-breadcrumb separator=">">
         <el-breadcrumb-item v-for="({ sha, path }, k) in route" :key="k">
           <a href="#" @click.prevent="goToPath(sha, k)" v-html="path" />
         </el-breadcrumb-item>
       </el-breadcrumb>
       <ul class="repositoryContentItem" v-if="trees !== null">
         <li v-for="(tree, k) in trees" :key="k">
-          <el-link @click.native="showContent(tree)">
+          <a href="#" @click.prevent="showContent(tree)">
             <i :class="`el-icon-${tree.type === 'blob' ? 'document' : 'folder'}`"></i>
             {{ tree.path }}
-          </el-link>
+          </a>
         </li>
       </ul>
     </template>
@@ -124,3 +126,53 @@ export default class Repository extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+h3 {
+  font-size: 25px;
+  font-weight: 100;
+  margin: 0;
+  padding: 0;
+}
+
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.repository {
+  &Content {
+    &Item {
+      margin-top: 20px;
+      font-size: 17px;
+      line-height: 160%;
+
+      a {
+        display: inline-block;
+        position: relative;
+        transition: color 0.3s;
+
+        &:after {
+          content: "";
+          display: block;
+          height: 1px;
+          width: 0;
+          position: absolute;
+          bottom: 0;
+          background: #06F;
+          transition: width 0.3s;
+        }
+
+        &:hover {
+          color: #06F;
+
+          &:after {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+</style>
