@@ -10,17 +10,17 @@
             <p class="userProfileName" v-html="`@${user.id}`" />
             <p class="userProfileBio" v-html="user.profile.bio" />
           </div>
-          <p class="userProfileEmail">
+          <p class="userProfileEmail" v-if="user.profile.email">
             <span class="userProfileIcon"><fa :icon="['far', 'envelope']" /></span>
             {{ user.profile.email }}
           </p>
-          <p class="userProfileGithub">
+          <p class="userProfileGithub" v-if="user.profile.html_url">
             <a :href="user.profile.html_url" target="_blank">
               <span class="userProfileIcon"><fa :icon="['fab', 'github']" /></span>
               {{ user.profile.html_url }}
             </a>
           </p>
-          <p class="userProfileHome">
+          <p class="userProfileHome" v-if="user.profile.blog">
             <a :href="user.profile.blog" target="_blank" class="userProfileGithub">
               <span class="userProfileIcon"><fa :icon="['fas', 'home']" /></span>
               {{ user.profile.blog }}
@@ -29,15 +29,15 @@
         </div>
         <ul class="userProfileNumbers">
           <li>
-            <strong v-html="postList.length" />
+            <el-button type="default" v-html="postList.length" circle plain />
             <span>게시물</span>
           </li>
           <li>
-            <strong v-html="user.profile.followers" />
+            <el-button type="default" v-html="user.profile.followers" circle plain />
             <span>팔로워</span>
           </li>
           <li>
-            <strong v-html="user.profile.following" />
+            <el-button type="default" v-html="user.profile.following" circle plain />
             <span>팔로잉</span>
           </li>
         </ul>
@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import { PostList } from '@/components'
 import { Action, State } from 'vuex-class'
 import { Post, User as UserType } from '@Domain'
@@ -66,6 +66,11 @@ export default class User extends Vue {
   @Action(FETCH_USER_POST) fetchUserPost!: ActionMethod
   @Action(FETCH_USER) fetchUser!: ActionMethod
 
+  @Watch('$route.path') onRoutePath () {
+    this.fetchUser(this.$route.params.userId)
+    this.fetchPost()
+  }
+
   fetchPost () {
     this.fetchUserPost(this.$route.params.userId)
   }
@@ -81,8 +86,15 @@ export default class User extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../assets/scss/lib";
+
+p {
+  margin: 0 0 5px;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
 .user {
   &Profile {
     font-family: enFont();
@@ -91,14 +103,9 @@ export default class User extends Vue {
     padding-bottom: 25px;
     border-bottom: 1px dotted #ddd;
 
-    p {
-      line-height: 1;
-      margin: 0 0 5px;
-      letter-spacing: -0.5px;
-    }
-
     &Info {
       margin-top: 10px;
+      max-width: 350px;
       &Header {
         padding-bottom: 10px;
       }
@@ -121,8 +128,11 @@ export default class User extends Vue {
     }
 
     &Bio {
+      font-size: 15px;
       font-family: krFont();
+      line-height: 1.3;
       color: #333;
+      word-break: break-all;
     }
 
     &Icon {
@@ -138,20 +148,16 @@ export default class User extends Vue {
       justify-content: space-between;
       width: 250px;
       margin-left: 100px;
+      padding-left: 0;
 
       li {
         list-style: none;
         text-align: center;
       }
 
-      strong {
-        @include circle(50px);
-        display: block;
-        border: 1px solid #bebebe;
-        text-align: center;
-        line-height: 50px;
-        font-weight: 400;
-        font-size: 19px;
+      .el-button.is-circle {
+        width: 50px;
+        height: 50px;
       }
 
       span {
