@@ -12,6 +12,7 @@
 
   &Logo {
     float: left;
+    font-family: enFont();
 
     a {
       font-size: 21px;
@@ -66,6 +67,7 @@
   }
 
   &Copyright {
+    font-family: enFont();
     a {
       font-weight: bold;
     }

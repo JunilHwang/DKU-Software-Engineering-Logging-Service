@@ -59,6 +59,7 @@ export default class Markdown extends Vue {
     h2 {
       padding-bottom: 10px;
       border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
     }
 
     code:not(.hljs) {
