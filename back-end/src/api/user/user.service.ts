@@ -20,7 +20,8 @@ export class UserService {
   }
 
   public find (params): Promise<UserEntity|undefined> {
-    return this.userRepository.findOne(params)
+    const user = { ...this.userRepository.findOne(params), access_token: null }
+    return user
   }
 
   public async findPosts (params): Promise<PostEntity[]> {

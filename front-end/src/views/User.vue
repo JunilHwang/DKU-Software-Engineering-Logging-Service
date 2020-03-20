@@ -27,6 +27,20 @@
             </a>
           </p>
         </div>
+        <ul class="userProfileNumbers">
+          <li>
+            <strong v-html="postList.length" />
+            게시물
+          </li>
+          <li>
+            <strong v-html="user.profile.followers" />
+            팔로워
+          </li>
+          <li>
+            <strong v-html="user.profile.following" />
+            팔로잉
+          </li>
+        </ul>
       </header>
       <post-list :data="postList" />
     </div>
