@@ -30,15 +30,15 @@
         <ul class="userProfileNumbers">
           <li>
             <strong v-html="postList.length" />
-            게시물
+            <span>게시물</span>
           </li>
           <li>
             <strong v-html="user.profile.followers" />
-            팔로워
+            <span>팔로워</span>
           </li>
           <li>
             <strong v-html="user.profile.following" />
-            팔로잉
+            <span>팔로잉</span>
           </li>
         </ul>
       </header>
@@ -131,6 +131,35 @@ export default class User extends Vue {
       text-align: center;
       vertical-align: bottom;
       margin-right: 5px
+    }
+
+    &Numbers {
+      display: flex;
+      justify-content: space-between;
+      width: 250px;
+      margin-left: 100px;
+
+      li {
+        list-style: none;
+        text-align: center;
+      }
+
+      strong {
+        @include circle(50px);
+        display: block;
+        border: 1px solid #bebebe;
+        text-align: center;
+        line-height: 50px;
+        font-weight: 400;
+        font-size: 19px;
+      }
+
+      span {
+        line-height: 1;
+        display: block;
+        font-size: 13px;
+        margin-top: 10px;
+      }
     }
   }
 }
