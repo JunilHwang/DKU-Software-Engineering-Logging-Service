@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faAt } from '@fortawesome/free-solid-svg-icons'
+import { faAt, faHome } from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-const icons = [ faAt, faGithub, faEnvelope ]
+const icons = [ faAt, faHome, faGithub, faEnvelope ]
 
 library.add(...icons)
 

@@ -6,18 +6,26 @@
           <img :src="user.profile.avatar_url" :alt="user.profile.login" width="100" />
         </figure>
         <div class="userProfileInfo">
-          <p class="userProfileName">
-            @{{ user.id }}
-          </p>
+          <div class="userProfileInfoHeader">
+            <p class="userProfileName" v-html="`@${user.id}`" />
+            <p class="userProfileBio" v-html="user.profile.bio" />
+          </div>
           <p class="userProfileEmail">
-            <fa :icon="['far', 'envelope']" /> {{ user.profile.email }}
+            <span class="userProfileIcon"><fa :icon="['far', 'envelope']" /></span>
+            {{ user.profile.email }}
           </p>
-          <a :href="user.profile.html_url" target="_blank" class="userProfileGithub">
-            <fa :icon="['fab', 'github']" /> {{ user.profile.html_url }}
-          </a>
-          <a :href="user.profile.blog" target="_blank" class="userProfileGithub">
-            <fa :icon="['fab', 'github']" /> {{ user.profile.blog }}
-          </a>
+          <p class="userProfileGithub">
+            <a :href="user.profile.html_url" target="_blank">
+              <span class="userProfileIcon"><fa :icon="['fab', 'github']" /></span>
+              {{ user.profile.html_url }}
+            </a>
+          </p>
+          <p class="userProfileHome">
+            <a :href="user.profile.blog" target="_blank" class="userProfileGithub">
+              <span class="userProfileIcon"><fa :icon="['fas', 'home']" /></span>
+              {{ user.profile.blog }}
+            </a>
+          </p>
         </div>
       </header>
       <post-list :data="postList" />
@@ -71,18 +79,15 @@ export default class User extends Vue {
 
     p {
       line-height: 1;
-      margin: 0;
+      margin: 0 0 5px;
       letter-spacing: -0.5px;
-    }
-
-    svg {
-      display: inline-block;
-      margin-right: 5px;
-      transform: translateY(1px);
     }
 
     &Info {
       margin-top: 10px;
+      &Header {
+        padding-bottom: 10px;
+      }
     }
 
     &Image {
@@ -96,13 +101,22 @@ export default class User extends Vue {
     &Name {
       font-size: 25px;
       font-weight: 300;
-      padding-bottom: 10px;
       transform: translateX(-3px);
-      color: #06F
+      color: #06F;
+      padding-bottom: 5px;
     }
 
-    &Email {
-      padding-bottom: 5px;
+    &Bio {
+      font-family: krFont();
+      color: #333;
+    }
+
+    &Icon {
+      display: inline-block;
+      width: 20px;
+      text-align: center;
+      vertical-align: bottom;
+      margin-right: 5px
     }
   }
 }
