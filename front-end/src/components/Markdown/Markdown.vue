@@ -89,6 +89,10 @@ export default class Markdown extends Vue {
       max-width: 100%
     }
 
+    hr {
+      margin: 50px 0;
+    }
+
     .header-anchor {
       float: left;
       margin-left: -0.75em;
