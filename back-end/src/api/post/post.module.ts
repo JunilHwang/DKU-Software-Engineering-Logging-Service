@@ -11,5 +11,6 @@ const PostEntity = TypeOrmModule.forFeature([ entity ])
   imports: [ PostEntity, UserModule, CacheModule.register() ],
   controllers: [ PostController ],
   providers: [ PostService ],
+  exports: [ PostService ]
 })
 export class PostModule {}

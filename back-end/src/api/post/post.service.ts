@@ -40,6 +40,10 @@ export class PostService {
     return await this.postRepository.find({ order: { idx: 'DESC' } })
   }
 
+  public async findAllByUser (writer: User): Promise<Post[]> {
+    return await this.postRepository.find({ where: { writer },  order: { idx: 'DESC' } })
+  }
+
   public async find (idx: number): Promise<Post> {
     const post = await this.postRepository.findOne(idx)
     if (post === undefined) throw new NotFoundException()
