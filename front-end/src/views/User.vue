@@ -33,11 +33,11 @@
             <span>게시물</span>
           </li>
           <li>
-            <el-button type="default" v-html="user.profile.followers" circle plain />
+            <el-button @click="open(`${user.profile.html_url}?tab=followers`)" type="default" v-html="user.profile.followers" circle plain />
             <span>팔로워</span>
           </li>
           <li>
-            <el-button type="default" v-html="user.profile.following" circle plain />
+            <el-button @click="open(`${user.profile.html_url}?tab=following`)" type="default" v-html="user.profile.following" circle plain />
             <span>팔로잉</span>
           </li>
         </ul>
@@ -75,12 +75,15 @@ export default class User extends Vue {
     this.fetchUserPost(this.$route.params.userId)
   }
 
+  open (url: string) {
+    window.open(url)
+  }
+
   created () {
     this.fetchUser(this.$route.params.userId)
     this.fetchPost()
 
     eventBus.$on('fetchPostAll', this.fetchPost)
-
   }
 
 }

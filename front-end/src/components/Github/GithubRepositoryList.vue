@@ -21,7 +21,7 @@ import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { GithubRepository } from '@Domain'
 import { FETCH_GITHUB_REPO } from '@/middleware/store/types/MutationType'
-import { eventBus } from '@/helper';
+import { eventBus } from '@/helper'
 
 @Component
 export default class RepositoryList extends Vue {
