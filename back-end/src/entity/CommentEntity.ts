@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { UserEntity as User, PostEntity as Post } from './index'
 
 @Entity()
@@ -24,4 +24,10 @@ export class CommentEntity {
 
   @ManyToOne(type => Post, post => post.comments)
   post: Post
+
+  @ManyToOne(type => CommentEntity, parent => parent.children)
+  parent: Comment
+
+  @OneToMany(type => CommentEntity, children => children.parent)
+  children: Comment[]
 }
