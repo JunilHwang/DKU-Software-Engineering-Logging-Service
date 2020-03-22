@@ -1,13 +1,12 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
-import { UserEntity as User } from './UserEntity'
+import { UserEntity as User, CommentEntity as Comment } from './index'
 
 @Entity({ name: 'post' })
 export class PostEntity {
@@ -46,4 +45,7 @@ export class PostEntity {
   @ManyToMany(type => User, { eager: true })
   @JoinTable()
   likeUsers: User[]
+
+  @ManyToMany(type => Comment, comment => comment.post, { eager: true })
+  comments: Comment[]
 }
