@@ -21,7 +21,7 @@ export class PostController {
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getPost (@Param('idx') idx: number) {
-    return await this.postService.find(idx)
+    return await this.postService.find({ idx })
   }
 
   @Post()

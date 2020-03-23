@@ -4,11 +4,12 @@ import { CommentController } from './comment.controller'
 import { PostModule } from '@/api/post/post.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { CommentEntity as entity } from '@/entity'
+import { UserModule } from '@/api/user/user.module'
 
 const CommentEntity = TypeOrmModule.forFeature([ entity ])
 
 @Module({
-  imports: [ PostModule, CommentEntity ],
+  imports: [ PostModule, UserModule, CommentEntity ],
   providers: [ CommentService ],
   controllers: [ CommentController ]
 })

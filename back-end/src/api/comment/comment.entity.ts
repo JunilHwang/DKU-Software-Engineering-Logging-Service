@@ -2,26 +2,20 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColum
 import { UserEntity as User, PostEntity as Post } from '@/entity'
 
 @Entity({ name: 'comment' })
-@Tree("nested-set")
+@Tree("closure-table")
 export class CommentEntity {
 
   @PrimaryGeneratedColumn()
   idx: number
 
-  @Column()
+  @Column({ name: 'created_at' })
   createdAt: number
-
-  @Column()
-  depth: number
-
-  @Column()
-  od: number
 
   @Column({ type: "text" })
   content: string
 
   @ManyToOne(type => User)
-  @JoinTable()
+  @JoinColumn({ name: 'writer' })
   writer: User
 
   @ManyToOne(type => Post)
