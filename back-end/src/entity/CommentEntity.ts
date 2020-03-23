@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import { UserEntity as User, PostEntity as Post } from './index'
 
-@Entity()
+@Entity({ name: 'comment' })
 @Tree("nested-set")
 export class CommentEntity {
 
@@ -35,7 +35,7 @@ export class CommentEntity {
   writer: User
 
   @ManyToOne(type => Post)
-  @JoinColumn()
+  @JoinColumn({ name: 'post' })
   post: Promise<Post>
 
   @TreeChildren()

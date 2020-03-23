@@ -1,12 +1,5 @@
-import {
-  Column,
-  Entity, JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne, OneToMany,
-  PrimaryGeneratedColumn
-} from 'typeorm'
-import { UserEntity as User, CommentEntity as Comment } from './index'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { UserEntity as User } from './index'
 
 @Entity({ name: 'post' })
 export class PostEntity {
@@ -44,7 +37,7 @@ export class PostEntity {
 
   @ManyToMany(type => User, { eager: true })
   @JoinTable({
-    name: 'likes',
+    name: 'like',
     joinColumn: {
       name: 'post',
       referencedColumnName: 'idx'
