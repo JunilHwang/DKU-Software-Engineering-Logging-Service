@@ -1,14 +1,14 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from "typeorm";
 import { UserEntity as User, PostEntity as Post } from '@/entity'
 
 @Entity({ name: 'comment' })
-@Tree("closure-table")
+@Tree("materialized-path")
 export class CommentEntity {
 
   @PrimaryGeneratedColumn()
-  idx: number
+  id: number
 
-  @Column({ name: 'created_at' })
+  @Column({ name: 'created_at', type: 'bigint' })
   createdAt: number
 
   @Column({ type: "text" })

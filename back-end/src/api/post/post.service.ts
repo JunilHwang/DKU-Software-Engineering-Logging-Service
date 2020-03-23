@@ -25,7 +25,7 @@ export class PostService {
     post.sha = sha
     post.repository = repository
     post.writer = writer
-    post.createdAt = post.updatedAt = Date.now()
+    post.createdAt = Date.now()
     post.description = description
     post.thumbnail = isThumbnail ? sha : ''
 

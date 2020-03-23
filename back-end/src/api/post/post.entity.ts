@@ -1,5 +1,5 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { UserEntity as User } from '@/entity'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from 'typeorm'
+import { CommentEntity as Comment, UserEntity as User} from '@/entity'
 
 @Entity({ name: 'post' })
 export class PostEntity {
@@ -24,9 +24,6 @@ export class PostEntity {
 
   @Column({ name: 'created_at', type: 'bigint' })
   createdAt: number
-
-  @Column({ name: 'updated_at', type: 'bigint' })
-  updatedAt: number
 
   @Column()
   thumbnail: string

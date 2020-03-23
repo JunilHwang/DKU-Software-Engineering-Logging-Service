@@ -14,17 +14,17 @@ export class CommentController {
 
   @Get('comments/:post')
   async getComments (@Param('post') idx: number) {
-    return await this.commentService.getCommentsByPost(await this.postService.find({ idx }))
+    return await this.commentService.findCommentsByPost(await this.postService.find({ idx }))
   }
 
   @Post('comment')
   @HttpCode(HttpStatus.CREATED)
-  async createdComment (@Body() { post, content, parent }, @Request() { cookies: { access_token } }) {
+  async createdComment (@Body() { post, content, parent = null }, @Request() { cookies: { access_token } }) {
 
     await this.commentService.create({
-      writer: await this.userService.find({ access_token }),
+      content, parent,
+      writer: await this.userService.find({ idx: 1 }),
       post: await this.postService.find({ idx: post}),
-      content, parent
     })
 
   }
