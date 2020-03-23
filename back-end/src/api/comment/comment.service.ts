@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CommentEntity as Comment, PostEntity as Post } from '@/entity'
-import { Repository, TreeRepository} from 'typeorm'
+import { TreeRepository} from 'typeorm'
 
 @Injectable()
 export class CommentService {
