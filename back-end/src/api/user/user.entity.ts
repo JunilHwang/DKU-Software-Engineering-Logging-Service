@@ -1,6 +1,5 @@
-import {Column, Entity,  OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import { GithubProfile } from '@/domain/Github';
-import { PostEntity as Post } from './PostEntity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { GithubProfile } from '@/domain/Github'
 
 @Entity({ name: 'user' })
 export class UserEntity {

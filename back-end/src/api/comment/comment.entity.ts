@@ -1,15 +1,5 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Tree,
-  TreeChildren,
-  TreeParent
-} from "typeorm";
-import { UserEntity as User, PostEntity as Post } from './index'
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from "typeorm";
+import { UserEntity as User, PostEntity as Post } from '@/entity'
 
 @Entity({ name: 'comment' })
 @Tree("nested-set")

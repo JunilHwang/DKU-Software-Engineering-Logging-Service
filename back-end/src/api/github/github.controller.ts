@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  Redirect,
-  Response,
-  Request,
-  CacheTTL,
-  HttpCode,
-  HttpStatus
-} from '@nestjs/common'
+import { Controller, Get, Param, Query, Res, Request, CacheTTL, HttpCode, HttpStatus } from '@nestjs/common'
+import { Response } from 'express'
 import { GithubService } from './github.service'
 import { client_id, redirectURL } from './secret'
 import { UserService } from '@/api/user/user.service'
@@ -38,12 +28,12 @@ export class GithubController {
   }
 
   @Get('sign-in')
-  public signIn (@Response() res) {
+  public signIn (@Res() res: Response) {
     res.status(HttpStatus.MOVED_PERMANENTLY).redirect(githubAuthURL)
   }
 
   @Get('authentication')
-  public async authentication (@Query('code') code, @Response() response) {
+  public async authentication (@Query('code') code, @Res() res: Response) {
 
     const { access_token } = await this.githubService.getToken(code)
 
@@ -52,8 +42,8 @@ export class GithubController {
       access_token
     )
 
-    response.cookie('access_token', access_token, { maxAge: 1000 * 60 * 60 })
-    response.status(HttpStatus.MOVED_PERMANENTLY).redirect('/')
+    res.cookie('access_token', access_token, { maxAge: 1000 * 60 * 60 })
+    res.status(HttpStatus.MOVED_PERMANENTLY).redirect('/')
 
   }
 

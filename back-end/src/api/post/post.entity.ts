@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { UserEntity as User } from './index'
+import { UserEntity as User } from '@/entity'
 
 @Entity({ name: 'post' })
 export class PostEntity {

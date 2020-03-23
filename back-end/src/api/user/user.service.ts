@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { UserEntity } from '@/entity/UserEntity'
+import { UserEntity } from './user.entity'
 import { GithubProfile } from '@/domain/Github'
-import { Repository } from 'typeorm';
-import {PostEntity} from "@/entity";
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class UserService {
