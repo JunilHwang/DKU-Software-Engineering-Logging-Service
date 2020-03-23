@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Tree, Tr
 import { UserEntity as User, PostEntity as Post } from '@/entity'
 
 @Entity({ name: 'comment' })
-@Tree("materialized-path")
+@Tree('closure-table')
 export class CommentEntity {
 
   @PrimaryGeneratedColumn()

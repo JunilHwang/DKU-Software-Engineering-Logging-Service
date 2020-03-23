@@ -11,7 +11,8 @@ export class CommentService {
   ) {}
 
   async findCommentsByPost (post: Post): Promise<Comment[]> {
-    return await this.commentRepository.findTrees()
+    const { children } = await this.commentRepository.findDescendantsTree(await this.findRoot(post))
+    return children
   }
 
   async findRoot (post: Post): Promise<Comment> {
@@ -22,7 +23,8 @@ export class CommentService {
     rootComment.post = Promise.resolve(post)
     rootComment.content = 'rootComment'
     rootComment.createdAt = Date.now()
-    return await this.commentRepository.save(rootComment)
+    await this.commentRepository.save(rootComment)
+    return await this.findRoot(post)
   }
 
   async findParent (post: Post, parent: number|null): Promise<Comment> {
