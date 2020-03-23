@@ -22,7 +22,8 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60 * 24)
   public async getMyPosts (@Request() { cookies: { access_token } }) {
-    return await this.userService.findPosts({ access_token })
+    const writer = await this.userService.find({ access_token })
+    return await this.postService.findAllByUser(writer)
   }
 
   @Get('/:id/posts')

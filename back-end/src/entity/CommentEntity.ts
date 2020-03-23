@@ -1,7 +1,18 @@
-import {Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Tree,
+  TreeChildren,
+  TreeParent
+} from "typeorm";
 import { UserEntity as User, PostEntity as Post } from './index'
 
 @Entity()
+@Tree("nested-set")
 export class CommentEntity {
 
   @PrimaryGeneratedColumn()
@@ -24,6 +35,12 @@ export class CommentEntity {
   writer: User
 
   @ManyToOne(type => Post)
-  @JoinTable()
-  post: Post
+  @JoinColumn()
+  post: Promise<Post>
+
+  @TreeChildren()
+  children: CommentEntity[]
+
+  @TreeParent()
+  parent: CommentEntity
 }

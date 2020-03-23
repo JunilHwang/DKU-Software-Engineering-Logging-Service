@@ -1,12 +1,12 @@
 import {
   Column,
-  Entity,
+  Entity, JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  ManyToOne, OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
-import { UserEntity as User } from './UserEntity'
+import { UserEntity as User, CommentEntity as Comment } from './index'
 
 @Entity({ name: 'post' })
 export class PostEntity {
@@ -38,11 +38,21 @@ export class PostEntity {
   @Column()
   thumbnail: string
 
-  @ManyToOne(type => User, writer => writer.posts, { eager: true })
-  @JoinTable()
+  @ManyToOne(type => User, { eager: true })
+  @JoinColumn({ name: 'writer' })
   writer: User
 
   @ManyToMany(type => User, { eager: true })
-  @JoinTable()
+  @JoinTable({
+    name: 'likes',
+    joinColumn: {
+      name: 'post',
+      referencedColumnName: 'idx'
+    },
+    inverseJoinColumn: {
+      name: 'user',
+      referencedColumnName: 'idx'
+    }
+  })
   likeUsers: User[]
 }
