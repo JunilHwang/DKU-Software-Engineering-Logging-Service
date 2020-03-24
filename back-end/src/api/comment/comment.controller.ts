@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Request,
+  UnauthorizedException
+} from '@nestjs/common'
 import { CommentService } from './comment.service'
 import { PostService } from '@/api/post/post.service'
 import { UserService } from '@/api/user/user.service'
@@ -24,13 +35,17 @@ export class CommentController {
 
   @Post('comment')
   @HttpCode(HttpStatus.CREATED)
-  async createdComment (@Body() { post, content, parent = null }, @Request() { cookies: { access_token } }) {
+  async createdComment (@Body() { post: postIdx, content, parent = null }, @Request() { cookies: { access_token } }) {
 
-    await this.commentService.create({
-      content, parent,
-      writer: await this.userService.find({ idx: 1 }),
-      post: await this.postService.find({ idx: post}),
-    })
+    if ( !access_token ) throw new UnauthorizedException()
+
+    const writer = await this.userService.find({ access_token })
+    if ( !writer ) throw new UnauthorizedException()
+
+    const post = await this.postService.find({ idx: postIdx })
+    if ( !post ) throw new BadRequestException()
+
+    await this.commentService.create({ content, parent, writer, post })
 
   }
 }
