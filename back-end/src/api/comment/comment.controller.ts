@@ -17,6 +17,11 @@ export class CommentController {
     return await this.commentService.findCommentsByPost(await this.postService.find({ idx }))
   }
 
+  @Get('comment/:idx')
+  async getComment (@Param('idx') id: number) {
+    return await this.commentService.findComment({ id })
+  }
+
   @Post('comment')
   @HttpCode(HttpStatus.CREATED)
   async createdComment (@Body() { post, content, parent = null }, @Request() { cookies: { access_token } }) {

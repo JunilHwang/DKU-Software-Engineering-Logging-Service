@@ -14,7 +14,7 @@ export class CommentEntity {
   @Column({ type: "text" })
   content: string
 
-  @ManyToOne(type => User)
+  @ManyToOne(type => User, { eager: true })
   @JoinColumn({ name: 'writer' })
   writer: User
 

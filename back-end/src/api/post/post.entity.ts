@@ -25,7 +25,6 @@ export class PostEntity {
   @Column({ name: 'created_at', type: 'bigint' })
   createdAt: number
 
-  @Column()
   thumbnail: string
 
   @ManyToOne(type => User, { eager: true })

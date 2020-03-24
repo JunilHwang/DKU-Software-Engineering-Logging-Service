@@ -33,6 +33,10 @@ export class CommentService {
            : await this.commentRepository.findOne({ where: { id: parent } })
   }
 
+  async findComment (params): Promise<Comment|undefined> {
+    return await this.commentRepository.findOne(params)
+  }
+
   async create ({ post, writer, content, parent }): Promise<void> {
     const comment: Comment = new Comment()
     comment.post = Promise.resolve(post)

@@ -1,6 +1,7 @@
 <template>
   <main class="postContainer" v-if="post !== null">
     <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
+    <comment-list />
   </main>
 </template>
 
@@ -10,9 +11,9 @@ import { Action, State } from 'vuex-class'
 import { FETCH_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
-import { Markdown } from '@/components'
+import { Markdown, CommentList } from '@/components'
 
-const components = { Markdown }
+const components = { Markdown, CommentList }
 
 @Component({ components })
 export default class Post extends Vue {
