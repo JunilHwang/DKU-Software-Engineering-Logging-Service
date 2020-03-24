@@ -12,3 +12,9 @@ export const FETCH_GITHUB_CONTENT = 'github/fetchContent'
 export const ADD_POST = 'post/add'
 export const FETCH_POST = 'post/fetchOne'
 export const FETCH_POST_ALL = 'post/fetchAll'
+
+// Comment
+export const FETCH_COMMENT = 'comment/fetch'
+export const ADD_COMMENT = 'comment/add'
+export const UPDATE_COMMENT = 'comment/update'
+export const DELETE_COMMENT = 'comment/delete'
