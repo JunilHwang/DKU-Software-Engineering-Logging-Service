@@ -2,29 +2,32 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Tree, Tr
 import { UserEntity as User, PostEntity as Post } from '@/entity'
 
 @Entity({ name: 'comment' })
-@Tree('closure-table')
 export class CommentEntity {
 
   @PrimaryGeneratedColumn()
-  id: number
+  idx: number
 
-  @Column({ name: 'created_at', type: 'bigint' })
-  createdAt: number
+  @Column()
+  od: number
+
+  @Column()
+  depth: number
 
   @Column({ type: "text" })
   content: string
 
-  @ManyToOne(type => User, { eager: true })
+  @Column({ name: 'created_at', type: 'bigint' })
+  createdAt: number
+
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'writer' })
   writer: User
 
-  @ManyToOne(type => Post)
+  @ManyToOne(() => Post)
   @JoinColumn({ name: 'post' })
   post: Promise<Post>
 
-  @TreeChildren()
-  children: CommentEntity[]
-
-  @TreeParent()
-  parent: CommentEntity
+  @ManyToOne(() => CommentEntity)
+  @JoinColumn({ name: 'parent' })
+  parent: Promise<CommentEntity>
 }

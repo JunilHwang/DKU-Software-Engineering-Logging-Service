@@ -13,8 +13,8 @@ export class CommentController {
   ) {}
 
   @Get('comments/:post')
-  async getComments (@Param('post') idx: number) {
-    return await this.commentService.findCommentsByPost(await this.postService.find({ idx }))
+  async getComments (@Param('post') post: number) {
+    return await this.commentService.findCommentsByPost(post)
   }
 
   @Get('comment/:idx')

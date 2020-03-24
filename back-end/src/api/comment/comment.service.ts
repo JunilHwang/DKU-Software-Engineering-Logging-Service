@@ -10,40 +10,38 @@ export class CommentService {
     @InjectRepository(Comment) private readonly commentRepository: TreeRepository<Comment>,
   ) {}
 
-  async findCommentsByPost (post: Post): Promise<Comment[]> {
-    const { children } = await this.commentRepository.findDescendantsTree(await this.findRoot(post))
-    return children
+  findCommentsByPost (post: number): Promise<Comment[]> {
+    return this.commentRepository.find({ where: { post }, order: { od: 'ASC' } })
   }
 
-  async findRoot (post: Post): Promise<Comment> {
-    const comment: Comment|undefined = await this.commentRepository.findOne({ where: { post }, order: { id: 'ASC' } })
-    if (comment !== undefined) return comment
-
-    const rootComment = new Comment()
-    rootComment.post = Promise.resolve(post)
-    rootComment.content = 'rootComment'
-    rootComment.createdAt = Date.now()
-    await this.commentRepository.save(rootComment)
-    return await this.findRoot(post)
+  findParent (idx: number|null): Promise<Comment> {
+    return this.commentRepository.findOne({ idx })
   }
 
-  async findParent (post: Post, parent: number|null): Promise<Comment> {
-    return parent === null
-           ? await this.findRoot(post)
-           : await this.commentRepository.findOne({ where: { id: parent } })
-  }
-
-  async findComment (params): Promise<Comment|undefined> {
-    return await this.commentRepository.findOne(params)
+  findComment (params): Promise<Comment|undefined> {
+    return this.commentRepository.findOne(params)
   }
 
   async create ({ post, writer, content, parent }): Promise<void> {
+    const lastEntity: Comment|undefined = await this.commentRepository.findOne({ where: { post },  order: { od: 'DESC' } })
+    const parentEntity: Comment|undefined = await this.findParent(parent)
     const comment: Comment = new Comment()
     comment.post = Promise.resolve(post)
     comment.writer = writer
-    comment.parent = await this.findParent(post, parent)
+    comment.parent = Promise.resolve(parentEntity)
     comment.content = content
     comment.createdAt = Date.now()
+
+    if (parentEntity === undefined) {
+      comment.od = lastEntity ? lastEntity.od + 1 : 0
+      comment.depth = 0
+    } else {
+      const { od, depth } = parentEntity
+      await this.commentRepository.query(`UPDATE comment SET od =  od + 1 WHERE od > ${od}`)
+      comment.od = od + 1
+      comment.depth = depth + 1
+    }
+
 
     await this.commentRepository.save(comment)
   }
