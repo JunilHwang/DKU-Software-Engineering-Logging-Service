@@ -1,4 +1,4 @@
-import { Body, CacheTTL, Controller, Get, HttpCode, HttpStatus, Param, Post, Request } from '@nestjs/common'
+import { Body, CacheTTL, Controller, Get, HttpCode, HttpStatus, Param, Post, Request, UnauthorizedException } from '@nestjs/common'
 import { PostService } from './post.service'
 import { UserService } from '@/api/user/user.service'
 import { PostVO } from '@/domain/Post';
@@ -27,10 +27,11 @@ export class PostController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   public async createPost (@Body() postVO: PostVO, @Request() { cookies: { access_token } }) {
-    await this.postService.create(
-      await this.userService.find({ access_token }),
-      postVO
-    )
-    return true
+    if (!access_token) throw new UnauthorizedException()
+
+    const writer = await this.userService.find({ access_token })
+    if (!writer) throw new UnauthorizedException()
+
+    await this.postService.create(writer, postVO)
   }
 }
