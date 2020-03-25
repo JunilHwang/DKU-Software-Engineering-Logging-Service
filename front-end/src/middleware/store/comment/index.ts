@@ -1,8 +1,8 @@
-import {ActionContext, Module, StoreOptions} from 'vuex'
+import { ActionContext, Module } from 'vuex'
 import { CommentState, RootState } from '../types'
 import { commentService } from '@/services'
 import { FETCH_COMMENT, ADD_COMMENT, UPDATE_COMMENT, DELETE_COMMENT } from '../types'
-import { Comment } from '@Domain'
+import { Comment, CommentVO } from '@Domain'
 
 
 const state: CommentState = {
@@ -21,10 +21,10 @@ const actions = {
       commit(FETCH_COMMENT, commentList)
     })
   },
-  [ADD_COMMENT]: () => {
-
+  [ADD_COMMENT]: ({ dispatch }: ActionContext<CommentState, RootState>, params: CommentVO) => {
+    commentService.create(params).then(() => dispatch(FETCH_COMMENT, params.post))
   },
-  [UPDATE_COMMENT]: () => {
+  [UPDATE_COMMENT]: ({ dispatch }: ActionContext<CommentState, RootState>, params: CommentVO) => {
 
   },
   [DELETE_COMMENT]: () => {
