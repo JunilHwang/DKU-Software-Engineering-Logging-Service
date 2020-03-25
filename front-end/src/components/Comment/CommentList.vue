@@ -6,8 +6,10 @@
     <article
       v-for="{ idx, depth, content, writer: { id, profile: { avatar_url } }, createdAt } in commentList"
       :key="idx"
-      :style="{ paddingLeft: `${depth * 20}px` }"
+      :style="{ marginLeft: `${depth * 20}px` }"
+      :class="{ reply: depth > 0 }"
     >
+      <span class="replyIcon" />
       <ul>
         <li class="commentWriter">
           <figure>
@@ -85,8 +87,40 @@ header {
 }
 
 article {
-  border-bottom: 1px dotted #ddd;
-  padding: 20px 0;
+  padding: 20px;
+  + article {
+    border-top: 1px dotted #ddd;
+  }
+
+  &.reply {
+    border-top: none;
+    background: #f7f7f7;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 0 5px 5px 5px;
+    position: relative;
+  }
+
+  .replyIcon {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: -20px;
+    width: 20px;
+    height: 20px;
+    background: #f7f7f7;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      margin-top: -20px;
+      background: #fff;
+    }
+  }
 }
 
 figure {
