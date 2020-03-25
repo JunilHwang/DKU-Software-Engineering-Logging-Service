@@ -7,7 +7,7 @@
     <el-form-item prop="content" size="mini">
       <el-input type="textarea" class="commentFormTextarea" rows="3" v-model="commentDetail.content" />
     </el-form-item>
-    <el-form-item style="text-align: right;" size="small">
+    <el-form-item class="commentFormButton" size="small">
       <el-button type="primary" native-type="submit" icon="el-icon-check">작성완료</el-button>
     </el-form-item>
   </el-form>
@@ -26,9 +26,9 @@ export default class CommentForm extends Vue {
 
 <style lang="scss">
 .commentForm {
-  margin-top: 30px;
 
   h3 {
+    margin-top: 0;
     font-weight: 400;
   }
 
@@ -43,6 +43,11 @@ export default class CommentForm extends Vue {
     font-size: 15px;
     line-height: 1.6;
     background: #fcfcfc;
+  }
+
+  &Button {
+    text-align: right;
+    margin-bottom: 0 !important;
   }
 }
 </style>

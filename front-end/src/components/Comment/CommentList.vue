@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="commentList.length !== 0">
 
     <header>
       <h2><i class="el-icon-chat-round" /> 댓글 {{ commentList.length }}</h2>
@@ -20,11 +20,15 @@
           <span class="commentWriterID" v-html="id" />
         </li>
         <li class="commentCreatedAt">{{ createdAt*1 | fromNow }}</li>
+        <li class="commentEdit" v-if="userProfile !== null && userProfile.login === id">
+          <el-button type="default" size="mini" icon="el-icon-edit-outline" plain circle />
+          <el-button type="danger" size="mini" icon="el-icon-delete" plain circle />
+        </li>
       </ul>
       <div class="commentContent" v-html="content" />
     </article>
 
-    <p class="noComment" v-if="commentList.length === 0">작성된 댓글이 없습니다.</p>
+    <!--<p class="noComment" v-if="commentList.length === 0">작성된 댓글이 없습니다.</p>-->
 
   </section>
 </template>
@@ -34,7 +38,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { FETCH_COMMENT } from '@/middleware/store/types'
-import { Comment } from '@Domain'
+import { Comment, GithubProfile } from '@Domain'
 import CommentForm from './CommentForm.vue'
 
 const components = { CommentForm }
@@ -44,6 +48,7 @@ export default class CommentList extends Vue {
 
   @Action(FETCH_COMMENT) fetchComment!: ActionMethod
   @State(state => state.comment.commentList) commentList!: Comment[]
+  @State(state => state.user.profile) userProfile!: GithubProfile|null
 
   created () {
     this.fetchComment(this.$route.params.idx)
@@ -72,6 +77,10 @@ ul, li {
 
 ul {
   font-family: enFont();
+}
+
+section {
+  margin-bottom: 30px;
 }
 
 header {
@@ -130,6 +139,7 @@ article {
       margin-top: -20px;
       background: #fff;
     }
+
   }
 }
 
@@ -142,19 +152,29 @@ figure {
 }
 
 .comment {
+
   &WriterID {
     font-size: 15px;
     margin-left: 5px;
   }
+
   &CreatedAt {
     font-size: 13px;
     color: #aaa;
     margin-left: 10px;
   }
+
+  &Edit {
+    margin-left: auto
+  }
+
   &Content {
     margin-top: 10px;
     line-height: 1.5;
+    min-height: calc(15px * (1.5 * 2));
+    letter-spacing: -0.5px;
   }
+
 }
 
 .noComment {
