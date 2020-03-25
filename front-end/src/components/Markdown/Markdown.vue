@@ -43,7 +43,7 @@ export default class Markdown extends Vue {
     color: #333;
     letter-spacing: -0.5px;
 
-    h1, h2, h3, h4, h5 ,h6 {
+    h2, h3, h4, h5 ,h6 {
       margin-top: -60px;
       padding-top: 80px;
       margin-bottom: 0;
@@ -53,6 +53,7 @@ export default class Markdown extends Vue {
     }
 
     h1 {
+      margin-top: 0;
       margin-bottom: 30px;
     }
 

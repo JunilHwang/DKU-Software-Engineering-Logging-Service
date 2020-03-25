@@ -63,6 +63,7 @@ p {
     border-radius: 3px;
     box-shadow: 0 0 10px fade-out(#aaa, 1);
     transition: box-shadow 0.3s;
+    background: #fff;
 
     &:hover {
       box-shadow: 0 0 10px fade-out(#aaa, 0.7);

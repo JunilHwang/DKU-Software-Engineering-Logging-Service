@@ -67,9 +67,12 @@ ul {
 }
 
 section {
-  margin-top: 70px;
-  border-top: 1px solid #ddd;
-  padding: 30px 0 70px;
+  width: 800px;
+  margin: 20px auto 100px;
+  border-radius: 3px;
+  padding: 30px 30px 70px;
+  background: #fff;
+  box-shadow: 0 0 0 1px fade-out(#ddd, 0.5);
 
   &::before {
     content: "";

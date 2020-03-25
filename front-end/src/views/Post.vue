@@ -1,6 +1,8 @@
 <template>
-  <main class="postContainer" v-if="post !== null">
-    <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
+  <main v-if="post !== null">
+    <div class="postContainer">
+      <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
+    </div>
     <comment-list />
   </main>
 </template>
@@ -29,6 +31,10 @@ export default class Post extends Vue {
 <style lang="scss">
   .postContainer {
     width: 800px;
-    margin: 0 auto
+    padding: 30px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px fade-out(#ddd, 0.5);
   }
 </style>
