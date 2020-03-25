@@ -67,7 +67,9 @@ ul {
 }
 
 section {
-  padding: 70px 0;
+  margin-top: 70px;
+  border-top: 1px solid #ddd;
+  padding: 30px 0 70px;
 
   &::before {
     content: "";
@@ -87,7 +89,8 @@ header {
 }
 
 article {
-  padding: 20px;
+  padding: 15px;
+
   + article {
     border-top: 1px dotted #ddd;
   }
@@ -96,7 +99,7 @@ article {
     border-top: none;
     background: #f7f7f7;
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     border-radius: 0 5px 5px 5px;
     position: relative;
   }
