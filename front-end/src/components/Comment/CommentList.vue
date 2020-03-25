@@ -1,8 +1,10 @@
 <template>
   <section>
+
     <header>
-      댓글 {{ commentList.length }}
+      <h2><i class="el-icon-chat-round" /> 댓글 {{ commentList.length }}</h2>
     </header>
+
     <article
       v-for="{ idx, depth, content, writer: { id, profile: { avatar_url } }, createdAt } in commentList"
       :key="idx"
@@ -21,6 +23,9 @@
       </ul>
       <div class="commentContent" v-html="content" />
     </article>
+
+    <p class="noComment" v-if="commentList.length === 0">작성된 댓글이 없습니다.</p>
+
   </section>
 </template>
 
@@ -30,8 +35,11 @@ import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { FETCH_COMMENT } from '@/middleware/store/types'
 import { Comment } from '@Domain'
+import CommentForm from './CommentForm.vue'
 
-@Component
+const components = { CommentForm }
+
+@Component({ components })
 export default class CommentList extends Vue {
 
   @Action(FETCH_COMMENT) fetchComment!: ActionMethod
@@ -66,36 +74,32 @@ ul {
   font-family: enFont();
 }
 
-section {
-  width: 800px;
-  margin: 20px auto 100px;
-  border-radius: 3px;
-  padding: 30px 30px 70px;
-  background: #fff;
-  box-shadow: 0 0 0 1px fade-out(#ddd, 0.5);
-
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    width: 100px;
-    z-index: 10;
-    background: #f5f5f5;
-  }
+header {
+  margin-bottom: 10px;
 }
 
-header {
+h2 {
+  font-weight: 400;
+  margin: 0;
   font-size: 21px;
-  margin-bottom: 10px;
+}
+
+.el-icon-chat-round {
+  display: inline-block;
+  transform: translateY(1px);
 }
 
 article {
   padding: 15px;
+  border-top: 1px dotted #ddd;
 
-  + article {
-    border-top: 1px dotted #ddd;
+  header + & {
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+  }
+
+  &:last-child {
+    border-bottom: 1px solid #eee;
   }
 
   &.reply {
@@ -151,6 +155,15 @@ figure {
     margin-top: 10px;
     line-height: 1.5;
   }
+}
+
+.noComment {
+  text-align: center;
+  background: #fafafa;
+  padding: 30px;
+  color: #aaa;
+  border-radius: 5px;
+  border: 1px solid #eee;
 }
 
 

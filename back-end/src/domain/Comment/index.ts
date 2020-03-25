@@ -1,4 +1,4 @@
-import { Post, User } from '@/domain'
+import { Post, User } from '../index'
 
 export interface Comment {
   idx: number
