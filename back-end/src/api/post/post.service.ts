@@ -13,6 +13,8 @@ export class PostService {
   public async create (writer: User, { content, title, sha, repository, description, thumbnail }: PostVO): Promise<void> {
     const cnt = await this.postRepository.count({ sha })
 
+    console.log('cnt : ', cnt)
+
     if (cnt !== 0) {
       throw new HttpException('', HttpStatus.NO_CONTENT);
     }

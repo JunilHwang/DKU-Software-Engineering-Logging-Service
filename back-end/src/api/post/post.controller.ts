@@ -1,4 +1,16 @@
-import { Body, CacheTTL, Controller, Get, HttpCode, HttpStatus, Param, Post, Request, UnauthorizedException } from '@nestjs/common'
+import {
+  Body, CACHE_MANAGER, CacheManagerOptions, CacheStore,
+  CacheTTL,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Param,
+  Post,
+  Request,
+  UnauthorizedException
+} from '@nestjs/common'
 import { PostService } from './post.service'
 import { UserService } from '@/api/user/user.service'
 import { PostVO } from '@/domain/Post';
@@ -7,7 +19,8 @@ import { PostVO } from '@/domain/Post';
 export class PostController {
   constructor (
     private readonly postService: PostService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore
   ) {}
 
   @Get()
@@ -33,5 +46,9 @@ export class PostController {
     if (!writer) throw new UnauthorizedException()
 
     await this.postService.create(writer, postVO)
+
+    this.cacheManager.del('/api/post')
+
+    return true
   }
 }
