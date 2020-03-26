@@ -28,8 +28,6 @@
       <div class="commentContent" v-html="content" />
     </article>
 
-    <!--<p class="noComment" v-if="commentList.length === 0">작성된 댓글이 없습니다.</p>-->
-
   </section>
 </template>
 
