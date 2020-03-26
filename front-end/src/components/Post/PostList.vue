@@ -1,32 +1,28 @@
 <template>
   <section class="postWrapper">
-    <article class="postArticle" v-for="(v, k) in data" :key="k">
-      <router-link :to="`/post/${v.idx}`">
+    <article class="postArticle" v-for="{ idx, thumbnail, sha, title, description, createdAt, likeUsers, writer } in data" :key="idx">
+      <router-link :to="`/post/${idx}`">
         <figure class="postArticleThumbnail">
-          <img
-            @load="thumbnailLoad"
-            @error="thumbnailRemove"
-            :src="`/uploaded/${v.sha}`"
-            :alt="v.title" />
-          <div class="postArticleNoneThumbnail" v-show="false">
+          <img v-if="thumbnail.length" :src="`/uploaded/${sha}`" :alt="title" />
+          <div class="postArticleNoneThumbnail" v-else>
             <i class="el-icon-camera" />
             <span>No Image</span>
           </div>
         </figure>
-        <h2 class="postArticleSubject" v-html="v.title" />
-        <p class="postArticleDescription" v-html="v.description" />
+        <h2 class="postArticleSubject" v-html="title" />
+        <p class="postArticleDescription" v-html="description" />
         <div class="postArticleInfo">
-          <span class="postArticleDate">{{ v.createdAt * 1 | dateformat }}</span>
+          <span class="postArticleDate">{{ createdAt * 1 | dateformat }}</span>
           <div class="postArticleLikes">
             <fa :icon="['fas', 'heart']" />
-            <span>{{ v.likeUsers.length }}</span>
+            <span>{{ likeUsers.length }}</span>
           </div>
         </div>
-        <router-link v-if="v.writer" :to="`/user/${v.writer.id}`" class="postArticleWriter">
+        <router-link v-if="writer" :to="`/user/${writer.id}`" class="postArticleWriter">
           <figure class="postArticleWriterAvatar">
-            <img :src="`${v.writer.profile.avatar_url}&s=30`" :alt="v.writer.id">
+            <img :src="`${writer.profile.avatar_url}&s=30`" :alt="writer.id">
           </figure>
-          <span class="postArticleWriterLabel" v-html="v.writer.id" />
+          <span class="postArticleWriterLabel" v-html="writer.id" />
         </router-link>
       </router-link>
     </article>
@@ -40,15 +36,6 @@ import { Post } from '@Domain'
 @Component
 export default class PostList extends Vue {
   @Prop({ type: Array, default: () => [] }) private data!: Post[]
-
-  private thumbnailLoad ({ target }: { target: Element }) {
-    target.nextElementSibling!.remove()
-  }
-
-  private thumbnailRemove ({ target }: { target: HTMLDivElement }) {
-    target.nextElementSibling!.removeAttribute('style')
-    target.remove()
-  }
 }
 </script>
 
