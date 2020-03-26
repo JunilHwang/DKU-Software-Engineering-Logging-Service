@@ -1,4 +1,4 @@
-import { Module, VuexModule, Mutation, Action, MutationAction } from "vuex-module-decorators";
+import { Module, VuexModule, Action, MutationAction } from 'vuex-module-decorators'
 
 import { commentService } from '@/services'
 import { FETCH_COMMENT, ADD_COMMENT, UPDATE_COMMENT, DELETE_COMMENT } from '../types'
@@ -6,6 +6,7 @@ import { Comment, CommentVO } from '@Domain'
 
 @Module
 export default class CommentStore extends VuexModule {
+
   commentList: Comment[] = []
 
   @MutationAction
@@ -24,4 +25,5 @@ export default class CommentStore extends VuexModule {
 
   @Action
   [DELETE_COMMENT] () { }
+
 }

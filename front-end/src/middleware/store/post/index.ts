@@ -1,39 +1,28 @@
-import { Module, ActionContext } from 'vuex'
+import { Module, Action, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators'
 import { ADD_POST, FETCH_POST, FETCH_POST_ALL, RootState, PostState } from '../types'
 import { PostVO, Post } from "@Domain";
 import { postService } from '@/services'
 
-const state: PostState = {
-  selectedPost: null,
-  postList: []
-}
+@Module
+export default class PostModule extends VuexModule {
 
-const mutations = {
-  [FETCH_POST]: (state: PostState, selectedPost: Post) => {
-    state.selectedPost = selectedPost
-  },
-  [FETCH_POST_ALL]: (state: PostState, postList: Post[]) => {
-    state.postList = postList
-  },
-}
+  selectedPost: Post|null = null
+  postList: Post[] = []
 
-const actions = {
-  [ADD_POST]: async ({ commit }: ActionContext<PostState, RootState>, postVO: PostVO): Promise<true|undefined> => {
+  @Action
+  async [ADD_POST] (postVO: PostVO): Promise<true|undefined> {
     return await postService.create(postVO)
-  },
-  [FETCH_POST]: ({ commit }: ActionContext<PostState, RootState>, idx: number) => {
-    commit(FETCH_POST, null)
-    postService.fetch(idx).then((selectedPost: Post) => {
-      commit(FETCH_POST, selectedPost)
-    })
-  },
-  [FETCH_POST_ALL]: ({ commit }: ActionContext<PostState, RootState>) => {
-    postService.fetchAll().then((postList: Post[]) => {
-      commit(FETCH_POST_ALL, postList)
-    })
-  },
+  }
+
+  @MutationAction
+  async [FETCH_POST] (idx: number) {
+    this.selectedPost = null
+    return { selectedPost: await postService.fetch(idx) }
+  }
+
+  @MutationAction
+  async [FETCH_POST_ALL] () {
+    return { postList: await postService.fetchAll() }
+  }
+
 }
-
-const PostModule: Module<PostState, RootState> = { state, mutations, actions }
-
-export default PostModule

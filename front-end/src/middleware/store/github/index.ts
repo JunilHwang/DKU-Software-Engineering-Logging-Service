@@ -1,35 +1,17 @@
+import { Module, VuexModule,  MutationAction } from 'vuex-module-decorators'
+import { FETCH_GITHUB_REPO } from '../types'
 import { githubService } from '@/services'
-import { FETCH_GITHUB_REPO, FETCH_GITHUB_CONTENT, GithubState, RootState } from '../types'
-import { ActionContext, Module } from 'vuex'
 import { GithubRepository } from '@Domain'
 
-interface ContentPayload {
-  content: string
-  route: string
-}
+@Module
+export default class GithubModule extends VuexModule {
 
-const state: GithubState = {
-  repositories: [],
-  content: '',
-  route: '',
-}
+  repositories: GithubRepository[] = []
 
-const mutations = {
-  [FETCH_GITHUB_REPO]: (state: GithubState, repositories: Array<GithubRepository>) => {
-    state.repositories = repositories
-  },
-  [FETCH_GITHUB_CONTENT]: (state: GithubState, { content, route }: ContentPayload) => {
-    Object.assign(state, { content, route })
+  @MutationAction
+  async [FETCH_GITHUB_REPO] () {
+    const { login } = this.context.rootState.user.profile
+    return { repositories: await githubService.getRepo(login) }
   }
+
 }
-
-const actions = {
-  [FETCH_GITHUB_REPO]: ({ commit, rootState }: ActionContext<GithubState, any>) => {
-    const { login } = rootState.user.profile
-    githubService.getRepo(login).then(repositories => commit(FETCH_GITHUB_REPO, repositories))
-  }
-}
-
-const GithubModule: Module<GithubState, RootState> = { state, mutations, actions }
-
-export default GithubModule
