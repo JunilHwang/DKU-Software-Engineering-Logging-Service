@@ -1,6 +1,6 @@
-import { Module, Action, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators'
-import { ADD_POST, FETCH_POST, FETCH_POST_ALL, RootState, PostState } from '../types'
-import { PostVO, Post } from "@Domain";
+import { Module, Action, MutationAction, VuexModule } from 'vuex-module-decorators'
+import { ADD_POST, FETCH_POST, FETCH_POST_ALL } from '../types'
+import { PostVO, Post } from '@Domain'
 import { postService } from '@/services'
 
 @Module

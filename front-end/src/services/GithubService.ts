@@ -1,13 +1,13 @@
 import $http from 'axios'
-import { GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO } from '@Domain'
+import { GithubProfile, GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO } from '@Domain'
 import { responseProcessor } from '@/helper'
 
 const baseURI = '/api/github'
 
 export default Object.freeze({
 
-  async getRepo (user: string): Promise<GithubRepository[]> {
-    return (await responseProcessor<GithubRepository[]>($http.get(`${baseURI}/repo/${user}`), 200))!
+  async getRepo ({ login }: GithubProfile): Promise<GithubRepository[]> {
+    return (await responseProcessor<GithubRepository[]>($http.get(`${baseURI}/repo/${login}`), 200))!
   },
 
   async getContent (params: ContentVO): Promise<GithubContent> {
