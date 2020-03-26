@@ -3,8 +3,12 @@
     <article class="postArticle" v-for="(v, k) in data" :key="k">
       <router-link :to="`/post/${v.idx}`">
         <figure class="postArticleThumbnail">
-          <img :src="`/uploaded/${v.sha}`" :alt="v.title" v-if="v.thumbnail.length" />
-          <div class="postArticleNoneThumbnail" v-else>
+          <img
+            @load="thumbnailLoad"
+            @error="thumbnailRemove"
+            :src="`/uploaded/${v.sha}`"
+            :alt="v.title" />
+          <div class="postArticleNoneThumbnail" v-show="false">
             <i class="el-icon-camera" />
             <span>No Image</span>
           </div>
@@ -36,6 +40,15 @@ import { Post } from '@Domain'
 @Component
 export default class PostList extends Vue {
   @Prop({ type: Array, default: () => [] }) private data!: Post[]
+
+  private thumbnailLoad ({ target }: { target: Element }) {
+    target.nextElementSibling!.remove()
+  }
+
+  private thumbnailRemove ({ target }: { target: HTMLDivElement }) {
+    target.nextElementSibling!.removeAttribute('style')
+    target.remove()
+  }
 }
 </script>
 
