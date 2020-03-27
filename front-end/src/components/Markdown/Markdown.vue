@@ -55,6 +55,7 @@ export default class Markdown extends Vue {
     h1 {
       margin-top: 0;
       margin-bottom: 30px;
+      font-size: 35px;
     }
 
     h2 {
