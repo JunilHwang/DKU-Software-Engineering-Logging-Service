@@ -18,3 +18,8 @@ export const saveBlob = (blob: string, path: string) => {
   const fullPath = `${UPLOADED_PATH}/${path}`
   fs.writeFileSync(fullPath, buffer)
 }
+
+export const removeBlob = (path: string) => {
+  const fullPath = `${UPLOADED_PATH}/${path}`
+  fs.unlinkSync(fullPath)
+}

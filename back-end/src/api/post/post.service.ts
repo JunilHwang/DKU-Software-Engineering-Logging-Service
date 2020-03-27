@@ -1,9 +1,9 @@
-import {HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common'
+import {HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { PostEntity as Post, UserEntity as User } from '@/entity'
 import { PostVO } from '@/domain/Post';
-import { saveBlob } from '@/helper'
+import { saveBlob, removeBlob } from '@/helper'
 
 @Injectable()
 export class PostService {
@@ -20,7 +20,7 @@ export class PostService {
     }
 
     const post: Post = new Post()
-    const isThumbnail = thumbnail.length
+    const isThumbnail = thumbnail.length > 0
 
     post.title = title
     post.content = content
@@ -29,13 +29,18 @@ export class PostService {
     post.writer = writer
     post.createdAt = Date.now()
     post.description = description
-    post.thumbnail = isThumbnail ? sha : ''
+    post.thumbnail = isThumbnail
 
     if (isThumbnail) {
       saveBlob(thumbnail, sha)
     }
 
-    await this.postRepository.save(post)
+    try {
+      await this.postRepository.save(post)
+    } catch (e) {
+      removeBlob(sha)
+      throw new InternalServerErrorException()
+    }
   }
 
   public async findAll (): Promise<Post[]> {
