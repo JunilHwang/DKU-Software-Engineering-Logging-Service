@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component} from 'vue-property-decorator'
+  import {Vue, Component, Emit} from 'vue-property-decorator'
 import { Base64 } from 'js-base64'
 import { Markdown } from '@/components/Markdown'
 
@@ -49,9 +49,10 @@ export default class Content extends Vue {
 
   }
 
+  @Emit()
   saveEditing () {
     const { content, repository, sha } = this
-    this.$emit('save-editing', { content, repository, sha })
+    return { content, repository, sha }
   }
 }
 </script>

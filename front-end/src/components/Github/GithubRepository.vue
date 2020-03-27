@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component} from 'vue-property-decorator'
+  import {Vue, Component, Emit} from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { GithubRepository, GithubTrees, GithubTree, GithubBlob, ContentVO } from '@Domain'
 import { githubService, githubClientService } from '@/services'
@@ -85,6 +85,7 @@ export default class Repository extends Vue {
     this.showDirectory({ repo, user, sha })
   }
 
+  @Emit()
   async showContent (tree: GithubTree) {
     const { type, path, sha } = tree
     const repo: string = this.repository!.name
@@ -105,7 +106,8 @@ export default class Repository extends Vue {
     const { content }: GithubBlob = await githubService.getBlob(params)
     const route = this.route.map(({ path }) => path)
     route.push(path)
-    this.$emit('show-content', [content, route, sha])
+
+    return [content, route, sha]
   }
 
   goToPath (sha: string|null, key: number) {

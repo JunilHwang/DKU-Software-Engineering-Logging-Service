@@ -6,7 +6,7 @@
     </h3>
     <ul v-if="opened">
       <li v-for="(repository, k) in repositories" :key="k">
-        <a href="#" type="primary" @click.prevent="showContents(repository)">
+        <a href="#" type="primary" @click.prevent="showRepository(repository)">
           <i class="el-icon-unlock" />
           {{ repository.name }}
         </a>
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component} from 'vue-property-decorator'
+  import {Vue, Component, Emit} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { GithubProfile, GithubRepository } from '@Domain'
@@ -32,8 +32,9 @@ export default class RepositoryList extends Vue {
 
   private opened = false
 
-  showContents (repository: GithubRepository) {
-    this.$emit('show-repository', repository)
+  @Emit()
+  showRepository (repository: GithubRepository) {
+    return repository
   }
 
   open () {

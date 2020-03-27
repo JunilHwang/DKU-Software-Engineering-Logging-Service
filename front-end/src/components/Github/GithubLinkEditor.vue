@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-if="opened" :visible.sync="opened" title="마크다운 파일 링크 입력" width="600px">
-    <el-form :model="formData"  label-width="100px" @submit.native.prevent="previewContent" v-if="opened">
+    <el-form :model="formData"  label-width="100px" @submit.native.prevent="showContent" v-if="opened">
       <el-form-item label="링크 입력" prop="link" size="small" required autofocus>
         <el-input v-model="formData.link" />
       </el-form-item>
@@ -12,11 +12,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Emit, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { eventBus } from '@/helper'
 import { githubClientService } from '@/services'
-import { Response, GithubContent } from '@Domain'
 
 @Component
 export default class GithubLinkEditor extends Vue {
@@ -32,7 +31,8 @@ export default class GithubLinkEditor extends Vue {
     this.formData.link = ''
   }
 
-  private async previewContent () {
+  @Emit()
+  private async showContent () {
     const link: string = this.formData.link
     const type = 'error'
     const message = '유효하지 않은 링크입니다.'
@@ -65,11 +65,13 @@ export default class GithubLinkEditor extends Vue {
     const result = await githubClientService.getContent({ user, repo, path })
 
     const { content, sha } = result!
-    this.$emit('show-content', [content, [user, repo, path], sha])
+
+    return [content, [user, repo, path], sha]
   }
 
   created () {
     eventBus.$on('openLinkEditor', this.open)
   }
+
 }
 </script>
