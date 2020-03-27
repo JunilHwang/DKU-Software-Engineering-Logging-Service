@@ -8,10 +8,11 @@ export default class PostModule extends VuexModule {
 
   selectedPost: Post|null = null
   postList: Post[] = []
+  state!: { selectedPost: Post[]|null }
 
   @MutationAction
   async [FETCH_POST] (idx: number) {
-    this.selectedPost = null
+    this.state.selectedPost = null
     return { selectedPost: await postService.fetch(idx) }
   }
 

@@ -12,9 +12,7 @@ export default class UserModule extends VuexModule {
   posts: Post[] = []
   user: User|null = null
 
-  // @Mutation signIn (profile: GithubProfile) {
-  //   this.profile = profile
-  // }
+  state!: { posts: Post[], user: User|null }
 
   @Mutation [SIGN_OUT] () {
     this.profile = null
@@ -26,12 +24,12 @@ export default class UserModule extends VuexModule {
   }
 
   @MutationAction async [FETCH_USER_POST] (userId: string) {
-    this.posts = []
+    this.state.posts = []
     return { posts: await userService.getUserPosts(userId) }
   }
 
   @MutationAction async [FETCH_USER] (userId: string) {
-    this.user = null
+    this.state.user = null
     return { user: await userService.getUser(userId) }
   }
 
