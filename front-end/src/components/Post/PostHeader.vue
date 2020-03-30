@@ -4,15 +4,21 @@
       <i class="el-icon-edit" />
       {{ post.title }}
     </strong>
-    <div class="writer">
-      <router-link :to="`/user/${post.writer.id}`">
-        <figure>
-          <img :src="`${post.writer.profile.avatar_url}&s=50`" :alt="post.writer.id">
-        </figure>
-      </router-link>
-      <ul class="writerInfo">
-        <li><strong>{{ post.writer.id }}</strong></li>
-        <li><em><i class="el-icon-date" /> {{ post.createdAt * 1 | dateformat }}</em></li>
+    <div class="bottom">
+      <div class="writer">
+        <router-link :to="`/user/${post.writer.id}`">
+          <figure>
+            <img :src="`${post.writer.profile.avatar_url}&s=50`" :alt="post.writer.id">
+          </figure>
+        </router-link>
+        <ul class="writerInfo">
+          <li><strong>{{ post.writer.id }}</strong></li>
+          <li><em><i class="el-icon-date" /> {{ post.createdAt * 1 | dateformat }}</em></li>
+        </ul>
+      </div>
+      <ul>
+        <li><el-button type="default" size="mini" icon="el-icon-edit-outline" plain circle></el-button></li>
+        <li><el-button type="default" size="mini" icon="el-icon-delete" plain circle></el-button></li>
       </ul>
     </div>
   </header>
