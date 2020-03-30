@@ -14,6 +14,9 @@
         <a href="#" class="iconWrap share">
           <fa icon="share-alt" />
         </a>
+        <a href="#" class="iconWrap back" @click="$router.back()">
+          <fa icon="reply" />
+        </a>
         <a href="#" class="iconWrap edit">
           <i class="el-icon-edit-outline" />
         </a>
