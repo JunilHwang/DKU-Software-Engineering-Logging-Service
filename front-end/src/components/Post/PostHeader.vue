@@ -16,9 +16,14 @@
           <li><em><i class="el-icon-date" /> {{ post.createdAt * 1 | dateformat }}</em></li>
         </ul>
       </div>
-      <ul>
-        <li><el-button type="default" size="mini" icon="el-icon-edit-outline" plain circle></el-button></li>
-        <li><el-button type="default" size="mini" icon="el-icon-delete" plain circle></el-button></li>
+      <ul class="bottomButtons">
+        <li><el-button type="default" size="small" icon="el-icon-edit-outline" plain circle></el-button></li>
+        <li><el-button type="default" size="small" icon="el-icon-delete" plain circle></el-button></li>
+        <li>
+          <el-button type="default" size="small" @click="$router.back()" plain circle>
+            <fa icon="reply" />
+          </el-button>
+        </li>
       </ul>
     </div>
   </header>
@@ -98,6 +103,19 @@ header {
       color: #aaa;
     }
 
+  }
+}
+.bottom{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &Buttons {
+    display: flex;
+
+    li {
+      margin-left: 5px;
+    }
   }
 }
 </style>
