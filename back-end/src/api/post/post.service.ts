@@ -48,8 +48,8 @@ export class PostService {
     return await this.postViewRepository.find({ order: { idx: 'DESC' } })
   }
 
-  public async findAllByUser (writer: User): Promise<PostView[]> {
-    return await this.postViewRepository.find({ where: { writer },  order: { idx: 'DESC' } })
+  public async findAllByUser (writerId: string): Promise<PostView[]> {
+    return await this.postViewRepository.find({ where: { writerId },  order: { idx: 'DESC' } })
   }
 
   public async find (params): Promise<Post> {

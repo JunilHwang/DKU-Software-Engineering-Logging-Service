@@ -22,16 +22,15 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60 * 24)
   public async getMyPosts (@Request() { cookies: { access_token } }) {
-    const writer = await this.userService.find({ access_token })
-    return await this.postService.findAllByUser(writer)
+    const { id } = await this.userService.find({ access_token })
+    return await this.postService.findAllByUser(id)
   }
 
   @Get('/:id/posts')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60 * 24)
   public async getUserPosts (@Param('id') id: string) {
-    const writer = await this.userService.find({ id })
-    return await this.postService.findAllByUser(writer)
+    return await this.postService.findAllByUser(id)
   }
 
   @Get('/:id')
