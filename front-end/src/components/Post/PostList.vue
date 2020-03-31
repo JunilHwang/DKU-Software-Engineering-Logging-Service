@@ -1,9 +1,13 @@
 <template>
   <section class="postWrapper">
-    <article class="postArticle" v-for="{ idx, thumbnail, sha, title, description, createdAt, likeUsers, writer } in data" :key="idx">
+    <article
+      class="postArticle"
+      v-for="{ idx, thumbnail, sha, title, description, createdAt, likes, writerId, writerProfile, comments } in data"
+      :key="idx"
+    >
       <router-link :to="`/post/${idx}`">
         <figure class="postArticleThumbnail">
-          <img v-if="thumbnail.length" :src="`/uploaded/${sha}`" :alt="title" />
+          <img v-if="thumbnail" :src="`/uploaded/${sha}`" :alt="title" />
           <div class="postArticleNoneThumbnail" v-else>
             <i class="el-icon-camera" />
             <span>No Image</span>
@@ -14,15 +18,19 @@
         <div class="postArticleInfo">
           <span class="postArticleDate">{{ createdAt * 1 | dateformat }}</span>
           <div class="postArticleLikes">
-            <fa :icon="['fas', 'heart']" />
-            <span>{{ likeUsers.length }}</span>
+            <fa :icon="['fas', 'heart']" size="xs" />
+            <span>{{ likes }}</span>
+          </div>
+          <div class="postArticleComments">
+            <i class="el-icon-chat-line-round" />
+            <span>{{ comments }}</span>
           </div>
         </div>
-        <router-link v-if="writer" :to="`/user/${writer.id}`" class="postArticleWriter">
+        <router-link v-if="writerId" :to="`/user/${writerId}`" class="postArticleWriter">
           <figure class="postArticleWriterAvatar">
-            <img :src="`${writer.profile.avatar_url}&s=30`" :alt="writer.id">
+            <img :src="`${writerProfile.avatar_url}&s=30`" :alt="writerId">
           </figure>
-          <span class="postArticleWriterLabel" v-html="writer.id" />
+          <span class="postArticleWriterLabel" v-html="writerId" />
         </router-link>
       </router-link>
     </article>
@@ -31,11 +39,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Post } from '@Domain'
+import { PostView } from '@Domain'
 
 @Component
 export default class PostList extends Vue {
-  @Prop({ type: Array, default: () => [] }) private data!: Post[]
+  @Prop({ type: Array, default: () => [] }) private data!: PostView[]
 }
 </script>
 
@@ -123,12 +131,12 @@ p {
 
     &Info {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       margin: 10px 0;
     }
 
-    &Likes {
+    &Likes,
+    &Comments{
       font-size: 13px;
 
       * {
@@ -140,6 +148,14 @@ p {
         margin-left: 3px;
         transform: translateY(-1px);
       }
+    }
+
+    &Likes {
+      margin-left: auto;
+    }
+
+    &Comments {
+      margin-left: 10px;
     }
 
     &Date {
