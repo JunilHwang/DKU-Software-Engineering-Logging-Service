@@ -1,19 +1,20 @@
 import {HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { PostEntity as Post, UserEntity as User } from '@/entity'
+import { PostEntity as Post, UserEntity as User, PostViewEntity as PostView } from '@/entity'
 import { PostVO } from '@/domain/Post';
 import { saveBlob, removeBlob } from '@/helper'
 
 @Injectable()
 export class PostService {
 
-  constructor (@InjectRepository(Post) private readonly postRepository: Repository<Post>) {}
+  constructor (
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>
+  ) {}
 
   public async create (writer: User, { content, title, sha, repository, description, thumbnail }: PostVO): Promise<void> {
     const cnt = await this.postRepository.count({ sha })
-
-    console.log('cnt : ', cnt)
 
     if (cnt !== 0) {
       throw new HttpException('', HttpStatus.NO_CONTENT);
@@ -43,12 +44,12 @@ export class PostService {
     }
   }
 
-  public async findAll (): Promise<Post[]> {
-    return await this.postRepository.find({ order: { idx: 'DESC' } })
+  public async findAll (): Promise<PostView[]> {
+    return await this.postViewRepository.find({ order: { idx: 'DESC' } })
   }
 
-  public async findAllByUser (writer: User): Promise<Post[]> {
-    return await this.postRepository.find({ where: { writer },  order: { idx: 'DESC' } })
+  public async findAllByUser (writer: User): Promise<PostView[]> {
+    return await this.postViewRepository.find({ where: { writer },  order: { idx: 'DESC' } })
   }
 
   public async find (params): Promise<Post> {
