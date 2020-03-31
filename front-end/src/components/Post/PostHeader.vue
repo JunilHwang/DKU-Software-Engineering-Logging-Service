@@ -17,8 +17,8 @@
         </ul>
       </div>
       <ul class="bottomButtons">
-        <li><el-button type="default" size="small" icon="el-icon-edit-outline" plain circle></el-button></li>
-        <li><el-button type="default" size="small" icon="el-icon-delete" plain circle></el-button></li>
+        <li v-if="isWriter"><el-button type="default" size="small" icon="el-icon-edit-outline" plain circle></el-button></li>
+        <li v-if="isWriter"><el-button type="default" size="small" icon="el-icon-delete" plain circle></el-button></li>
         <li>
           <el-button type="default" size="small" @click="$router.back()" plain circle>
             <fa icon="reply" />
@@ -32,10 +32,16 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Post } from '@Domain'
+import { State } from 'vuex-class'
+import { GithubProfile } from '@Domain'
 
 @Component
 export default class PostHeader extends Vue {
   @Prop({ type: Object }) post!: Post
+  @State(state => state.user.profile) profile!: GithubProfile|null
+  get isWriter () {
+    return this.profile && this.profile.login === this.post.writer.id
+  }
 }
 </script>
 

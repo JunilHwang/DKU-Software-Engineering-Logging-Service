@@ -17,10 +17,10 @@
         <a href="#" class="iconWrap back" @click="$router.back()">
           <fa icon="reply" />
         </a>
-        <a href="#" class="iconWrap edit">
+        <a v-if="isWriter" href="#" class="iconWrap edit">
           <i class="el-icon-edit-outline" />
         </a>
-        <a href="#" class="iconWrap delete">
+        <a v-if="isWriter" href="#" class="iconWrap delete">
           <i class="el-icon-delete" />
         </a>
       </div>
@@ -45,6 +45,7 @@ import { FETCH_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, PostHeader } from '@/components'
+import { GithubProfile } from '@Domain'
 
 const components = { Markdown, CommentList, CommentForm, PostHeader }
 
@@ -52,6 +53,11 @@ const components = { Markdown, CommentList, CommentForm, PostHeader }
 export default class Post extends Vue {
   @Action(FETCH_POST) fetchPost!: ActionMethod
   @State(state => state.post.selectedPost) post!: PostType|null
+  @State(state => state.user.profile) profile!: GithubProfile|null
+
+  get isWriter () {
+    return this.profile && this.post && this.profile.login === this.post.writer.id
+  }
 
   created () {
     this.fetchPost(this.$route.params.idx)
