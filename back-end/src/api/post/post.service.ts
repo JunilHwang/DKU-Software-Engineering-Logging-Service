@@ -58,12 +58,20 @@ export class PostService {
     return post
   }
 
-  public async remove (params): Promise<void> {
+  public async delete (params): Promise<void> {
     try {
       await this.postRepository.delete(params)
     } catch (e) {
       throw new InternalServerErrorException()
     }
+  }
 
+  public async update (idx: number, postVO: PostVO): Promise<void> {
+    try {
+      const { content, title } = postVO
+      await this.postRepository.update(idx, {content, title})
+    } catch (e) {
+      throw new InternalServerErrorException()
+    }
   }
 }

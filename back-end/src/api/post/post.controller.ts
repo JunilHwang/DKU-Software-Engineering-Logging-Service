@@ -7,7 +7,7 @@ import {
   HttpStatus,
   Inject,
   Param,
-  Post,
+  Post, Put,
   Request,
   UnauthorizedException
 } from '@nestjs/common'
@@ -56,6 +56,13 @@ export class PostController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @CacheTTL(60 * 60)
   public async deletePost (@Param('idx') idx: number) {
-    return await this.postService.remove({ idx })
+    return await this.postService.delete({ idx })
+  }
+
+  @Put('/:idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @CacheTTL(60 * 60)
+  public async updatePost (@Param('idx') idx: number, @Body() postVO: PostVO) {
+    return await this.postService.update(idx, postVO)
   }
 }
