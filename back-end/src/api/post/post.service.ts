@@ -57,4 +57,13 @@ export class PostService {
     if (post === undefined) throw new NotFoundException()
     return post
   }
+
+  public async remove (params): Promise<void> {
+    try {
+      await this.postRepository.delete(params)
+    } catch (e) {
+      throw new InternalServerErrorException()
+    }
+
+  }
 }

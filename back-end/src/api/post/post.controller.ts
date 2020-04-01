@@ -1,7 +1,7 @@
 import {
   Body, CACHE_MANAGER, CacheManagerOptions, CacheStore,
   CacheTTL,
-  Controller,
+  Controller, Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -50,5 +50,12 @@ export class PostController {
     this.cacheManager.del('/api/post')
 
     return true
+  }
+
+  @Delete('/:idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @CacheTTL(60 * 60)
+  public async deletePost (@Param('idx') idx: number) {
+    return await this.postService.remove({ idx })
   }
 }
