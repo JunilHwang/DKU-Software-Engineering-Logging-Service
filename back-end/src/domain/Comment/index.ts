@@ -7,6 +7,7 @@ export interface Comment {
   content: string
   createdAt: number
   writer: User
+  deleted: boolean
   parent?: Comment
   post?: Post
 }

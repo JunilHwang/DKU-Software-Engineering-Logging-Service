@@ -1,18 +1,19 @@
 import {
   BadRequestException,
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  Post,
+  Post, Put,
   Request,
   UnauthorizedException
 } from '@nestjs/common'
 import { CommentService } from './comment.service'
 import { PostService } from '@/api/post/post.service'
 import { UserService } from '@/api/user/user.service'
+import { CommentVO} from '@/domain'
 
 @Controller('/api')
 export class CommentController {
@@ -47,5 +48,17 @@ export class CommentController {
 
     await this.commentService.create({ content, parent, writer, post })
 
+  }
+
+  @Put(':idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO) {
+    await this.commentService.update(idx, commentVO)
+  }
+
+  @Delete(':idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteComment (@Param('idx') idx: number) {
+    await this.commentService.delete({ idx })
   }
 }

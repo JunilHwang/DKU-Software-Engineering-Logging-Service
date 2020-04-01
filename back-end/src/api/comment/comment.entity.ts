@@ -19,6 +19,9 @@ export class CommentEntity {
   @Column({ name: 'created_at', type: 'bigint' })
   createdAt: number
 
+  @Column({ type: 'boolean', default: false })
+  deleted: boolean
+
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'writer' })
   writer: User

@@ -1,4 +1,11 @@
-import {HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common'
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { PostEntity as Post, UserEntity as User, PostViewEntity as PostView } from '@/entity'
@@ -62,16 +69,15 @@ export class PostService {
     try {
       await this.postRepository.delete(params)
     } catch (e) {
-      throw new InternalServerErrorException()
+      throw new BadRequestException()
     }
   }
 
-  public async update (idx: number, postVO: PostVO): Promise<void> {
+  public async update (idx: number, { content, title }: PostVO): Promise<void> {
     try {
-      const { content, title } = postVO
-      await this.postRepository.update(idx, {content, title})
+      await this.postRepository.update(idx, { content, title })
     } catch (e) {
-      throw new InternalServerErrorException()
+      throw new BadRequestException()
     }
   }
 }

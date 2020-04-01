@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common'
+import { BadGatewayException, BadRequestException, Catch, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CommentEntity as Comment, PostEntity as Post } from '@/entity'
+import { CommentEntity as Comment } from '@/entity'
 import { TreeRepository} from 'typeorm'
+import { CommentVO } from '@/domain'
 
 @Injectable()
+@Catch(BadRequestException)
 export class CommentService {
 
   constructor (
@@ -23,8 +25,8 @@ export class CommentService {
   }
 
   async create ({ post, writer, content, parent }): Promise<void> {
-    const lastEntity: Comment|undefined = await this.commentRepository.findOne({ where: { post },  order: { od: 'DESC' } })
-    const parentEntity: Comment|undefined = await this.findParent(parent)
+    const lastEntity: Comment | undefined = await this.commentRepository.findOne({where: {post}, order: {od: 'DESC'}})
+    const parentEntity: Comment | undefined = await this.findParent(parent)
     const comment: Comment = new Comment()
     comment.post = Promise.resolve(post)
     comment.writer = writer
@@ -36,13 +38,26 @@ export class CommentService {
       comment.od = lastEntity ? lastEntity.od + 1 : 0
       comment.depth = 0
     } else {
-      const { od, depth } = parentEntity
+      const {od, depth} = parentEntity
       await this.commentRepository.query(`UPDATE comment SET od =  od + 1 WHERE od > ${od}`)
       comment.od = od + 1
       comment.depth = depth + 1
     }
 
-
     await this.commentRepository.save(comment)
+  }
+
+  async update (idx: number, { content }: CommentVO) {
+    await this.commentRepository.update(idx, { content })
+  }
+
+  async delete (params): Promise<void> {
+    const { idx: parent } = await this.commentRepository.findOne({ where: params })
+    const count: number = await this.commentRepository.count({ where: { parent } })
+    if (count === 0) {
+      await this.commentRepository.delete(params)
+    } else {
+      await this.commentRepository.update(params, { deleted: true })
+    }
   }
 }
