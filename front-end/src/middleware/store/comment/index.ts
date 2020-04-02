@@ -1,4 +1,4 @@
-import { Module, VuexModule, Action, MutationAction } from 'vuex-module-decorators'
+import {Module, VuexModule, Action, MutationAction, Mutation} from 'vuex-module-decorators'
 
 import { commentService } from '@/services'
 import { FETCH_COMMENT, ADD_COMMENT, UPDATE_COMMENT, DELETE_COMMENT } from '../types'
@@ -8,6 +8,12 @@ import { Comment, CommentVO } from '@Domain'
 export default class CommentStore extends VuexModule {
 
   commentList: Comment[] = []
+
+  @Mutation
+  delete (idx: number) {
+    const list: Comment[] = this.commentList
+    this.commentList = list.filter((v: Comment) => v.idx !== idx)
+  }
 
   @MutationAction
   async [FETCH_COMMENT] (post: number) {
@@ -23,10 +29,10 @@ export default class CommentStore extends VuexModule {
   @Action
   [UPDATE_COMMENT] () { }
 
-  @Action
+  @Action({ commit: 'delete' })
   async [DELETE_COMMENT] ({ idx, post }: { idx: number, post: number }) {
     await commentService.remove(idx)
-    await this.context.dispatch(FETCH_COMMENT, post)
+    return idx
   }
 
 }

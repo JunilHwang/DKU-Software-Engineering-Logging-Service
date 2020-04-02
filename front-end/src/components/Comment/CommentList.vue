@@ -63,11 +63,9 @@ export default class CommentList extends Vue {
   remove (idx: number): void {
     const confirmMsg: string = '정말로 삭제하시겠습니까?'
     const confirmTitle: string = '댓글 삭제'
-    const confirmOption = {
-      confirmButtonText: '확인',
-      cancelButtonText: '취소',
-      type: 'warning'
-    }
+    const confirmButtonText: string = '확인'
+    const cancelButtonText: string = '취소'
+    const type: 'warning' = 'warning'
 
     const confirmed = async (): Promise<void> => {
       const post = this.$route.params.idx
@@ -80,7 +78,7 @@ export default class CommentList extends Vue {
     }
     const cancel = () => this.$message({ type: 'info', message: '취소되었습니다.' })
 
-    this.$confirm(confirmMsg, confirmTitle, confirmOption).then(confirmed).catch(cancel)
+    this.$confirm(confirmMsg, confirmTitle, { confirmButtonText, cancelButtonText, type }).then(confirmed).catch(cancel)
   }
 
 }

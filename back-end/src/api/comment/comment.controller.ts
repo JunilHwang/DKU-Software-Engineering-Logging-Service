@@ -39,16 +39,15 @@ export class CommentController {
 
   }
 
-  @Put('/:idx')
+  @Put('/comment/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO) {
     await this.commentService.update(idx, commentVO)
   }
 
-  @Delete('/:idx')
+  @Delete('/comment/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteComment (@Param('idx') idx: number) {
-    console.log(idx)
     await this.commentService.delete({ idx })
   }
 }
