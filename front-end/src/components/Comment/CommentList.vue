@@ -35,10 +35,10 @@
 </template>
 
 <script lang="ts">
-  import {Vue, Component, Emit} from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
-  import {DELETE_COMMENT, FETCH_COMMENT} from '@/middleware/store/types'
+import { DELETE_COMMENT } from '@/middleware/store/types'
 import { Comment, GithubProfile } from '@Domain'
 import CommentForm from './CommentForm.vue'
 
@@ -46,21 +46,12 @@ const components = { CommentForm }
 
 @Component({ components })
 export default class CommentList extends Vue {
-
-  @Action(FETCH_COMMENT) fetchComment!: ActionMethod
   @Action(DELETE_COMMENT) deleteComment!: ActionMethod
+  @Prop({ type: Function }) fetchComment!: Function
   @State(state => state.comment.commentList) commentList!: Comment[]
   @State(state => state.user.profile) userProfile!: GithubProfile|null
 
-  async created (): Promise<void> {
-    try {
-      await this.fetchComment(this.$route.params.idx)
-    } catch (e) {
-      this.$message({ type: 'error', message: '댓글을 가져오는 동안 오류가 발생했습니다.' })
-    }
-  }
-
-  remove (idx: number): void {
+  private remove (idx: number): void {
     const confirmMsg: string = '정말로 삭제하시겠습니까?'
     const confirmTitle: string = '댓글 삭제'
     const confirmButtonText: string = '확인'
@@ -70,11 +61,12 @@ export default class CommentList extends Vue {
     const confirmed = async (): Promise<void> => {
       const post = this.$route.params.idx
       try {
-        await this.deleteComment({idx, post})
+        await this.deleteComment({ idx, post })
         this.$message({ type: 'success', message: '댓글이 삭제되었습니다.' })
       } catch (e) {
         this.$message({ type: 'error', message: '오류로 인하여 댓글을 삭제할 수 없습니다.' })
       }
+      await this.fetchComment()
     }
     const cancel = () => this.$message({ type: 'info', message: '취소되었습니다.' })
 

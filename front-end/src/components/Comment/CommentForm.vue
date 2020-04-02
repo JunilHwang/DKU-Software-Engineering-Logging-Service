@@ -33,7 +33,8 @@ import { ActionMethod } from 'vuex'
 export default class CommentForm extends Vue {
   @Prop({ type: String, default: '' }) content!: string
   @Prop({ type: Number, default: 0 }) parent!: number
-  @Action(ADD_COMMENT) add!: ActionMethod
+  @Prop({ type: Function }) fetchComment!: Function
+  @Action(ADD_COMMENT) addComment!: ActionMethod
   @State(state => state.user.access_token) access_token!: string|null
 
   private commentDetail = {
@@ -46,7 +47,7 @@ export default class CommentForm extends Vue {
 
   private async commentSubmit (): Promise<void> {
     try {
-      await this.add({
+      await this.addComment({
         content: this.commentDetail.content,
         parent: this.parent,
         post: parseInt(this.$route.params.idx)
@@ -56,6 +57,7 @@ export default class CommentForm extends Vue {
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 댓글을 추가할 수 없습니다.' })
     }
+    await this.fetchComment()
   }
 
   private created (): void {

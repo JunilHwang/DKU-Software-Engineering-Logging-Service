@@ -29,9 +29,9 @@
 
     <div class="contentContainer">
 
-      <comment-list />
+      <comment-list :fetch-comment="fetchComment" />
 
-      <comment-form v-if="isUser" />
+      <comment-form v-if="isUser" :fetch-comment="fetchComment" />
 
     </div>
 
@@ -41,7 +41,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import { FETCH_POST } from '@/middleware/store/types'
+import {FETCH_COMMENT, FETCH_POST} from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, PostHeader } from '@/components'
@@ -51,24 +51,39 @@ const components = { Markdown, CommentList, CommentForm, PostHeader }
 
 @Component({ components })
 export default class Post extends Vue {
-  @Action(FETCH_POST) fetchPost!: ActionMethod
+  @Action(FETCH_POST) fetchPostAction!: ActionMethod
+  @Action(FETCH_COMMENT) fetchCommentAction!: ActionMethod
   @State(state => state.post.selectedPost) post!: PostType|null
   @State(state => state.user.profile) profile!: GithubProfile|null
 
-  get isWriter () {
+  private get isWriter () {
     return this.profile && this.post && this.profile.login === this.post.writer.id
   }
 
-  get isUser () {
+  private get isUser () {
     return this.profile !== null
   }
 
-  async created () {
+  private async fetchPost () {
     try {
-      await this.fetchPost(this.$route.params.idx)
+      await this.fetchPostAction(this.$route.params.idx)
+      console.log(this.$route.params.idx)
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
     }
+  }
+
+  private async fetchComment () {
+    try {
+      await this.fetchCommentAction(this.$route.params.idx)
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
+    }
+  }
+
+  private created () {
+    this.fetchPost()
+    this.fetchComment()
   }
 }
 </script>
