@@ -59,8 +59,12 @@ export default class Post extends Vue {
     return this.profile && this.post && this.profile.login === this.post.writer.id
   }
 
-  created () {
-    this.fetchPost(this.$route.params.idx)
+  async created () {
+    try {
+      await this.fetchPost(this.$route.params.idx)
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
+    }
   }
 }
 </script>

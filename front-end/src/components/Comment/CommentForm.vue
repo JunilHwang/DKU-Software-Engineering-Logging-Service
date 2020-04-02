@@ -1,5 +1,5 @@
 <template>
-  <el-form class="commentForm" :model="commentDetail">
+  <el-form v-if="access_token !== null" class="commentForm" :model="commentDetail" @submit.native.prevent="commentSubmit">
     <h3>
       <i class="el-icon-chat-dot-round" />
       댓글 작성
@@ -14,12 +14,37 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import {Action, State} from 'vuex-class'
+import { ADD_COMMENT } from '@/middleware/store/types'
+import { ActionMethod } from 'vuex'
 
 @Component
 export default class CommentForm extends Vue {
+  @Prop({ type: String, default: '' }) content!: string
+  @Prop({ type: Number, default: 0 }) parent!: number
+  @Action(ADD_COMMENT) add!: ActionMethod
+  @State(state => state.user.access_token) access_token!: string|null
+
+
   private commentDetail = {
     content: ''
+  }
+
+  private async commentSubmit () {
+    try {
+      await this.add({
+        content: this.commentDetail.content,
+        parent: this.parent,
+        post: parseInt(this.$route.params.post)
+      })
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 댓글을 추가할 수 없습니다.' })
+    }
+  }
+
+  private created () {
+    this.commentDetail.content = this.content
   }
 }
 </script>

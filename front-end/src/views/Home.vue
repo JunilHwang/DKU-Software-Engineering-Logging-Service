@@ -23,8 +23,12 @@ export default class Home extends Vue {
   @State(state => state.post.postList) postList!: Post[]
   @Action(FETCH_POST_ALL) fetchAll!: ActionMethod
 
-  created () {
-    this.fetchAll()
+  async created () {
+    try {
+      await this.fetchAll()
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 포스트 목록을 가져올 수 없습니다.' })
+    }
 
     eventBus.$on('fetchPostAll', this.fetchAll)
 

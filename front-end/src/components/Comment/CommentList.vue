@@ -1,5 +1,5 @@
 <template>
-  <section v-if="commentList.length !== 0">
+  <section>
 
     <header>
       <h2><i class="el-icon-chat-round" /> 댓글 {{ commentList.length }}</h2>
@@ -27,6 +27,9 @@
       </ul>
       <div class="commentContent" v-html="content" />
     </article>
+    <p v-if="commentList.length === 0">
+      작성된 댓글이 없습니다.
+    </p>
 
   </section>
 </template>
@@ -48,8 +51,12 @@ export default class CommentList extends Vue {
   @State(state => state.comment.commentList) commentList!: Comment[]
   @State(state => state.user.profile) userProfile!: GithubProfile|null
 
-  created () {
-    this.fetchComment(this.$route.params.idx)
+  async created () {
+    try {
+      await this.fetchComment(this.$route.params.idx)
+    } catch (e) {
+      this.$message({ type: 'error', message: '댓글을 가져오는 동안 오류가 발생했습니다.' })
+    }
   }
 
 }

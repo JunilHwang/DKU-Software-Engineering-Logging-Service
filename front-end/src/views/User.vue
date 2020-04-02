@@ -66,13 +66,21 @@ export default class User extends Vue {
   @Action(FETCH_USER_POST) fetchUserPost!: ActionMethod
   @Action(FETCH_USER) fetchUser!: ActionMethod
 
-  @Watch('$route.path') onRoutePath () {
-    this.fetchUser(this.$route.params.userId)
-    this.fetchPost()
+  @Watch('$route.path') async onRoutePath () {
+    try {
+      await this.fetchUser(this.$route.params.userId)
+      this.fetchPost()
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 사용자 정보를 가져올 수 없습니다.' })
+    }
   }
 
-  fetchPost () {
-    this.fetchUserPost(this.$route.params.userId)
+  async fetchPost () {
+    try {
+      await this.fetchUserPost(this.$route.params.userId)
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 사용자의 포스트를 가져올 수 없습니다.' })
+    }
   }
 
   windowOpen (url: string) {

@@ -26,9 +26,15 @@ export default class App extends Vue {
 
   @Action(SIGN_IN) signIn: ActionMethod | undefined
 
-  created () {
-    const { token, signIn } = this
-    token && signIn && signIn(token)
+  async created () {
+    try {
+      const {token, signIn} = this
+      token
+      && signIn
+      && await signIn(token)
+    } catch (e) {
+      this.$message({ type: 'error', message: '로그인을 하는 동안 오류가 발생했습니다.' })
+    }
   }
 }
 </script>
