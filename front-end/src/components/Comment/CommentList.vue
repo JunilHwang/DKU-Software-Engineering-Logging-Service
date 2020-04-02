@@ -6,13 +6,13 @@
     </header>
 
     <article
-      v-for="{ idx, depth, content, writer: { id, profile: { avatar_url } }, createdAt, deleted } in commentList"
+      v-for="{ idx, depth, content, writer: { id, profile: { avatar_url } }, createdAt } in commentList"
       :key="idx"
       :style="{ marginLeft: `${depth * 20}px` }"
       :class="{ reply: depth > 0 }"
     >
       <span class="replyIcon" />
-      <ul v-if="!deleted">
+      <ul>
         <li class="commentWriter">
           <figure>
             <img :src="`${avatar_url}&s=30`" :alt="id">
@@ -25,7 +25,7 @@
           <el-button type="danger" @click="remove(idx)" size="mini" icon="el-icon-delete" plain circle />
         </li>
       </ul>
-      <div class="commentContent" v-html="deleted ? '삭제된 댓글입니다.' : content" />
+      <div class="commentContent" v-html="content" />
     </article>
     <p class="noComment" v-if="commentList.length === 0">
       작성된 댓글이 없습니다.
@@ -56,6 +56,13 @@ export default class CommentList extends Vue {
     const confirmButtonText: string = '확인'
     const cancelButtonText: string = '취소'
     const type: 'warning' = 'warning'
+
+    const isChildren = this.commentList.find(v => v.parent === idx)
+    console.log(isChildren)
+    if (isChildren) {
+      this.$message({ type: 'warning', message: '답글이 있는 댓글은 삭제할 수 없습니다.' })
+      return
+    }
 
     const confirmed = async (): Promise<void> => {
       const post = this.$route.params.idx

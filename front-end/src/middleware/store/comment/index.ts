@@ -22,7 +22,6 @@ export default class CommentStore extends VuexModule {
   @MutationAction
   async [DELETE_COMMENT] ({ idx, post }: { idx: number, post: number }) {
     return { commentList: await commentService.remove(idx) }
-
   }
 
   @Action

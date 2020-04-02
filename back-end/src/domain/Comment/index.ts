@@ -8,8 +8,8 @@ export interface Comment {
   createdAt: number
   writer: User
   deleted: boolean
-  parent?: Comment
-  post?: Post
+  parent: number
+  post: number
 }
 
 export interface CommentVO {
