@@ -1,11 +1,11 @@
-import { BadGatewayException, BadRequestException, Catch, Injectable } from '@nestjs/common'
+import { Catch, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CommentEntity as Comment } from '@/entity'
 import { TreeRepository} from 'typeorm'
 import { CommentVO } from '@/domain'
 
 @Injectable()
-@Catch(BadRequestException)
+@Catch(InternalServerErrorException)
 export class CommentService {
 
   constructor (

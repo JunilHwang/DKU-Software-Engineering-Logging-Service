@@ -48,6 +48,7 @@ export class CommentController {
   @Delete('/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteComment (@Param('idx') idx: number) {
+    console.log(idx)
     await this.commentService.delete({ idx })
   }
 }

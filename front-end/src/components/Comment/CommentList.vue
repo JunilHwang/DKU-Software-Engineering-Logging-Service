@@ -6,13 +6,13 @@
     </header>
 
     <article
-      v-for="{ idx, depth, content, writer: { id, profile: { avatar_url } }, createdAt } in commentList"
+      v-for="{ idx, depth, content, writer: { id, profile: { avatar_url } }, createdAt, deleted } in commentList"
       :key="idx"
       :style="{ marginLeft: `${depth * 20}px` }"
       :class="{ reply: depth > 0 }"
     >
       <span class="replyIcon" />
-      <ul>
+      <ul v-if="!deleted">
         <li class="commentWriter">
           <figure>
             <img :src="`${avatar_url}&s=30`" :alt="id">
@@ -22,10 +22,10 @@
         <li class="commentCreatedAt">{{ createdAt*1 | fromNow }}</li>
         <li class="commentEdit" v-if="userProfile !== null && userProfile.login === id">
           <el-button type="default" size="mini" icon="el-icon-edit-outline" plain circle />
-          <el-button type="danger" size="mini" icon="el-icon-delete" plain circle />
+          <el-button type="danger" @click="remove(idx)" size="mini" icon="el-icon-delete" plain circle />
         </li>
       </ul>
-      <div class="commentContent" v-html="content" />
+      <div class="commentContent" v-html="deleted ? '삭제된 댓글입니다.' : content" />
     </article>
     <p class="noComment" v-if="commentList.length === 0">
       작성된 댓글이 없습니다.
@@ -35,10 +35,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+  import {Vue, Component, Emit} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
-import { FETCH_COMMENT } from '@/middleware/store/types'
+  import {DELETE_COMMENT, FETCH_COMMENT} from '@/middleware/store/types'
 import { Comment, GithubProfile } from '@Domain'
 import CommentForm from './CommentForm.vue'
 
@@ -48,15 +48,39 @@ const components = { CommentForm }
 export default class CommentList extends Vue {
 
   @Action(FETCH_COMMENT) fetchComment!: ActionMethod
+  @Action(DELETE_COMMENT) deleteComment!: ActionMethod
   @State(state => state.comment.commentList) commentList!: Comment[]
   @State(state => state.user.profile) userProfile!: GithubProfile|null
 
-  async created () {
+  async created (): Promise<void> {
     try {
       await this.fetchComment(this.$route.params.idx)
     } catch (e) {
       this.$message({ type: 'error', message: '댓글을 가져오는 동안 오류가 발생했습니다.' })
     }
+  }
+
+  remove (idx: number): void {
+    const confirmMsg: string = '정말로 삭제하시겠습니까?'
+    const confirmTitle: string = '댓글 삭제'
+    const confirmOption = {
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+      type: 'warning'
+    }
+
+    const confirmed = async (): Promise<void> => {
+      const post = this.$route.params.idx
+      try {
+        await this.deleteComment({idx, post})
+        this.$message({ type: 'success', message: '댓글이 삭제되었습니다.' })
+      } catch (e) {
+        this.$message({ type: 'error', message: '오류로 인하여 댓글을 삭제할 수 없습니다.' })
+      }
+    }
+    const cancel = () => this.$message({ type: 'info', message: '취소되었습니다.' })
+
+    this.$confirm(confirmMsg, confirmTitle, confirmOption).then(confirmed).catch(cancel)
   }
 
 }

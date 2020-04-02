@@ -24,6 +24,9 @@ export default class CommentStore extends VuexModule {
   [UPDATE_COMMENT] () { }
 
   @Action
-  [DELETE_COMMENT] () { }
+  async [DELETE_COMMENT] ({ idx, post }: { idx: number, post: number }) {
+    await commentService.remove(idx)
+    await this.context.dispatch(FETCH_COMMENT, post)
+  }
 
 }
