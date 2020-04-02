@@ -29,9 +29,9 @@
 
     <div class="contentContainer">
 
-      <comment-list :fetch-comment="fetchComment" />
+      <comment-list @fetch-comment="fetchComment" />
 
-      <comment-form v-if="isUser" :fetch-comment="fetchComment" />
+      <comment-form v-if="isUser" @fetch-comment="fetchComment" />
 
     </div>
 
@@ -67,7 +67,6 @@ export default class Post extends Vue {
   private async fetchPost () {
     try {
       await this.fetchPostAction(this.$route.params.idx)
-      console.log(this.$route.params.idx)
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
     }

@@ -2,7 +2,8 @@ import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatu
 import { CommentService } from './comment.service'
 import { PostService } from '@/api/post/post.service'
 import { UserService } from '@/api/user/user.service'
-import { CommentVO} from '@/domain'
+import { CommentVO } from '@/domain'
+import { CommentEntity as Comment } from './comment.entity'
 
 @Controller('/api')
 export class CommentController {
@@ -14,18 +15,18 @@ export class CommentController {
   ) {}
 
   @Get('/comments/:post')
-  async getComments (@Param('post') post: number) {
+  async getComments (@Param('post') post: number): Promise<Comment[]> {
     return await this.commentService.findCommentsByPost(post)
   }
 
   @Get('/comment/:idx')
-  async getComment (@Param('idx') id: number) {
+  async getComment (@Param('idx') id: number): Promise<Comment> {
     return await this.commentService.findComment({ id })
   }
 
   @Post('/comment')
-  @HttpCode(HttpStatus.CREATED)
-  async createdComment (@Body() { post, content, parent }, @Request() { cookies: { access_token } }) {
+  @HttpCode(HttpStatus.OK)
+  async createdComment (@Body() { post, content, parent }, @Request() { cookies: { access_token } }): Promise<Comment[]> {
 
     if ( !access_token ) throw new UnauthorizedException()
 
@@ -36,18 +37,21 @@ export class CommentController {
     if ( !postEntity ) throw new BadRequestException()
 
     await this.commentService.create({ content, parent, writer, post: postEntity })
-
+    return await this.commentService.findCommentsByPost(post)
   }
 
   @Put('/comment/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO) {
+  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO): Promise<void> {
     await this.commentService.update(idx, commentVO)
   }
 
   @Delete('/comment/:idx')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteComment (@Param('idx') idx: number) {
+  @HttpCode(HttpStatus.OK)
+  async deleteComment (@Param('idx') idx: number): Promise<Comment[]> {
+    const comment: Comment = await this.commentService.findComment({ idx })
+    const post = await comment.post
     await this.commentService.delete({ idx })
+    return await this.commentService.findCommentsByPost(post.idx)
   }
 }

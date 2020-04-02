@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Emit } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { DELETE_COMMENT } from '@/middleware/store/types'
@@ -47,7 +47,6 @@ const components = { CommentForm }
 @Component({ components })
 export default class CommentList extends Vue {
   @Action(DELETE_COMMENT) deleteComment!: ActionMethod
-  @Prop({ type: Function }) fetchComment!: Function
   @State(state => state.comment.commentList) commentList!: Comment[]
   @State(state => state.user.profile) userProfile!: GithubProfile|null
 
@@ -66,7 +65,6 @@ export default class CommentList extends Vue {
       } catch (e) {
         this.$message({ type: 'error', message: '오류로 인하여 댓글을 삭제할 수 없습니다.' })
       }
-      await this.fetchComment()
     }
     const cancel = () => this.$message({ type: 'info', message: '취소되었습니다.' })
 

@@ -14,14 +14,15 @@ export default class CommentStore extends VuexModule {
     return { commentList: await commentService.findCommentByPost(post) }
   }
 
-  @Action
+  @MutationAction
   async [ADD_COMMENT] (params: CommentVO) {
-    await commentService.create(params)
+    return { commentList: await commentService.create(params) }
   }
 
-  @Action({ commit: 'delete' })
+  @MutationAction
   async [DELETE_COMMENT] ({ idx, post }: { idx: number, post: number }) {
-    await commentService.remove(idx)
+    return { commentList: await commentService.remove(idx) }
+
   }
 
   @Action

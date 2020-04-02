@@ -10,11 +10,11 @@ export default Object.freeze({
     return (await responseProcessor<Comment[]>($http.get(`${baseURI}s/${postIdx}`), 200))!
   },
 
-  async create (params: CommentVO): Promise<void> {
-    return (await responseProcessor<void>($http.post(baseURI, params), 201))!
+  async create (params: CommentVO): Promise<Comment[]> {
+    return (await responseProcessor<Comment[]>($http.post(baseURI, params), 200))!
   },
 
-  async remove (idx: number): Promise<void> {
-    return (await responseProcessor<void>($http.delete(`${baseURI}/${idx}`), 204))!
+  async remove (idx: number): Promise<Comment[]> {
+    return (await responseProcessor<Comment[]>($http.delete(`${baseURI}/${idx}`), 200))!
   }
 })
