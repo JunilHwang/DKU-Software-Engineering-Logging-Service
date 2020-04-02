@@ -4,7 +4,7 @@
       <i class="el-icon-chat-dot-round" />
       댓글 작성
     </h3>
-    <el-form-item prop="content" size="mini" required>
+    <el-form-item size="mini">
       <el-input
         type="textarea"
         class="commentFormTextarea"
@@ -13,7 +13,12 @@
       />
     </el-form-item>
     <el-form-item class="commentFormButton" size="small">
-      <el-button type="primary" native-type="submit" icon="el-icon-check">작성완료</el-button>
+      <el-button
+        :type="isValid ? 'primary' : 'default'"
+        :native-type="isValid ? 'submit' : 'button'"
+        icon="el-icon-check">
+        작성완료
+      </el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -35,19 +40,25 @@ export default class CommentForm extends Vue {
     content: ''
   }
 
-  private async commentSubmit () {
+  private get isValid (): boolean {
+    return this.commentDetail.content.length > 0
+  }
+
+  private async commentSubmit (): Promise<void> {
     try {
       await this.add({
         content: this.commentDetail.content,
         parent: this.parent,
-        post: parseInt(this.$route.params.post)
+        post: parseInt(this.$route.params.idx)
       })
+      this.commentDetail.content = ''
+      this.$message({ type: 'success', message: '댓글이 추가되었습니다.' })
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 댓글을 추가할 수 없습니다.' })
     }
   }
 
-  private created () {
+  private created (): void {
     this.commentDetail.content = this.content
   }
 }

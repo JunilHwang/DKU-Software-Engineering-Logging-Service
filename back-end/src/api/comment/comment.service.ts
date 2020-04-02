@@ -25,8 +25,8 @@ export class CommentService {
   }
 
   async create ({ post, writer, content, parent }): Promise<void> {
-    const lastEntity: Comment | undefined = await this.commentRepository.findOne({where: {post}, order: {od: 'DESC'}})
-    const parentEntity: Comment | undefined = await this.findParent(parent)
+    const lastEntity: Comment|undefined = await this.commentRepository.findOne({where: {post}, order: {od: 'DESC'}})
+    const parentEntity: Comment|undefined = await this.findParent(parent)
     const comment: Comment = new Comment()
     comment.post = Promise.resolve(post)
     comment.writer = writer

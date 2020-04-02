@@ -17,7 +17,7 @@ export default class CommentStore extends VuexModule {
   @Action
   async [ADD_COMMENT] (params: CommentVO) {
     await commentService.create(params)
-    this[FETCH_COMMENT](params.post)
+    await this.context.dispatch(FETCH_COMMENT, params.post)
   }
 
   @Action
