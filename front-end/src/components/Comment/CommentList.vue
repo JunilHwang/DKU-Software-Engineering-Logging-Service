@@ -27,7 +27,7 @@
       </ul>
       <div class="commentContent" v-html="content" />
     </article>
-    <p v-if="commentList.length === 0">
+    <p class="noComment" v-if="commentList.length === 0">
       작성된 댓글이 없습니다.
     </p>
 

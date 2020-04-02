@@ -31,7 +31,7 @@
 
       <comment-list />
 
-      <comment-form />
+      <comment-form v-if="isUser" />
 
     </div>
 
@@ -57,6 +57,10 @@ export default class Post extends Vue {
 
   get isWriter () {
     return this.profile && this.post && this.profile.login === this.post.writer.id
+  }
+
+  get isUser () {
+    return this.profile !== null
   }
 
   async created () {

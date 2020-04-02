@@ -1,11 +1,16 @@
 <template>
-  <el-form v-if="access_token !== null" class="commentForm" :model="commentDetail" @submit.native.prevent="commentSubmit">
+  <el-form class="commentForm" :model="commentDetail" @submit.native.prevent="commentSubmit">
     <h3>
       <i class="el-icon-chat-dot-round" />
       댓글 작성
     </h3>
-    <el-form-item prop="content" size="mini">
-      <el-input type="textarea" class="commentFormTextarea" rows="3" v-model="commentDetail.content" />
+    <el-form-item prop="content" size="mini" required>
+      <el-input
+        type="textarea"
+        class="commentFormTextarea"
+        rows="3"
+        v-model="commentDetail.content"
+      />
     </el-form-item>
     <el-form-item class="commentFormButton" size="small">
       <el-button type="primary" native-type="submit" icon="el-icon-check">작성완료</el-button>
@@ -15,7 +20,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import {Action, State} from 'vuex-class'
+import { Action, State } from 'vuex-class'
 import { ADD_COMMENT } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 
@@ -25,7 +30,6 @@ export default class CommentForm extends Vue {
   @Prop({ type: Number, default: 0 }) parent!: number
   @Action(ADD_COMMENT) add!: ActionMethod
   @State(state => state.user.access_token) access_token!: string|null
-
 
   private commentDetail = {
     content: ''
@@ -67,7 +71,7 @@ export default class CommentForm extends Vue {
     padding: 10px;
     font-size: 15px;
     line-height: 1.6;
-    background: #fcfcfc;
+    background-color: #fcfcfc;
   }
 
   &Button {
