@@ -20,8 +20,8 @@ export class CommentController {
   }
 
   @Get('/comment/:idx')
-  async getComment (@Param('idx') id: number): Promise<Comment> {
-    return await this.commentService.findComment({ id })
+  async getComment (@Param('idx') idx: number): Promise<Comment> {
+    return await this.commentService.findComment({ idx })
   }
 
   @Post('/comment')
