@@ -13,6 +13,7 @@ export const FETCH_POST_ALL = 'post/fetchAll'
 
 // Comment
 export const FETCH_COMMENT = 'comment/fetch'
+export const FETCH_ONE_COMMENT = 'comment/fetchOne'
 export const ADD_COMMENT = 'comment/add'
 export const UPDATE_COMMENT = 'comment/update'
 export const DELETE_COMMENT = 'comment/delete'

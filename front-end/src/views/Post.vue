@@ -29,9 +29,11 @@
 
     <div class="contentContainer">
 
-      <comment-list @fetch-comment="fetchComment" />
+      <comment-list @edit="editComment" />
 
-      <comment-form v-if="isUser" @fetch-comment="fetchComment" />
+      <comment-form v-if="isUser" />
+
+      <comment-dialog ref="commentDialog" />
 
     </div>
 
@@ -44,10 +46,10 @@ import { Action, State } from 'vuex-class'
 import {FETCH_COMMENT, FETCH_POST} from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
-import { Markdown, CommentList, CommentForm, PostHeader } from '@/components'
+import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader } from '@/components'
 import { GithubProfile } from '@Domain'
 
-const components = { Markdown, CommentList, CommentForm, PostHeader }
+const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader }
 
 @Component({ components })
 export default class Post extends Vue {
@@ -78,6 +80,11 @@ export default class Post extends Vue {
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
     }
+  }
+
+  private editComment (idx: number) {
+    const target: any = this.$refs.commentDialog
+    target.open(idx)
   }
 
   private created () {

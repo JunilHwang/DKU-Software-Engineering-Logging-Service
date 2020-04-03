@@ -21,7 +21,7 @@
         </li>
         <li class="commentCreatedAt">{{ createdAt*1 | fromNow }}</li>
         <li class="commentEdit" v-if="userProfile !== null && userProfile.login === id">
-          <el-button type="default" size="mini" icon="el-icon-edit-outline" plain circle />
+          <el-button type="default" @click="$emit('edit', idx)" size="mini" icon="el-icon-edit-outline" plain circle />
           <el-button type="danger" @click="remove(idx)" size="mini" icon="el-icon-delete" plain circle />
         </li>
       </ul>
@@ -30,7 +30,6 @@
     <p class="noComment" v-if="commentList.length === 0">
       작성된 댓글이 없습니다.
     </p>
-
   </section>
 </template>
 

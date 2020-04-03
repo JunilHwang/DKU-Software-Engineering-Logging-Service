@@ -10,6 +10,10 @@ export default Object.freeze({
     return (await responseProcessor<Comment[]>($http.get(`${baseURI}s/${postIdx}`), 200))!
   },
 
+  async findComment (idx: number): Promise<Comment> {
+    return (await responseProcessor<Comment>($http.get(`${baseURI}/${idx}`), 200))!
+  },
+
   async create (params: CommentVO): Promise<Comment[]> {
     return (await responseProcessor<Comment[]>($http.post(baseURI, params), 200))!
   },

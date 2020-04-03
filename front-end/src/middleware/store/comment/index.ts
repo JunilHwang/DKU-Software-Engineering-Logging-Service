@@ -1,17 +1,23 @@
 import {Module, VuexModule, Action, MutationAction, Mutation} from 'vuex-module-decorators'
 
 import { commentService } from '@/services'
-import { FETCH_COMMENT, ADD_COMMENT, UPDATE_COMMENT, DELETE_COMMENT } from '../types'
+import {FETCH_COMMENT, ADD_COMMENT, UPDATE_COMMENT, DELETE_COMMENT, FETCH_ONE_COMMENT} from '../types'
 import { Comment, CommentVO } from '@Domain'
 
 @Module
 export default class CommentStore extends VuexModule {
 
   commentList: Comment[] = []
+  selectedComment: Comment|null = null
 
   @MutationAction
   async [FETCH_COMMENT] (post: number) {
     return { commentList: await commentService.findCommentByPost(post) }
+  }
+
+  @MutationAction
+  async [FETCH_ONE_COMMENT] (idx: number) {
+    return { selectedComment: await commentService.findComment(idx) }
   }
 
   @MutationAction
