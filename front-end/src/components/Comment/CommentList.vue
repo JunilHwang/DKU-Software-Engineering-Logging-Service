@@ -25,7 +25,7 @@
           <el-button type="danger" @click="remove(idx)" size="mini" icon="el-icon-delete" plain circle />
         </li>
       </ul>
-      <div class="commentContent" v-html="content" />
+      <div class="commentContent" v-html="content.split('\n').join('<br />')" />
     </article>
     <p class="noComment" v-if="commentList.length === 0">
       작성된 댓글이 없습니다.
@@ -57,7 +57,6 @@ export default class CommentList extends Vue {
     const type: 'warning' = 'warning'
 
     const isChildren = this.commentList.find(v => v.parent === idx)
-    console.log(isChildren)
     if (isChildren) {
       this.$message({ type: 'warning', message: '답글이 있는 댓글은 삭제할 수 없습니다.' })
       return

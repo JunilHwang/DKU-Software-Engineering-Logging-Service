@@ -30,7 +30,9 @@ export default class CommentStore extends VuexModule {
     return { commentList: await commentService.remove(idx) }
   }
 
-  @Action
-  [UPDATE_COMMENT] () { }
+  @MutationAction
+  async [UPDATE_COMMENT] ({ idx, content }: { idx: number, content: string }) {
+    return { commentList: await commentService.update(idx, content) }
+  }
 
 }

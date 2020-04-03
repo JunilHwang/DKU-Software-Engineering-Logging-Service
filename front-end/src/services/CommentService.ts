@@ -18,6 +18,10 @@ export default Object.freeze({
     return (await responseProcessor<Comment[]>($http.post(baseURI, params), 200))!
   },
 
+  async update (idx: number, content: string): Promise<Comment[]> {
+    return (await responseProcessor<Comment[]>($http.put(`${baseURI}/${idx}`, { content }), 200))!
+  },
+
   async remove (idx: number): Promise<Comment[]> {
     return (await responseProcessor<Comment[]>($http.delete(`${baseURI}/${idx}`), 200))!
   }

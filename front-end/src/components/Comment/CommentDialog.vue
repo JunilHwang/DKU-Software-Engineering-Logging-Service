@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import {ADD_COMMENT, FETCH_ONE_COMMENT} from '@/middleware/store/types'
+import { UPDATE_COMMENT, FETCH_ONE_COMMENT } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Comment } from '@Domain'
 
@@ -38,7 +38,7 @@ export default class CommentForm extends Vue {
   @Prop({ type: Number, default: 0 }) parent!: number
   @State(state => state.comment.selectedComment) comment!: Comment|null
   @Action(FETCH_ONE_COMMENT) fetch!: ActionMethod
-  @Action(ADD_COMMENT) add!: ActionMethod
+  @Action(UPDATE_COMMENT) update!: ActionMethod
 
   private opened: boolean = false
   private title: string = '댓글 수정'
@@ -52,13 +52,13 @@ export default class CommentForm extends Vue {
 
   private async commentSubmit (): Promise<void> {
     try {
-      await this.add({
-        content: this.commentDetail.content,
-        parent: this.parent,
-        post: parseInt(this.$route.params.idx)
+      await this.update({
+        idx: this.comment!.idx,
+        content: this.commentDetail.content
       })
       this.commentDetail.content = ''
-      this.$message({ type: 'success', message: '댓글이 추가되었습니다.' })
+      this.$message({ type: 'success', message: '댓글이 수정되었습니다.' })
+      this.opened = false
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 댓글을 추가할 수 없습니다.' })
     }

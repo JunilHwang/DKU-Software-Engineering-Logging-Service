@@ -41,9 +41,12 @@ export class CommentController {
   }
 
   @Put('/comment/:idx')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO): Promise<void> {
+  @HttpCode(HttpStatus.OK)
+  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO): Promise<Comment[]> {
+    const comment: Comment = await this.commentService.findComment({ idx })
+    const post = await comment.post
     await this.commentService.update(idx, commentVO)
+    return await this.commentService.findCommentsByPost(post.idx)
   }
 
   @Delete('/comment/:idx')
