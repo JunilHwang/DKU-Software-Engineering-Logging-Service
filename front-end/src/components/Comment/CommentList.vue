@@ -6,10 +6,9 @@
     </header>
 
     <article
-      v-for="{ idx, depth, content, writer: { id, profile: { avatar_url } }, createdAt } in commentList"
+      v-for="{ idx, parent, content, writer: { id, profile: { avatar_url } }, createdAt } in commentList"
       :key="idx"
-      :style="{ marginLeft: `${depth * 20}px` }"
-      :class="{ reply: depth > 0 }"
+      :class="{ reply: parent }"
     >
       <span class="replyIcon" />
       <ul>
@@ -141,15 +140,14 @@ article {
   &:last-child {
     border-bottom: 1px solid #eee;
   }
-
   &.reply {
     border-top: none;
     background: #f7f7f7;
-    margin-top: 10px;
-    margin-bottom: 30px;
+    margin: 10px 0 30px 30px;
     border-radius: 0 5px 5px 5px;
     position: relative;
   }
+
 
   .replyIcon {
     display: block;
