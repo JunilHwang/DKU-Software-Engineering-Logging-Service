@@ -21,11 +21,11 @@
         </li>
         <li class="commentCreatedAt">{{ createdAt*1 | fromNow }}</li>
         <li class="commentEdit" v-if="userProfile !== null">
-          <el-button class="xMini" @click="$emit('reply', idx)" type="default" plain>
+          <el-button class="xMini" @click="$emit('open-form', { idx, type: 'reply' })" type="default" plain>
             답글
           </el-button>
           <template v-if="userProfile.login === id">
-            <el-button class="xMini" @click="$emit('edit', idx)" type="default" plain>
+            <el-button class="xMini" @click="$emit('open-form', { idx, type: 'update' })" type="default" plain>
               수정
             </el-button>
             <el-button class="xMini" @click="remove(idx)" type="danger" plain>

@@ -29,7 +29,7 @@
 
     <div class="contentContainer">
 
-      <comment-list @edit="editComment" />
+      <comment-list @open-form="openForm" />
 
       <comment-form v-if="isUser" />
 
@@ -82,9 +82,9 @@ export default class Post extends Vue {
     }
   }
 
-  private editComment (idx: number) {
+  private openForm (params: { idx: number, type: 'reply'|'update' }) {
     const target: any = this.$refs.commentDialog
-    target.open(idx)
+    target.open(params)
   }
 
   private created () {

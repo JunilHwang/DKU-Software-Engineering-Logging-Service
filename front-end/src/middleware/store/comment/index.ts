@@ -1,7 +1,7 @@
-import {Module, VuexModule, Action, MutationAction, Mutation} from 'vuex-module-decorators'
+import { Module, VuexModule, MutationAction } from 'vuex-module-decorators'
 
 import { commentService } from '@/services'
-import {FETCH_COMMENT, ADD_COMMENT, UPDATE_COMMENT, DELETE_COMMENT, FETCH_ONE_COMMENT} from '../types'
+import { FETCH_COMMENT, ADD_COMMENT, UPDATE_COMMENT, DELETE_COMMENT, FETCH_ONE_COMMENT } from '../types'
 import { Comment, CommentVO } from '@Domain'
 
 @Module

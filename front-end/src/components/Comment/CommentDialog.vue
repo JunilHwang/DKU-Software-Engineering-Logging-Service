@@ -4,7 +4,7 @@
       <i class="el-icon-chat-dot-round" />
       {{ title }}
     </h3>
-    <el-form :model="commentDetail" @submit.native.prevent="commentSubmit">
+    <el-form :model="commentDetail" ref="frm" @submit.native.prevent="commentSubmit">
       <el-form-item size="mini">
         <el-input
           type="textarea"
@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import { UPDATE_COMMENT, FETCH_ONE_COMMENT } from '@/middleware/store/types'
+import { UPDATE_COMMENT, FETCH_ONE_COMMENT, ADD_COMMENT } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Comment } from '@Domain'
 
@@ -38,6 +38,7 @@ export default class CommentForm extends Vue {
   @Prop({ type: Number, default: 0 }) parent!: number
   @State(state => state.comment.selectedComment) comment!: Comment|null
   @Action(FETCH_ONE_COMMENT) fetch!: ActionMethod
+  @Action(ADD_COMMENT) create!: ActionMethod
   @Action(UPDATE_COMMENT) update!: ActionMethod
 
   private opened: boolean = false
@@ -45,12 +46,28 @@ export default class CommentForm extends Vue {
   private commentDetail = {
     content: ''
   }
+  private type: 'reply'|'update' = 'update'
 
   private get isValid (): boolean {
     return this.commentDetail.content.length > 0
   }
 
-  private async commentSubmit (): Promise<void> {
+  private async commentReply (): Promise<void> {
+    try {
+      await this.create({
+        post: this.$route.params.idx,
+        parent: this.comment!.idx,
+        content: this.commentDetail.content
+      })
+      this.commentDetail.content = ''
+      this.$message({ type: 'success', message: '답글 작성이 완료되었습니다.' })
+      this.opened = false
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 답글 작성이 취소되었습니다.' })
+    }
+  }
+
+  private async commentUpdate (): Promise<void> {
     try {
       await this.update({
         idx: this.comment!.idx,
@@ -64,11 +81,20 @@ export default class CommentForm extends Vue {
     }
   }
 
-  public async open (idx: number) {
+  private commentSubmit () {
+    this.type === 'update'
+      ? this.commentUpdate()
+      : this.commentReply()
+  }
+
+  public async open ({ idx, type }: { idx: number, type: 'reply'|'update' }) {
+    const isUpdate = type === 'update'
     try {
       await this.fetch(idx)
       this.opened = true
-      this.commentDetail.content = this.comment!.content
+      this.type = type
+      this.title = isUpdate ? '댓글 수정' : '답글 작성'
+      this.commentDetail.content = isUpdate ? this.comment!.content : ''
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 댓글 정보를 가져올 수 없습니다.' })
     }
