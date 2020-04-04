@@ -20,9 +20,18 @@
           <span class="commentWriterID" v-html="id" />
         </li>
         <li class="commentCreatedAt">{{ createdAt*1 | fromNow }}</li>
-        <li class="commentEdit" v-if="userProfile !== null && userProfile.login === id">
-          <el-button type="default" @click="$emit('edit', idx)" size="mini" icon="el-icon-edit-outline" plain circle />
-          <el-button type="danger" @click="remove(idx)" size="mini" icon="el-icon-delete" plain circle />
+        <li class="commentEdit" v-if="userProfile !== null">
+          <el-button class="xMini" @click="$emit('reply', idx)" type="default" plain>
+            답글
+          </el-button>
+          <template v-if="userProfile.login === id">
+            <el-button class="xMini" @click="$emit('edit', idx)" type="default" plain>
+              수정
+            </el-button>
+            <el-button class="xMini" @click="remove(idx)" type="danger" plain>
+              삭제
+            </el-button>
+          </template>
         </li>
       </ul>
       <div class="commentContent" v-html="content.split('\n').join('<br />')" />
@@ -197,6 +206,9 @@ figure {
     letter-spacing: -0.5px;
   }
 
+  &Reply {
+    transform: rotateZ(180deg);
+  }
 }
 
 .noComment {
@@ -206,6 +218,11 @@ figure {
   color: #aaa;
   border-radius: 5px;
   border: 1px solid #eee;
+}
+
+.xMini {
+  padding: 5px 7px;
+  font-size: 11px;
 }
 
 
