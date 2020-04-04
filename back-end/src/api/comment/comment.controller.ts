@@ -35,7 +35,6 @@ export class CommentController {
 
     const postEntity = await this.postService.find({ idx: post })
     if ( !postEntity ) throw new BadRequestException()
-
     await this.commentService.create({ content, parent, to, writer, post: postEntity })
     return await this.commentService.findCommentsByPost(post)
   }

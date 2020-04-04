@@ -13,7 +13,7 @@ export class CommentService {
   ) {}
 
   findCommentsByPost (post: number): Promise<Comment[]> {
-    return this.commentRepository.find({ where: { post }, order: { od: 'DESC' } })
+    return this.commentRepository.find({ where: { post }, order: { od: 'ASC' } })
   }
 
   findComment (params): Promise<Comment|undefined> {
@@ -33,12 +33,12 @@ export class CommentService {
       comment.od = await this.commentRepository.count({ post })
     } else {
       comment.to = to
-      const { od }: Comment = await this.commentRepository.findOne({
-        select: [ 'od' ],
+      const last: Comment = await this.commentRepository.findOne({
         where: [ { idx: parent }, { parent } ],
         order: { od: 'DESC' }
       })
-      await this.commentRepository.query(`UPDATE comment SET od = od + 1 WHERE post = ${post} and od >= ${od};`)
+      const od: number = last.od
+      await this.commentRepository.query(`UPDATE comment SET od = od + 1 WHERE post = ${(await post).idx} and od > ${od}`)
       comment.od = od + 1
     }
 
