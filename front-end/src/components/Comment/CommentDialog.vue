@@ -54,9 +54,11 @@ export default class CommentForm extends Vue {
 
   private async commentReply (): Promise<void> {
     try {
+      const comment: Comment = this.comment!
       await this.create({
+        parent: comment.parent === 0 ? comment.idx : comment.parent,
+        to: comment.writer.id,
         post: this.$route.params.idx,
-        parent: this.comment!.idx,
         content: this.commentDetail.content
       })
       this.commentDetail.content = ''

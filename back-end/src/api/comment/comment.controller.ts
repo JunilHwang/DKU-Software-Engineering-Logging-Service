@@ -26,7 +26,7 @@ export class CommentController {
 
   @Post('/comment')
   @HttpCode(HttpStatus.OK)
-  async createdComment (@Body() { post, content, parent = 0 }, @Request() { cookies: { access_token } }): Promise<Comment[]> {
+  async createdComment (@Body() { post, content, to = '', parent = 0 }, @Request() { cookies: { access_token } }): Promise<Comment[]> {
 
     if ( !access_token ) throw new UnauthorizedException()
 
@@ -36,7 +36,7 @@ export class CommentController {
     const postEntity = await this.postService.find({ idx: post })
     if ( !postEntity ) throw new BadRequestException()
 
-    await this.commentService.create({ content, parent, writer, post: postEntity })
+    await this.commentService.create({ content, parent, to, writer, post: postEntity })
     return await this.commentService.findCommentsByPost(post)
   }
 

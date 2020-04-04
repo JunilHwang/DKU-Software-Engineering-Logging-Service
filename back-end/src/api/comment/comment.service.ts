@@ -20,7 +20,7 @@ export class CommentService {
     return this.commentRepository.findOne(params)
   }
 
-  async create ({ post, writer, content, parent }): Promise<void> {
+  async create ({ post, writer, content, parent, to }): Promise<void> {
     const comment: Comment = new Comment()
     comment.post = Promise.resolve(post)
     comment.writer = writer
@@ -30,29 +30,16 @@ export class CommentService {
     comment.content = content
 
     if (parent === 0) {
-      const last: Comment|undefined = await this.commentRepository.findOne({
-        select: [ 'od' ],
-        where: { post },
-        order: { od: 'DESC' }
-      })
-      comment.od = last !== undefined ? last.od + 1 : 0
+      comment.od = await this.commentRepository.count({ post })
     } else {
-      const parentEntity: Comment = await this.commentRepository.findOne({ idx: parent })
-      comment.to = (await parentEntity.writer).id
-
-      if (parentEntity.parent !== 0) {
-
-      }
-      const last: Comment|undefined = await this.commentRepository.findOne({
+      comment.to = to
+      const { od }: Comment = await this.commentRepository.findOne({
         select: [ 'od' ],
         where: [ { idx: parent }, { parent } ],
         order: { od: 'DESC' }
       })
-      await this.commentRepository.query(`
-        UPDATE comment SET od = od + 1 WHERE post = ${post} and od >= ${last.od};
-      `)
-      comment.od = last.od + 1
-      comment.to =
+      await this.commentRepository.query(`UPDATE comment SET od = od + 1 WHERE post = ${post} and od >= ${od};`)
+      comment.od = od + 1
     }
 
     await this.commentRepository.save(comment)
