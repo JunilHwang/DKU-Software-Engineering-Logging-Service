@@ -33,12 +33,19 @@ export class CommentService {
       comment.od = lastEntity ? lastEntity.od + 1 : 0
       comment.depth = 0
     } else {
-      const commentList: Comment[] = await this.commentRepository.find({
-        select: [ 'od', 'depth' ],
-        where: [ { idx: parent }, { parent } ]
-      })
-      const reducer = ([od, depth]: number[], v) => [ Math.max(od, v.od), Math.min(depth, v.depth) ]
-      const [od, depth]: number[] = commentList.reduce(reducer, [0, Infinity])
+      // parent로 부터 시작하는 모든 답글을 가져온다.
+      let { od, depth }: Comment = await this.findComment({ idx: parent })
+      let before: number = parent
+      do {
+        const children: Comment|undefined = await this.commentRepository.findOne({
+          select: [ 'idx', 'od' ],
+          where: [ { parent: before } ],
+          order: { od: 'DESC' },
+        })
+        if (children === undefined) break;
+        ([before, od] = [children.idx, children.od])
+      } while (true)
+
       await this.commentRepository.query(`UPDATE comment SET od =  od + 1 WHERE od > ${od}`)
       comment.od = od + 1
       comment.depth = depth + 1
