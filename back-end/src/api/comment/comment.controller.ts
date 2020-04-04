@@ -26,7 +26,7 @@ export class CommentController {
 
   @Post('/comment')
   @HttpCode(HttpStatus.OK)
-  async createdComment (@Body() { post, content, parent }, @Request() { cookies: { access_token } }): Promise<Comment[]> {
+  async createdComment (@Body() { post, content, parent = 0 }, @Request() { cookies: { access_token } }): Promise<Comment[]> {
 
     if ( !access_token ) throw new UnauthorizedException()
 

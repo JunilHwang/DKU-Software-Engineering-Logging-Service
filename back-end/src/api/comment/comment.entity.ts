@@ -10,17 +10,17 @@ export class CommentEntity {
   @Column({ default: 0 })
   parent: number
 
-  @Column()
+  @Column({ default: 0 })
   od: number
-
-  @Column()
-  depth: number
 
   @Column({ type: "text" })
   content: string
 
   @Column({ name: 'created_at', type: 'bigint' })
   createdAt: number
+
+  @Column({ default: '' })
+  to: string
 
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'writer' })

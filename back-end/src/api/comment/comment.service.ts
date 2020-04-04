@@ -13,7 +13,7 @@ export class CommentService {
   ) {}
 
   findCommentsByPost (post: number): Promise<Comment[]> {
-    return this.commentRepository.find({ where: { post }, order: { od: 'ASC' } })
+    return this.commentRepository.find({ where: { post }, order: { od: 'DESC' } })
   }
 
   findComment (params): Promise<Comment|undefined> {
@@ -21,34 +21,38 @@ export class CommentService {
   }
 
   async create ({ post, writer, content, parent }): Promise<void> {
-    const lastEntity: Comment|undefined = await this.commentRepository.findOne({ where: { post }, order: { od: 'DESC' } })
     const comment: Comment = new Comment()
     comment.post = Promise.resolve(post)
     comment.writer = writer
     comment.parent = parent
-    comment.content = content
     comment.createdAt = Date.now()
+    comment.parent = parent
+    comment.content = content
 
     if (parent === 0) {
-      comment.od = lastEntity ? lastEntity.od + 1 : 0
-      comment.depth = 0
+      const last: Comment|undefined = await this.commentRepository.findOne({
+        select: [ 'od' ],
+        where: { post },
+        order: { od: 'DESC' }
+      })
+      comment.od = last !== undefined ? last.od + 1 : 0
     } else {
-      // parent로 부터 시작하는 모든 답글을 가져온다.
-      let { od, depth }: Comment = await this.findComment({ idx: parent })
-      let before: number = parent
-      do {
-        const children: Comment|undefined = await this.commentRepository.findOne({
-          select: [ 'idx', 'od' ],
-          where: [ { parent: before } ],
-          order: { od: 'DESC' },
-        })
-        if (children === undefined) break;
-        ([before, od] = [children.idx, children.od])
-      } while (true)
+      const parentEntity: Comment = await this.commentRepository.findOne({ idx: parent })
+      comment.to = (await parentEntity.writer).id
 
-      await this.commentRepository.query(`UPDATE comment SET od =  od + 1 WHERE od > ${od}`)
-      comment.od = od + 1
-      comment.depth = depth + 1
+      if (parentEntity.parent !== 0) {
+
+      }
+      const last: Comment|undefined = await this.commentRepository.findOne({
+        select: [ 'od' ],
+        where: [ { idx: parent }, { parent } ],
+        order: { od: 'DESC' }
+      })
+      await this.commentRepository.query(`
+        UPDATE comment SET od = od + 1 WHERE post = ${post} and od >= ${last.od};
+      `)
+      comment.od = last.od + 1
+      comment.to =
     }
 
     await this.commentRepository.save(comment)
