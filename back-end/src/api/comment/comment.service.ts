@@ -33,7 +33,12 @@ export class CommentService {
       comment.od = lastEntity ? lastEntity.od + 1 : 0
       comment.depth = 0
     } else {
-      const { od, depth }: Comment = await this.commentRepository.findOne({ parent })
+      const commentList: Comment[] = await this.commentRepository.find({
+        select: [ 'od', 'depth' ],
+        where: [ { idx: parent }, { parent } ]
+      })
+      const reducer = ([od, depth]: number[], v) => [ Math.max(od, v.od), Math.min(depth, v.depth) ]
+      const [od, depth]: number[] = commentList.reduce(reducer, [0, Infinity])
       await this.commentRepository.query(`UPDATE comment SET od =  od + 1 WHERE od > ${od}`)
       comment.od = od + 1
       comment.depth = depth + 1

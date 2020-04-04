@@ -28,8 +28,6 @@ export class CommentController {
   @HttpCode(HttpStatus.OK)
   async createdComment (@Body() { post, content, parent }, @Request() { cookies: { access_token } }): Promise<Comment[]> {
 
-    console.log(post, content, parent)
-
     if ( !access_token ) throw new UnauthorizedException()
 
     const writer = await this.userService.find({ access_token })
