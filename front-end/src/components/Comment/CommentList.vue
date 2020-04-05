@@ -6,7 +6,7 @@
     </header>
 
     <article
-      v-for="{ idx, parent, content, writer: { id, profile: { avatar_url } }, createdAt } in commentList"
+      v-for="{ idx, parent, content, writer: { id, profile: { avatar_url } }, createdAt, to } in commentList"
       :key="idx"
       :class="{ reply: parent }"
     >
@@ -33,7 +33,10 @@
           </template>
         </li>
       </ul>
-      <div class="commentContent" v-html="content.split('\n').join('<br />')" />
+      <div class="commentContent">
+        <router-link class="commentReplyTo" :to="`/user/${to}`" v-if="to.length" v-html="`@${to}`" />
+        <div v-html="content.split('\n').join('<br />')" />
+      </div>
     </article>
     <p class="noComment" v-if="commentList.length === 0">
       작성된 댓글이 없습니다.
@@ -206,6 +209,13 @@ figure {
 
   &Reply {
     transform: rotateZ(180deg);
+
+    &To {
+      color: #06F;
+      float: left;
+      margin-right: 5px;
+      font-weight: 600;
+    }
   }
 }
 
