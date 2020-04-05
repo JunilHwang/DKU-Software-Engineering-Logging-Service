@@ -6,6 +6,6 @@ export const responseProcessor = async <T>(response: Promise<AxiosResponse<Respo
     const { data: { result }, status } = await response
     return isStatus === status ? result : undefined
   } catch ({ status, response: { data: { statusCode, path } } }) {
-    throw `${statusCode}, ${path}`
+    throw statusCode
   }
 }

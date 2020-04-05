@@ -8,8 +8,15 @@
       <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
 
       <div class="iconGroup">
-        <a href="#" class="iconWrap like">
+        <a @click.prevent="toggleLike"
+           href="#"
+           class="iconWrap like"
+           :class="{ active: likeActive }"
+        >
           <fa icon="heart" />
+          <strong>
+            {{ post.likeUsers.length }}
+          </strong>
         </a>
         <a href="#" class="iconWrap share">
           <fa icon="share-alt" />
@@ -43,7 +50,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import {FETCH_COMMENT, FETCH_POST} from '@/middleware/store/types'
+import { FETCH_COMMENT, FETCH_POST, LIKE_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader } from '@/components'
@@ -55,6 +62,7 @@ const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHead
 export default class Post extends Vue {
   @Action(FETCH_POST) fetchPostAction!: ActionMethod
   @Action(FETCH_COMMENT) fetchCommentAction!: ActionMethod
+  @Action(LIKE_POST) likePost!: ActionMethod
   @State(state => state.post.selectedPost) post!: PostType|null
   @State(state => state.user.profile) profile!: GithubProfile|null
 
@@ -64,6 +72,10 @@ export default class Post extends Vue {
 
   private get isUser () {
     return this.profile !== null
+  }
+
+  private get likeActive () {
+    return this.isUser && this.post !== null && this.post.likeUsers.find(({ id }) => id === this.profile!.login)
   }
 
   private async fetchPost () {
@@ -85,6 +97,16 @@ export default class Post extends Vue {
   private openForm (params: { idx: number, type: 'reply'|'update' }) {
     const target: any = this.$refs.commentDialog
     target.open(params)
+  }
+
+  private async toggleLike () {
+    try {
+      await this.likePost(this.$route.params.idx)
+    } catch (e) {
+      let message: string =  '오류로 인하여 좋아요를 완료할 수 없습니다.'
+      if (e === 401) message = '로그인 후 이용해주세요'
+      this.$message({ type: 'error', message })
+    }
   }
 
   private created () {
@@ -125,6 +147,19 @@ export default class Post extends Vue {
     justify-content: center;
     align-items: center;
     margin: 0 5px;
+
+    &.like {
+      padding: 0 5px;
+
+      &.active {
+        background: #000;
+        color: #fff;
+      }
+
+      strong {
+        margin-left: 5px;
+      }
+    }
 
     &:hover {
       opacity: 1;

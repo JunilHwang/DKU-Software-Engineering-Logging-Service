@@ -10,6 +10,7 @@ export const FETCH_GITHUB_REPO = 'github/fetchRepo'
 // Post
 export const FETCH_POST = 'post/fetchOne'
 export const FETCH_POST_ALL = 'post/fetchAll'
+export const LIKE_POST = 'post/like'
 
 // Comment
 export const FETCH_COMMENT = 'comment/fetch'
