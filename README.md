@@ -17,16 +17,16 @@
 
 ### GitHub API 이용
 
-- GitHub API를 이용하여 다른 사람의 Repository에 있는 README.md 파일을 읽어오는 방식으로 포스팅 한다.
-- 회원가입/로그인은 무조건 GitHub Authorization을 이용한다.
-- GitHub Follow, Star 등을 연동한다.
-- GitHub Repository와 Post를 연동한다
-- 댓글은 Utterances를 이용한다.
+- GitHub API를 이용하여 다른 사람의 Repository에 있는 README.md 파일을 읽어오는 방식으로 포스팅 한다. `완료`
+- 회원가입/로그인은 무조건 GitHub Authorization을 이용한다. `완료`
+- GitHub Follow, Star 등을 연동한다. `완료`
+- GitHub Repository와 Post를 연동한다 `완료`
+- 댓글은 Utterances를 이용한다. `보류`
 
 ### Repository 연동 방법
 
-- 사용자는 서비스에 등록할 Repository를 만든다.
-- frontmatter 문법으로 title, date, category 등의 정보를 입력할 수 있다.
+- 사용자는 서비스에 등록할 Repository를 만든다. `완료`
+- frontmatter 문법으로 title, date, category 등의 정보를 입력할 수 있다. `완료`
 - Observing에 대한 방안
   - 방안1 : batch나 scheduling을 통해 repository를 observing 하여 지속적으로 변경 내역을 읽어온다.
   - 방안2 : 사용자가 hook을 등록하면 commit시 repository의 변경 내역을 읽어온다.
@@ -34,6 +34,7 @@
 2020-02-28
 - 약간의 이슈
   - GithubService API에는 시간당 요청 제한 갯수가 있음 (약 60개)
+    - 서버가 아니라 클라이언트에서 요청해도 무방함
   - API를 이용하는 방법말고 또다른 방법이 필요할 듯함
 
 ### 기타 제공 서비스

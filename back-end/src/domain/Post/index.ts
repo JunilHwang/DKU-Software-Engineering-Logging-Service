@@ -10,6 +10,7 @@ export interface Post {
   sha: string
   createdAt: number
   writer: User
+  likeUsers: User[]
 }
 
 export interface PostView {
