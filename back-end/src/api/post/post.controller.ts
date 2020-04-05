@@ -1,19 +1,20 @@
 import {
-  Body, CACHE_MANAGER, CacheManagerOptions, CacheStore,
+  Body, CACHE_MANAGER, CacheStore,
   CacheTTL,
   Controller, Delete,
   Get,
   HttpCode,
   HttpStatus,
   Inject,
-  Param,
+  Param, Patch,
   Post, Put,
   Request,
   UnauthorizedException
 } from '@nestjs/common'
 import { PostService } from './post.service'
 import { UserService } from '@/api/user/user.service'
-import { PostVO } from '@/domain/Post';
+import { PostVO } from '@/domain/Post'
+import { UserEntity as User } from '@/api/user/user.entity'
 
 @Controller('/api/post')
 export class PostController {
@@ -42,27 +43,43 @@ export class PostController {
   public async createPost (@Body() postVO: PostVO, @Request() { cookies: { access_token } }) {
     if (!access_token) throw new UnauthorizedException()
 
-    const writer = await this.userService.find({ access_token })
+    const writer: User = await this.userService.find({ access_token })
     if (!writer) throw new UnauthorizedException()
 
     await this.postService.create(writer, postVO)
 
-    this.cacheManager.del('/api/post')
+    this.refresh()
 
     return true
   }
 
   @Delete('/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @CacheTTL(60 * 60)
   public async deletePost (@Param('idx') idx: number) {
+    this.refresh(idx)
     return await this.postService.delete({ idx })
   }
 
   @Put('/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @CacheTTL(60 * 60)
   public async updatePost (@Param('idx') idx: number, @Body() postVO: PostVO) {
+    this.refresh(idx)
     return await this.postService.update(idx, postVO)
+  }
+
+  @Patch('/:idx')
+  @HttpCode(HttpStatus.OK)
+  public async likePost (@Param('idx') idx: number, @Request() { cookies: { access_token } }) {
+    this.refresh(idx)
+
+    const user: User|undefined = await this.userService.find({ access_token })
+    if (user === undefined) throw new UnauthorizedException()
+
+    return await this.postService.like(idx, user)
+  }
+
+  private refresh (idx: number = 0) {
+    this.cacheManager.del('/api/post')
+    if (idx !== 0) this.cacheManager.del(`/api/post/${idx}`)
   }
 }

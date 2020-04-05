@@ -21,48 +21,58 @@ export class PostService {
   ) {}
 
   public async create (writer: User, { content, title, sha, repository, description, thumbnail }: PostVO): Promise<void> {
-    const cnt = await this.postRepository.count({ sha })
-
-    if (cnt !== 0) {
-      throw new HttpException('', HttpStatus.NO_CONTENT);
-    }
-
-    const post: Post = new Post()
-    const isThumbnail = thumbnail.length > 0
-
-    post.title = title
-    post.content = content
-    post.sha = sha
-    post.repository = repository
-    post.writer = writer
-    post.createdAt = Date.now()
-    post.description = description
-    post.thumbnail = isThumbnail
-
-    if (isThumbnail) {
-      saveBlob(thumbnail, sha)
-    }
-
     try {
+      const cnt = await this.postRepository.count({ sha })
+
+      if (cnt !== 0) {
+        throw new HttpException('', HttpStatus.NO_CONTENT);
+      }
+
+      const post: Post = new Post()
+      const isThumbnail = thumbnail.length > 0
+
+      post.title = title
+      post.content = content
+      post.sha = sha
+      post.repository = repository
+      post.writer = writer
+      post.createdAt = Date.now()
+      post.description = description
+      post.thumbnail = isThumbnail
+
+      if (isThumbnail) saveBlob(thumbnail, sha)
+
       await this.postRepository.save(post)
     } catch (e) {
       removeBlob(sha)
-      throw new InternalServerErrorException()
+      throw new BadRequestException()
     }
   }
 
   public async findAll (): Promise<PostView[]> {
-    return await this.postViewRepository.find({ order: { idx: 'DESC' } })
+    try {
+      return await this.postViewRepository.find({order: {idx: 'DESC'}})
+    } catch (e) {
+      throw new BadRequestException()
+    }
   }
 
   public async findAllByUser (writerId: string): Promise<PostView[]> {
-    return await this.postViewRepository.find({ where: { writerId },  order: { idx: 'DESC' } })
+    try {
+      return await this.postViewRepository.find({where: {writerId}, order: {idx: 'DESC'}})
+    } catch (e) {
+      throw new BadRequestException()
+    }
   }
 
   public async find (params): Promise<Post> {
-    const post = await this.postRepository.findOne(params)
-    if (post === undefined) throw new NotFoundException()
-    return post
+    try {
+      const post = await this.postRepository.findOne(params)
+      if (post === undefined) throw new NotFoundException()
+      return post
+    } catch (e) {
+      throw new BadRequestException()
+    }
   }
 
   public async delete (params): Promise<void> {
@@ -76,6 +86,20 @@ export class PostService {
   public async update (idx: number, { content, title }: PostVO): Promise<void> {
     try {
       await this.postRepository.update(idx, { content, title })
+    } catch (e) {
+      throw new BadRequestException()
+    }
+  }
+
+  public async like (idx: number, user: User): Promise<Post> {
+    try {
+      const post: Post = await this.find({idx})
+      const index = post.likeUsers.findIndex(v => v.id === user.id)
+      index !== -1
+        ? post.likeUsers.splice(index, 1)
+        : post.likeUsers.push(user)
+      await this.postRepository.save(post)
+      return post
     } catch (e) {
       throw new BadRequestException()
     }
