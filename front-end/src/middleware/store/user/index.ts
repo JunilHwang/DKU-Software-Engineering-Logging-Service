@@ -2,13 +2,13 @@ import Cookie from 'js-cookie'
 import { userService } from '@/services';
 import { Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators'
 import { AccessToken, SIGN_IN, SIGN_OUT, FETCH_USER_POST, FETCH_USER } from '../types';
-import { Profile, PostView, User } from '@Domain';
+import { GithubProfile, PostView, User } from '@Domain';
 
 @Module
 export default class UserModule extends VuexModule {
 
   access_token: AccessToken = Cookie.get('access_token') || null
-  profile: Profile|null = null
+  profile: GithubProfile|null = null
   posts: PostView[] = []
   user: User|null = null
 

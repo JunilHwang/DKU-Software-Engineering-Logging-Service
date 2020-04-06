@@ -29,10 +29,12 @@ export default class Content extends Vue {
   private repository: string = ''
   private sha: string = ''
   private content: string = ''
+  private route: string[] = []
 
   open (content: string, route: string[], sha: string) {
     this.sha = sha!
     this.opened = true
+    this.route = route
     this.contentTitle = route.join('/')
     const head = [...route].splice(0, 2).join('/')
 
@@ -51,8 +53,8 @@ export default class Content extends Vue {
 
   @Emit()
   saveEditing () {
-    const { content, repository, sha } = this
-    return { content, repository, sha }
+    const { content, repository, route, sha } = this
+    return { content, repository, route: route.join('/'), sha }
   }
 }
 </script>

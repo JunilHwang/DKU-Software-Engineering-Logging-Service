@@ -14,7 +14,6 @@ export default class Setting extends Vue {
   @State(state => state.user.access_token) access_token!: AccessToken
 
   @Watch('access_token') onAccessToken () {
-    console.log(this.access_token)
     this.accessCheck()
   }
 

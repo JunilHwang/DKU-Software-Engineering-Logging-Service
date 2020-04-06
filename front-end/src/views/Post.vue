@@ -54,7 +54,7 @@ import { FETCH_COMMENT, FETCH_POST, LIKE_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader } from '@/components'
-import { Profile } from '@Domain'
+import { GithubProfile } from '@Domain'
 
 const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader }
 
@@ -64,7 +64,7 @@ export default class Post extends Vue {
   @Action(FETCH_COMMENT) fetchCommentAction!: ActionMethod
   @Action(LIKE_POST) likePost!: ActionMethod
   @State(state => state.post.selectedPost) post!: PostType|null
-  @State(state => state.user.profile) profile!: Profile|null
+  @State(state => state.user.profile) profile!: GithubProfile|null
 
   private get isWriter () {
     return this.profile && this.post && this.profile.login === this.post.writer.id

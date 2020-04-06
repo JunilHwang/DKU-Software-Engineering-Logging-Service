@@ -21,6 +21,7 @@ export default class GithubFactory extends Vue {
   }
 
   showContent (args: any) {
+    if (args === null) return
     const target: any = this.$refs.content
     target.open(...args)
   }

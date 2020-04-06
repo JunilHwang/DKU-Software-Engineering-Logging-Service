@@ -54,11 +54,9 @@ export default class Repository extends Vue {
   }
 
   //========== methods ==========//
-
-  showDirectory (params: ContentVO) {
-    return githubService
-      .getTrees(params)
-      .then(({ tree }: GithubTrees) => {
+  showDirectory (params: ContentVO) {return githubService
+    .getTrees(params)
+    .then(({ tree }: GithubTrees) => {
         tree.sort((a: GithubTree, b: GithubTree) => {
           if (a.type !== b.type) {
             return a.type === 'blob' ? 1 : -1
@@ -95,19 +93,19 @@ export default class Repository extends Vue {
     if (type === 'tree') {
       this.route.push({ path, sha })
       this.showDirectory(params)
-      return
-    }
+      return null
+  }
 
     const ext = path.replace(/.*\.(.*)/, '$1')
     if (ext !== 'md') {
       this.$message({ type: 'warning', message: `Markdown File만 조회할 수 있습니다` })
-      return
+      return null
     }
     const { content }: GithubBlob = await githubService.getBlob(params)
     const route = this.route.map(({ path }) => path)
     route.push(path)
 
-    return [content, route, sha]
+    return [ content, route, sha ]
   }
 
   goToPath (sha: string|null, key: number) {
@@ -120,11 +118,9 @@ export default class Repository extends Vue {
     const user: string = this.user
     const route: RepoRoute[] = [ ...this.route ]
 
-    this
-      .showDirectory({ user, repo, sha })
-      .then(() => {
-        this.route = route.filter((v, k) => k <= key)
-      })
+    this.showDirectory({ user, repo, sha }).then(() => {
+      this.route = route.filter((v, k) => k <= key)
+    })
   }
 }
 </script>

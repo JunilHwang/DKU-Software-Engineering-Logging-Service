@@ -47,7 +47,8 @@ export default class GithubContentSaveEditor extends Vue {
     sha: '',
     repository: '',
     thumbnail: '',
-    description: ''
+    description: '',
+    route: ''
   }
   private thumbnailLoaded: boolean = false
 
