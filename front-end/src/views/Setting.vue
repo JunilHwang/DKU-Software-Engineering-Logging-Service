@@ -3,16 +3,11 @@
     <h1>
       <i class="el-icon-setting" /> 설정
     </h1>
-    <div class="main">
-      <nav>
-        <ul>
-          <li v-for="({ title, path }, k) in tab" :key="k">
-            <router-link :to="path" v-html="title" />
-          </li>
-        </ul>
-      </nav>
-      <router-view />
-    </div>
+    <el-tabs type="border-card">
+      <el-tab-pane v-for="({ title, component }, k) in tab" :key="k" :label="title">
+        <component :is="component" />
+      </el-tab-pane>
+    </el-tabs>
   </main>
 </template>
 
@@ -20,13 +15,16 @@
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { AccessToken } from '@/middleware/store/types'
+import { Hook, Profile } from '@/components'
 
 interface TabMenu {
   title: string
-  path: string
+  component: string
 }
 
-@Component
+const components = { Hook, Profile }
+
+@Component({ components })
 export default class Setting extends Vue {
   @State(state => state.user.access_token) access_token!: AccessToken
 
@@ -35,8 +33,8 @@ export default class Setting extends Vue {
   }
 
   private tab: TabMenu[] = [
-    { title: 'Hook', path: '/setting/hook' },
-    { title: 'Profile', path: '/setting/profile' },
+    { title: 'Hook', component: 'Hook' },
+    { title: 'Profile', component: 'Profile' },
   ]
 
   accessCheck () {
@@ -53,19 +51,12 @@ export default class Setting extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '../../assets/scss/lib';
+@import '../assets/scss/lib';
 
 ul, li {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.main {
-  background: #fff;
-  border-radius: 3px;
-  border: 1px solid #ddd;
-  padding: 20px;
 }
 
 h1 {
@@ -90,20 +81,6 @@ h1 {
     width: 150px;
     height: 3px;
     background: #09F;
-  }
-}
-
-nav {
-  margin: -20px -20px 0;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-
-  ul {
-    display: flex;
-  }
-
-  a {
-    display: block;
   }
 }
 </style>
