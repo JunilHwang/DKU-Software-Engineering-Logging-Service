@@ -70,8 +70,8 @@ export class PostService {
   }
 
   public async delete (post: Post): Promise<void> {
+    if (post.thumbnail) removeBlob(post.sha)
     try {
-      removeBlob(post.sha)
       await this.postRepository.remove(post)
     } catch (e) {
       throw new BadRequestException()
