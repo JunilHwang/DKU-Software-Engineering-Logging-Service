@@ -1,3 +1,5 @@
+import { GithubRepository, GithubProfile } from './index';
+
 export interface GithubHookConfig {
   content_type: 'json',
   insecure_ssl: '0'|'1',
@@ -23,4 +25,40 @@ export interface GithubHookData {
   ping_url: string,
   last_response: GithubHookLastResponse
   message: null|string
+}
+
+export interface GithubCommitUser {
+  name: string
+  email: string
+  username?: string
+}
+
+export interface GithubCommit {
+  id: string,
+  tree_id: string,
+  distinct: boolean,
+  message: string,
+  timestamp: string,
+  url: string,
+  author: GithubCommitUser[],
+  committer: GithubCommitUser[],
+  added: string[],
+  removed: string[],
+  modified: string[]
+}
+
+export interface GithubHookPayload {
+  ref: string,
+  before: string,
+  after: string,
+  repository: GithubRepository,
+  pusher: GithubCommitUser,
+  sender: GithubProfile,
+  created: boolean,
+  deleted: boolean,
+  forced: boolean,
+  base_ref: null|string,
+  compare: string,
+  commits: GithubCommit[],
+  head_commit: GithubCommit
 }

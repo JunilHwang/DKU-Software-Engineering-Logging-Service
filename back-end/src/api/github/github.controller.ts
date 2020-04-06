@@ -4,6 +4,7 @@ import { GithubService } from './github.service'
 import { client_id, redirectURL } from './secret'
 import { UserService } from '@/api/user/user.service'
 import { UserEntity as User } from '@/entity'
+import { GithubHookPayload } from '@/domain'
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}&scope=admin:repo_hook`
 
@@ -77,8 +78,8 @@ export class GithubController {
 
   @Post('hook/commit')
   @HttpCode(HttpStatus.OK)
-  public getHookCommit (@Body() payload) {
-    console.log(payload)
+  public getHookCommit (@Body() { commits }: GithubHookPayload) {
+    commits.map(({ modified }) => console.log(modified))
     return 'hook'
   }
 }
