@@ -6,6 +6,9 @@ export const FETCH_USER = 'user/fetch'
 
 // Github
 export const FETCH_GITHUB_REPO = 'github/fetchRepo'
+export const FETCH_GITHUB_HOOK = 'github/fetchHook'
+export const ADD_GITHUB_HOOK = 'github/addHook'
+export const DELETE_GITHUB_HOOK = 'github/deleteHook'
 
 // Post
 export const FETCH_POST = 'post/fetchOne'

@@ -1,5 +1,5 @@
 import $http from 'axios'
-import { GithubProfile, GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO } from '@Domain'
+import { GithubProfile, GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO, GithubHook } from '@Domain'
 import { responseProcessor } from '@/helper'
 
 const baseURI = '/api/github'
@@ -20,6 +20,10 @@ export default Object.freeze({
 
   async getBlob (params: ContentVO): Promise<GithubBlob> {
     return (await responseProcessor<GithubBlob>($http.get(`${baseURI}/blob`, { params }), 200))!
+  },
+
+  async getHook (): Promise<GithubHook[]> {
+    return (await responseProcessor<GithubHook[]>($http.get(`${baseURI}/hook`), 200))!
   }
 
 })
