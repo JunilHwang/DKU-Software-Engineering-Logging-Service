@@ -1,5 +1,5 @@
-import {Column, ViewColumn, ViewEntity} from 'typeorm'
-import { Profile } from '@/domain'
+import { Column, ViewColumn, ViewEntity } from 'typeorm'
+import { GithubProfile } from '@/domain'
 
 @ViewEntity({
   expression: `
@@ -38,7 +38,7 @@ export class PostViewEntity {
 
   @ViewColumn()
   @Column('simple-json')
-  writerProfile: Profile
+  writerProfile: GithubProfile
 
   @ViewColumn()
   comments: number

@@ -3,6 +3,9 @@ import $http from 'axios'
 import { client_id, client_secret } from './secret'
 import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
 import { httpResponseCheck } from '@/helper';
+import { InjectRepository } from "@nestjs/typeorm";
+import { GithubHookEntity as GithubHook } from "@/api/github/github.hook.entity";
+import {Repository} from "typeorm";
 
 const headers = {
   Accept: 'application/vnd.github.v3+json',
@@ -13,6 +16,10 @@ const BASE_URL = 'https://api.github.com'
 
 @Injectable()
 export class GithubService {
+
+  constructor(
+    @InjectRepository(GithubHook) private readonly githubHookRepository: Repository<GithubHook>
+  ) {}
 
   public async getRepo (user: string, access_token: string): Promise<Array<GithubRepository>> {
     const Authorization = `token ${access_token}`

@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from 'typeorm'
-import { CommentEntity as Comment, UserEntity as User} from '@/entity'
+import { UserEntity as User} from '@/entity'
 
 @Entity({ name: 'post' })
 export class PostEntity {

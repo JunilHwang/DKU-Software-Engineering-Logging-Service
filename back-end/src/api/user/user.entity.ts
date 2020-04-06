@@ -8,7 +8,7 @@ export class UserEntity {
   idx: number
 
   @Column()
-  repo: string
+  id: string
 
   @Column({ select: false })
   access_token: string

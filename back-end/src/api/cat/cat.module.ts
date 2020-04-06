@@ -3,14 +3,14 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { CatController } from './cat.controller';
 import { CatService } from './cat.service';
-import { CatModel as model } from './cat.schema';
-import { CatEntity as entity } from './cat.entity';
+import { CatModel } from './cat.schema';
+import { CatEntity } from './cat.entity';
 
-const CatModel = MongooseModule.forFeature([ model ])
-const CatEntity = TypeOrmModule.forFeature([ entity ])
+const models = MongooseModule.forFeature([ CatModel ])
+const entities = TypeOrmModule.forFeature([ CatEntity ])
 
 @Module({
-  imports: [ CatModel, CatEntity ],
+  imports: [ models, entities ],
   controllers: [ CatController ],
   providers: [ CatService ],
 })
