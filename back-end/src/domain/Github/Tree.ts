@@ -1,4 +1,4 @@
-export type Tree = {
+export interface GithubTree {
   path: string
   mode: string
   type: 'blob' | 'tree'
@@ -7,14 +7,14 @@ export type Tree = {
   url: string
 }
 
-export type Trees = {
+export interface GithubTrees {
   sha: string
   url: string
-  tree: Tree[],
+  tree: GithubTree[],
   truncated: boolean
 }
 
-export type Blob = {
+export interface GithubBlob {
   sha: string
   node_id: string
   size: number,

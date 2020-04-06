@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Res, Request, CacheTTL, HttpCode, HttpStatus } from '@nestjs/common'
+import {Controller, Get, Param, Query, Res, Request, CacheTTL, HttpCode, HttpStatus, Post} from '@nestjs/common'
 import { Response } from 'express'
 import { GithubService } from './github.service'
 import { client_id, redirectURL } from './secret'
@@ -59,5 +59,11 @@ export class GithubController {
   @CacheTTL(60 * 60)
   public async getBlob (@Query() { user, repo, sha }) {
     return await this.githubService.getBlob(user, repo, sha)
+  }
+
+  @Post('hook')
+  @HttpCode(HttpStatus.OK)
+  public async addHook () {
+
   }
 }

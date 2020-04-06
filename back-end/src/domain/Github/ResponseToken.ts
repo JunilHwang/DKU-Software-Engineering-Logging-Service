@@ -1,6 +1,4 @@
-type ResponseToken = {
+export interface GithubResponseToken {
   access_token: string
   token_type: string
 }
-
-export default ResponseToken

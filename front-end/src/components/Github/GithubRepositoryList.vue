@@ -19,7 +19,7 @@
   import {Vue, Component, Emit} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
-import { GithubProfile, GithubRepository } from '@Domain'
+import { Profile, GithubRepository } from '@Domain'
 import { FETCH_GITHUB_REPO } from '@/middleware/store/types/MutationType'
 import { eventBus } from '@/helper'
 
@@ -27,7 +27,7 @@ import { eventBus } from '@/helper'
 export default class RepositoryList extends Vue {
 
   @State(state => state.github.repositories) repositories!: GithubRepository[]
-  @State(state => state.user.profile) profile!: GithubProfile
+  @State(state => state.user.profile) profile!: Profile
   @Action(FETCH_GITHUB_REPO) fetchRepo!: ActionMethod
 
   private opened = false

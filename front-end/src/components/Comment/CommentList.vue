@@ -49,7 +49,7 @@ import { Vue, Component, Emit } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { DELETE_COMMENT } from '@/middleware/store/types'
-import { Comment, GithubProfile } from '@Domain'
+import { Comment, Profile } from '@Domain'
 import CommentForm from './CommentForm.vue'
 
 const components = { CommentForm }
@@ -58,7 +58,7 @@ const components = { CommentForm }
 export default class CommentList extends Vue {
   @Action(DELETE_COMMENT) deleteComment!: ActionMethod
   @State(state => state.comment.commentList) commentList!: Comment[]
-  @State(state => state.user.profile) userProfile!: GithubProfile|null
+  @State(state => state.user.profile) userProfile!: Profile|null
 
   private remove (idx: number): void {
     const confirmMsg: string = '정말로 삭제하시겠습니까?'

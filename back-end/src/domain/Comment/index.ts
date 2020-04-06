@@ -1,4 +1,4 @@
-import { Post, User } from '../index'
+import { User } from '../index'
 
 export interface Comment {
   idx: number

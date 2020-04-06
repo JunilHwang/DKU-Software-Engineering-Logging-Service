@@ -1,14 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import $http from 'axios'
 import { client_id, client_secret } from './secret'
-import {
-  GithubRepository,
-  GithubContent,
-  GithubResponseToken,
-  GithubProfile,
-  GithubTrees,
-  GithubBlob
-} from '@/domain/Github'
+import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
 import { httpResponseCheck } from '@/helper';
 
 const headers = {
@@ -50,6 +43,24 @@ export class GithubService {
 
   public async getBlob (user: string, repo: string, sha: string): Promise<GithubBlob> {
     return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`))
+  }
+
+  public async addHook (user: string, repo: string) {
+    const url = process.env.NODE_ENV === 'development'
+                ? 'http://localhost:8080'
+                : 'http://localhost:8080'
+
+    const params = {
+      name: '단국대학교 개발자 커뮤니티',
+      active: true,
+      events: [ 'push' ],
+      config: {
+        url,
+        content_type: 'json',
+        insecure_ssl: 0
+      }
+    }
+    return await httpResponseCheck($http.post(`${BASE_URL}/repos/${user}/${repo}/hook`, params))
   }
 
 }

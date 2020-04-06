@@ -1,10 +1,18 @@
-export type ContentLink = {
+export interface ContentLink {
   self: string
   git: string
   html: string
 }
 
-export type Content = {
+export interface ContentVO {
+  user: string
+  repo: string
+  path?: string
+  sha?: string
+}
+
+
+export interface GithubContent {
   name: string
   path: string
   sha: string
@@ -17,11 +25,4 @@ export type Content = {
   content?: string
   encoding?: string
   _links: ContentLink
-}
-
-export interface ContentVO {
-  user: string
-  repo: string
-  path?: string
-  sha?: string
 }

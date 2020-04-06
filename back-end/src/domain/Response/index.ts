@@ -1,4 +1,4 @@
-export type Response<T> = {
+export interface Response<T> {
   success: boolean
   result?: T
 }

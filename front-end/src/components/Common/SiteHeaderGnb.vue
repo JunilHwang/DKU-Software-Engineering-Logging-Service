@@ -33,13 +33,13 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { GithubProfile } from '@Domain'
+import { Profile } from '@Domain'
 import { SIGN_OUT } from '@/middleware/store/types'
 import { eventBus } from '@/helper'
 
 @Component
 export default class SiteHeader extends Vue {
-  @State(state => state.user.profile) profile!: GithubProfile|null
+  @State(state => state.user.profile) profile!: Profile|null
 
   signIn () {
     location.replace('/api/github/sign-in')

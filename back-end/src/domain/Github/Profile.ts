@@ -1,4 +1,4 @@
-type Profile = {
+export interface GithubProfile {
   avatar_url: string
   bio?: string
   blog: string
@@ -31,5 +31,3 @@ type Profile = {
   updated_at: string
   url: string
 }
-
-export default Profile

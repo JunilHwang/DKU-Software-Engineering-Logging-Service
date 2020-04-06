@@ -25,4 +25,4 @@ export interface PostView {
   likes: number
 }
 
-export { PostVO } from './PostVO'
+export * from './PostVO'

@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { GithubProfile } from '@/domain/Github'
+import { Profile } from '@/domain/Github'
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -14,5 +14,5 @@ export class UserEntity {
   access_token: string
 
   @Column('simple-json')
-  profile: GithubProfile
+  profile: Profile
 }
