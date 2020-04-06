@@ -1,12 +1,20 @@
-import {Entity, PrimaryGeneratedColumn} from 'typeorm'
-
-
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm'
+import { GithubHookData } from '@/domain'
+import { UserEntity as User } from '@/entity'
 
 @Entity({ name: 'github_hook' })
-export class GithubHook {
+export class GithubHookEntity {
 
   @PrimaryGeneratedColumn()
   idx: number
 
+  @Column()
+  repo: string
 
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user' })
+  user: User
+
+  @Column('simple-json')
+  data: GithubHookData
 }
