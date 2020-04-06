@@ -86,4 +86,13 @@ export class GithubService {
     return githubHook
   }
 
+  public async removeHook (idx: number, token: string): Promise<void> {
+    const hook: GithubHook = await this.githubHookRepository.findOne({ idx })
+    const id: number = hook.data.id
+    const requestURL = `${BASE_URL}/repos/${hook.repo}/hooks/${id}`
+    const headers = { Authorization: `token ${token}` }
+
+    await httpResponseCheck($http.delete(requestURL, { headers }))
+  }
+
 }

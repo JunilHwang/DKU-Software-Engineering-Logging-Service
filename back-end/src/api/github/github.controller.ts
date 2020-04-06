@@ -10,7 +10,7 @@ import {
   Post,
   Body,
   UnauthorizedException,
-  Req
+  Req, Delete
 } from '@nestjs/common'
 import { Response, Request } from 'express'
 import { GithubService } from './github.service'
@@ -89,10 +89,18 @@ export class GithubController {
   }
 
   @Post('hook/commit')
-  @HttpCode(HttpStatus.OK)
-  public getHookCommit (@Body() payload: GithubHookPayload, @Req() req: Request) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public getHookCommit (@Body() payload: GithubHookPayload, @Req() req: Request): Promise<void> {
     console.log(req.header)
+    if (payload.ref !== 'refs/heads/master') return
     console.log(payload)
-    return 'hook'
+  }
+
+  @Delete('hook/:idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async removeHook (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request): Promise<void> {
+    if (!access_token) throw new UnauthorizedException()
+
+    await this.githubService.removeHook(idx, access_token)
   }
 }
