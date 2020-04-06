@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Home, Content, User, Post } from '@/views'
+import { Home, Content, User, Post, Setting } from '@/views'
 
 Vue.use(VueRouter)
 
@@ -20,6 +20,10 @@ const routes = [
   {
     path: '/post/:idx',
     component: Post
+  },
+  {
+    path: '/setting',
+    component: Setting
   },
 ]
 

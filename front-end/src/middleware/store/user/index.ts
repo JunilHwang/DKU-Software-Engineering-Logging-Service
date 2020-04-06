@@ -16,6 +16,7 @@ export default class UserModule extends VuexModule {
 
   @Mutation [SIGN_OUT] () {
     this.profile = null
+    this.access_token = null
     Cookie.remove('access_token')
   }
 

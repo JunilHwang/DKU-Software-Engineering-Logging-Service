@@ -28,7 +28,7 @@ export default class App extends Vue {
 
   async created () {
     try {
-      const {token, signIn} = this
+      const { token, signIn } = this
       token
       && signIn
       && await signIn(token)
