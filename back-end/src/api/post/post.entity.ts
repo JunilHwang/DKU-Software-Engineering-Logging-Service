@@ -28,11 +28,11 @@ export class PostEntity {
   @Column({ default: false })
   thumbnail: boolean
 
-  @ManyToOne(type => User, { eager: true })
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'writer' })
   writer: User
 
-  @ManyToMany(type => User, { eager: true })
+  @ManyToMany(() => User, { eager: true })
   @JoinTable({
     name: 'like',
     joinColumn: {
