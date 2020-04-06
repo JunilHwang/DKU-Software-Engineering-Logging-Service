@@ -56,6 +56,10 @@ export class GithubService {
     return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`))
   }
 
+  public async getHook (user: User): Promise<GithubHook[]> {
+    return await this.githubHookRepository.find({ user })
+  }
+
   public async addHook (user: User, repo: string, token: string): Promise<GithubHook> {
     const requestURL = `${BASE_URL}/repos/${user.id}/${repo}/hooks`
     const configURL = process.env.NODE_ENV === 'development'

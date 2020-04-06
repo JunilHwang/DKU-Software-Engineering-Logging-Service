@@ -1,4 +1,5 @@
 import { GithubRepository, GithubProfile } from './index';
+import { User } from '../index'
 
 export interface GithubHookConfig {
   content_type: 'json',
@@ -61,4 +62,11 @@ export interface GithubHookPayload {
   compare: string,
   commits: GithubCommit[],
   head_commit: GithubCommit
+}
+
+export interface GithubHook {
+  idx: number
+  repo: string
+  user: User
+  data: GithubHookData
 }
