@@ -17,8 +17,12 @@
         </ul>
       </div>
       <ul class="bottomButtons">
-        <li v-if="isWriter"><el-button type="default" size="small" icon="el-icon-edit-outline" plain circle></el-button></li>
-        <li v-if="isWriter"><el-button type="default" size="small" icon="el-icon-delete" plain circle></el-button></li>
+        <li v-if="isWriter">
+          <el-button type="default" size="small" icon="el-icon-edit-outline" plain circle />
+        </li>
+        <li v-if="isWriter">
+          <el-button @click="$emit('delete')" type="default" size="small" icon="el-icon-delete" plain circle />
+        </li>
         <li>
           <el-button type="default" size="small" @click="$router.back()" plain circle>
             <fa icon="reply" />

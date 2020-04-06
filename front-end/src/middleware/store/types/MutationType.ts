@@ -11,6 +11,7 @@ export const FETCH_GITHUB_REPO = 'github/fetchRepo'
 export const FETCH_POST = 'post/fetchOne'
 export const FETCH_POST_ALL = 'post/fetchAll'
 export const LIKE_POST = 'post/like'
+export const DELETE_POST = 'post/delete'
 
 // Comment
 export const FETCH_COMMENT = 'comment/fetch'

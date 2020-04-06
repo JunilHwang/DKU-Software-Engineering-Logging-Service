@@ -3,7 +3,7 @@
 
     <main class="contentContainer">
 
-      <post-header :post="post" />
+      <post-header :post="post" @delete="deletePost" />
 
       <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
 
@@ -21,15 +21,17 @@
         <a href="#" class="iconWrap share">
           <fa icon="share-alt" />
         </a>
-        <a href="#" class="iconWrap back" @click="$router.back()">
+        <a @click.prevent="$router.back()" href="#" class="iconWrap back">
           <fa icon="reply" />
         </a>
-        <a v-if="isWriter" href="#" class="iconWrap edit">
-          <i class="el-icon-edit-outline" />
-        </a>
-        <a v-if="isWriter" href="#" class="iconWrap delete">
-          <i class="el-icon-delete" />
-        </a>
+        <template v-if="isWriter">
+          <a @click.prevent href="#" class="iconWrap edit">
+            <i class="el-icon-edit-outline" />
+          </a>
+          <a @click.prevent="deletePost" href="#" class="iconWrap delete">
+            <i class="el-icon-delete" />
+          </a>
+        </template>
       </div>
 
     </main>
@@ -50,7 +52,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import { FETCH_COMMENT, FETCH_POST, LIKE_POST } from '@/middleware/store/types'
+import { FETCH_COMMENT, FETCH_POST, LIKE_POST, DELETE_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader } from '@/components'
@@ -63,6 +65,7 @@ export default class Post extends Vue {
   @Action(FETCH_POST) fetchPostAction!: ActionMethod
   @Action(FETCH_COMMENT) fetchCommentAction!: ActionMethod
   @Action(LIKE_POST) likePost!: ActionMethod
+  @Action(DELETE_POST) deletePostAction!: ActionMethod
   @State(state => state.post.selectedPost) post!: PostType|null
   @State(state => state.user.profile) profile!: GithubProfile|null
 
@@ -84,6 +87,29 @@ export default class Post extends Vue {
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
     }
+  }
+
+  private async deletePost () {
+    const confirmButtonText = '확인',
+          cancelButtonText = '취소',
+          type = 'warning',
+          msg = '정말로 삭제하시겠습니까?',
+          title = '포스트 삭제'
+
+    this.$confirm(msg, title, { type, confirmButtonText, cancelButtonText })
+        .then(async () => {
+          try {
+            await this.deletePostAction(this.$route.params.idx)
+            this.$message({ type: 'success', message: '포스트가 삭제되었습니다.' })
+            await this.$router.push('/')
+          } catch (e) {
+            const message: string =  e === 401 ? '포스트 삭제 권한이 없습니다.' : '오류로 인하여 포스트를 삭제할 수 없습니다'
+            this.$message({ type: 'error', message })
+          }
+        })
+        .catch(() => {
+          this.$message({ type: 'info', message: '포스트 삭제가 취소되었습니다.' })
+        })
   }
 
   private async fetchComment () {
