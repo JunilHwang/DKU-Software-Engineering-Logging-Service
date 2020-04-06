@@ -1,6 +1,6 @@
 <template>
-  <main>
-    this is setting page
+  <main class="container">
+    띠요잉
   </main>
 </template>
 

@@ -59,14 +59,14 @@ export class GithubService {
   public async addHook (user: User, repo: string, token: string): Promise<GithubHook> {
     const requestURL = `${BASE_URL}/repos/${user.id}/${repo}/hooks`
     const configURL = process.env.NODE_ENV === 'development'
-                      ? 'http://192.168.0.5:8080'
+                      ? 'http://49.172.17.25:8080'
                       : 'http://localhost:8080' // 추후에 변경 예
     const data = {
       name: 'web',
       active: true,
       events: [ 'push' ],
       config: {
-        url: `${configURL}/api/github/hook`,
+        url: `${configURL}/api/github/hook/commit`,
         content_type: 'json',
         insecure_ssl: 0
       }

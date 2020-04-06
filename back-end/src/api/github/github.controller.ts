@@ -62,12 +62,6 @@ export class GithubController {
     return await this.githubService.getBlob(user, repo, sha)
   }
 
-  @Get('hook')
-  @HttpCode(HttpStatus.OK)
-  public getHook () {
-    return 'hook'
-  }
-
   @Post('hook')
   @HttpCode(HttpStatus.OK)
   public async addHook (@Body() { repo }, @Request() { cookies: { access_token } }) {
@@ -79,5 +73,12 @@ export class GithubController {
 
     return await this.githubService.addHook(user, repo, access_token)
 
+  }
+
+  @Post('hook/commit')
+  @HttpCode(HttpStatus.OK)
+  public getHookCommit (@Body() payload) {
+    console.log(payload)
+    return 'hook'
   }
 }
