@@ -84,3 +84,17 @@ h1 {
   }
 }
 </style>
+
+<style lang="scss">
+.settingContent {
+  margin: -15px;
+  padding: 20px;
+
+  &Title {
+    margin: 0;
+    letter-spacing: -1px;
+    font-size: 19px;
+    font-weight: 400;
+  }
+}
+</style>

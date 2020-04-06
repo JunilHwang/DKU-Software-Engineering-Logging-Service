@@ -1,6 +1,8 @@
   <template>
-  <section>
-    <h2>Hook</h2>
+  <section class="settingContent">
+    <h2 class="settingContentTitle">
+      <span>자동 반영 저장소 관리</span>
+    </h2>
   </section>
 </template>
 

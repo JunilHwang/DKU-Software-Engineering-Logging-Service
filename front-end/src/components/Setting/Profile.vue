@@ -1,6 +1,8 @@
-  <template>
-  <section>
-    <h2>Profile</h2>
+<template>
+  <section class="settingContent">
+    <h2 class="settingContentTitle">
+      <span>프로필 관리</span>
+    </h2>
   </section>
 </template>
 
