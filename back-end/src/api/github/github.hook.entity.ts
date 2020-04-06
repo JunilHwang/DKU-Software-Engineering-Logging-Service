@@ -8,7 +8,7 @@ export class GithubHookEntity {
   @PrimaryGeneratedColumn()
   idx: number
 
-  @Column()
+  @Column({ unique: true })
   repo: string
 
   @ManyToOne(() => User, { eager: true })
