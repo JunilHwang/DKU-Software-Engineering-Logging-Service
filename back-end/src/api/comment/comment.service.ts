@@ -1,6 +1,6 @@
 import { BadRequestException, Catch, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CommentEntity as Comment } from '@/entity'
+import { CommentEntity as Comment, PostEntity as Post } from '@/entity'
 import { TreeRepository} from 'typeorm'
 import { CommentVO } from '@/domain'
 
@@ -51,5 +51,10 @@ export class CommentService {
 
   async delete (params): Promise<void> {
     await this.commentRepository.delete(params)
+  }
+
+  async deleteByPost (post: Post): Promise<void> {
+    const comments: Comment[] = await this.commentRepository.find({ where: { post } })
+    await this.commentRepository.remove(comments)
   }
 }

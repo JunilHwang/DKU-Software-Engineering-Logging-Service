@@ -13,7 +13,7 @@ export class PostService {
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>
   ) {}
 
-  public async create (writer: User, { content, title, sha, repository, description, thumbnail }: PostVO): Promise<void> {
+  public async create (writer: User, { content, title, sha, repository, description, thumbnail, route }: PostVO): Promise<void> {
     try {
       const cnt = await this.postRepository.count({ sha })
 
@@ -28,6 +28,7 @@ export class PostService {
       post.content = content
       post.sha = sha
       post.repository = repository
+      post.route = route
       post.writer = writer
       post.createdAt = Date.now()
       post.description = description
@@ -68,9 +69,10 @@ export class PostService {
     }
   }
 
-  public async delete (params): Promise<void> {
+  public async delete (post: Post): Promise<void> {
     try {
-      await this.postRepository.delete(params)
+      removeBlob(post.sha)
+      await this.postRepository.remove(post)
     } catch (e) {
       throw new BadRequestException()
     }

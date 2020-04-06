@@ -91,8 +91,10 @@ export class GithubController {
   @Post('hook/commit')
   @HttpCode(HttpStatus.NO_CONTENT)
   public getHookCommit (@Body() payload: GithubHookPayload, @Req() req: Request): Promise<void> {
-    console.log(req.header)
-    if (payload.ref !== 'refs/heads/master') return
+    if (
+      req.headers['x-github-event'] !== 'push' ||
+      payload.ref !== 'refs/heads/master'
+    ) return
     console.log(payload)
   }
 

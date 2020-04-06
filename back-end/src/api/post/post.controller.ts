@@ -1,26 +1,17 @@
-import {
-  Body, CACHE_MANAGER, CacheStore,
-  CacheTTL,
-  Controller, Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  Param, Patch,
-  Post, Put,
-  Request,
-  UnauthorizedException
-} from '@nestjs/common'
+import { Body, CACHE_MANAGER, CacheStore, CacheTTL, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Patch, Post, Put, Req, UnauthorizedException } from '@nestjs/common'
+import { Request } from 'express'
 import { PostService } from './post.service'
 import { UserService } from '@/api/user/user.service'
 import { PostVO } from '@/domain/Post'
-import { UserEntity as User } from '@/api/user/user.entity'
+import { UserEntity as User, PostEntity } from '@/entity'
+import { CommentService } from '@/api/comment/comment.service'
 
 @Controller('/api/post')
 export class PostController {
   constructor (
     private readonly postService: PostService,
     private readonly userService: UserService,
+    private readonly commentService: CommentService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore
   ) {}
 
@@ -40,7 +31,7 @@ export class PostController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  public async createPost (@Body() postVO: PostVO, @Request() { cookies: { access_token } }) {
+  public async createPost (@Body() postVO: PostVO, @Req() { cookies: { access_token } }: Request) {
     if (!access_token) throw new UnauthorizedException()
 
     const writer: User = await this.userService.find({ access_token })
@@ -54,10 +45,20 @@ export class PostController {
   }
 
   @Delete('/:idx')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  public async deletePost (@Param('idx') idx: number) {
+  @HttpCode(HttpStatus.OK)
+  public async deletePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
+
     this.refresh(idx)
-    return await this.postService.delete({ idx })
+
+    const post: PostEntity = await this.postService.find({ idx })
+    const user: User = await this.userService.find({ access_token })
+
+    if (!(user && user.idx === post.writer.idx)) throw new UnauthorizedException()
+
+    await this.commentService.deleteByPost(post)
+    await this.postService.delete(post)
+
+    return await this.postService.findAll()
   }
 
   @Put('/:idx')
@@ -69,7 +70,7 @@ export class PostController {
 
   @Patch('/:idx')
   @HttpCode(HttpStatus.OK)
-  public async likePost (@Param('idx') idx: number, @Request() { cookies: { access_token } }) {
+  public async likePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
     this.refresh(idx)
 
     const user: User|undefined = await this.userService.find({ access_token })

@@ -5,4 +5,5 @@ export interface PostVO {
   sha: string
   description: string
   thumbnail: string
+  route: string
 }

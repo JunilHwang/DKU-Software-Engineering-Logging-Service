@@ -20,6 +20,9 @@ export class PostEntity {
   repository: string
 
   @Column()
+  route: string
+
+  @Column()
   sha: string
 
   @Column({ name: 'created_at', type: 'bigint' })
