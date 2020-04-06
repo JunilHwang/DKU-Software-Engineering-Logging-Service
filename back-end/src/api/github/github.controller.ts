@@ -1,5 +1,18 @@
-import { Controller, Get, Param, Query, Res, Request, CacheTTL, HttpCode, HttpStatus, Post, Body, UnauthorizedException } from '@nestjs/common'
-import { Response } from 'express'
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Res,
+  CacheTTL,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Body,
+  UnauthorizedException,
+  Req
+} from '@nestjs/common'
+import { Response, Request } from 'express'
 import { GithubService } from './github.service'
 import { client_id, redirectURL } from './secret'
 import { UserService } from '@/api/user/user.service'
@@ -18,7 +31,7 @@ export class GithubController {
   @Get('repo/:user')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
-  public async getRepo (@Param('user') user: string, @Request() { cookies: { access_token } } ) {
+  public async getRepo (@Param('user') user: string, @Req() { cookies: { access_token }}: Request) {
     return await this.githubService.getRepo(user, access_token)
   }
 
@@ -65,11 +78,10 @@ export class GithubController {
 
   @Post('hook')
   @HttpCode(HttpStatus.OK)
-  public async addHook (@Body() { repo }, @Request() { cookies: { access_token } }) {
+  public async addHook (@Body() { repo }, @Req() { cookies: { access_token } }) {
 
     // 현재 로그인 중인 유저 정보 가져오기
     const user: User|undefined = await this.userService.find({ access_token })
-    // const user: User|undefined = await this.userService.find({ idx: 1 }) // Test용
     if (user === undefined) throw new UnauthorizedException()
 
     return await this.githubService.addHook(user, repo, access_token)
@@ -78,8 +90,9 @@ export class GithubController {
 
   @Post('hook/commit')
   @HttpCode(HttpStatus.OK)
-  public getHookCommit (@Body() { commits }: GithubHookPayload) {
-    commits.map(({ modified }) => console.log(modified))
+  public getHookCommit (@Body() payload: GithubHookPayload, @Req() req: Request) {
+    console.log(req.header)
+    console.log(payload)
     return 'hook'
   }
 }
