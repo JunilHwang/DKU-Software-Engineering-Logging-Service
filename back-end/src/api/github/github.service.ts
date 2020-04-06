@@ -91,8 +91,8 @@ export class GithubService {
     const id: number = hook.data.id
     const requestURL = `${BASE_URL}/repos/${hook.repo}/hooks/${id}`
     const headers = { Authorization: `token ${token}` }
-
-    await httpResponseCheck($http.delete(requestURL, { headers }))
+    await httpResponseCheck($http.delete(requestURL, {headers}))
+    await this.githubHookRepository.remove(hook)
   }
 
 }
