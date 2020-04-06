@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Home, Content, User, Post, Setting } from '@/views'
+import { Home, Content, User, Post, Setting, Hook } from '@/views'
 
 Vue.use(VueRouter)
 
@@ -23,7 +23,14 @@ const routes = [
   },
   {
     path: '/setting',
-    component: Setting
+    component: Setting,
+    children: [
+      {
+        alias: '',
+        path: 'hook',
+        component: Hook
+      }
+    ]
   },
 ]
 
