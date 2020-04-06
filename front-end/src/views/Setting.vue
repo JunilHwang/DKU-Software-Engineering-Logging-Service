@@ -1,6 +1,6 @@
 <template>
   <main class="container">
-    띠요잉
+    테스트
   </main>
 </template>
 
