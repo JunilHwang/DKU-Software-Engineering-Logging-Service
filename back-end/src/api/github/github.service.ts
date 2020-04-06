@@ -56,23 +56,26 @@ export class GithubService {
     return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`))
   }
 
-  public async addHook (user: User, repo: string): Promise<GithubHook> {
-    const requestURL = `${BASE_URL}/repos/${user.id}/${repo}/hook`
+  public async addHook (user: User, repo: string, token: string): Promise<GithubHook> {
+    const requestURL = `${BASE_URL}/repos/${user.id}/${repo}/hooks`
+    const configURL = process.env.NODE_ENV === 'development'
+                      ? 'http://192.168.0.5:8080'
+                      : 'http://localhost:8080' // 추후에 변경 예
     const data = {
-      name: '단국대학교 개발자 커뮤니티',
+      name: 'web',
       active: true,
       events: [ 'push' ],
       config: {
-        url: process.env.NODE_ENV === 'development'
-          ? 'http://localhost:8080'
-          : 'http://localhost:8080', // 추후에 변경 예정
+        url: `${configURL}/api/github/hook`,
         content_type: 'json',
         insecure_ssl: 0
       }
     }
 
+    const headers = { Authorization: `token ${token}` }
+
     const count: number = await this.githubHookRepository.count({ repo: `${user.id}/${repo}` })
-    if (count) throw new BadRequestException()
+    if (count !== 0) throw new BadRequestException()
 
     const githubHook = new GithubHook()
     githubHook.repo = `${user.id}/${repo}`

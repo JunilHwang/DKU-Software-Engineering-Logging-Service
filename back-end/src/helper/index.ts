@@ -8,7 +8,8 @@ export const httpResponseCheck = async (response: Promise<any>) => {
     const { statusText, status, config: { method, url }, data } = await response
     if (process.env.NODE_ENV !== 'production') console.log(method, url, status, statusText)
     return data
-  } catch (e) {
+  } catch ({ response }) {
+    console.error(response)
     throw new InternalServerErrorException()
   }
 }
