@@ -10,10 +10,14 @@
       <li>저장소의 ID를 클릭하면 <strong>Ping Test</strong>를 할 수 있습니다.</li>
     </ul>
     <el-table :data="hookList" class="table" :stripe="true" :header-row-class-name="() => 'tableHeader'">
-      <el-table-column label="ID" prop="data.id" width="150" align="center" />
+      <el-table-column label="ID" width="150" align="center">
+        <template slot-scope="scope">
+          <a href="#" @click.prevent="pingTest(scope.row)" v-html="scope.row.data.id" />
+        </template>
+      </el-table-column>
       <el-table-column label="저장소" align="center">
         <template slot-scope="scope">
-          <a :href="`https://github.com/${scope.row.repo}`" target="_blank">
+          <a :href="`https://github.com/${scope.row}`" target="_blank">
             <i class="el-icon-news" />
             {{ scope.row.repo }}
           </a>
@@ -42,20 +46,35 @@ import { Vue, Component } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { State, Action } from 'vuex-class'
 import { GithubHook } from '@Domain'
-import { FETCH_GITHUB_HOOK } from '@/middleware/store/types'
+import { AccessToken, FETCH_GITHUB_HOOK } from '@/middleware/store/types'
+import { githubClientService } from '@/services'
 
 @Component
 export default class Hook extends Vue {
   @State(state => state.github.hookList) hookList!: GithubHook[]
+  @State(state => state.user.access_token) access_token!: AccessToken
   @Action(FETCH_GITHUB_HOOK) fetchHook!: ActionMethod
 
-  created () {
+  private async pingTest ({ repo, data: { id } }: GithubHook) {
+    if (this.access_token === null) {
+      this.$message({ type: 'error', message: '로그인 후 이용해주세요' })
+      return
+    }
+    try {
+      await githubClientService.hookPingTest(repo, id, this.access_token)
+      this.$message({ type: 'success', message: '핑 테스트를 성공했습니다.' })
+    } catch (e) {
+      this.$message({ type: 'error', message: '핑 테스트 도중 오류가 발생했습니다.' })
+    }
+  }
+
+  private created () {
     this.fetchHook()
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../assets/scss/lib";
 li {
   font-size: 13px;
@@ -66,13 +85,6 @@ li {
 .table {
   font-font: enFont();
   font-size: 13px;
-
-  &Header {
-    th {
-      background: lighten(#06F, 20%);
-      color: #fff;
-    }
-  }
 
   i {
     display: inline-block;

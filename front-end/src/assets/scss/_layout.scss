@@ -96,3 +96,11 @@
   }
 }
 // </버튼 영역>
+
+// <테이블 상단>
+.el-table .tableHeader {
+  th {
+    background-color: lighten(#06F, 20%);
+    color: #fff;
+  }
+}
