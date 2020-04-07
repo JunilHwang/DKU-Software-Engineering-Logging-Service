@@ -76,13 +76,14 @@ export class GithubController {
 
   @Post('hook')
   @HttpCode(HttpStatus.OK)
-  public async addHook (@Body() { repo }, @Req() { cookies: { access_token } }) {
+  public async addHook (@Body('repo') repo: string, @Req() { cookies: { access_token } }): Promise<GithubHook[]> {
 
     // 현재 로그인 중인 유저 정보 가져오기
     const user: User|undefined = await this.userService.find({ access_token })
     if (user === undefined) throw new UnauthorizedException()
 
-    return await this.githubService.addHook(user, repo, access_token)
+    await this.githubService.addHook(user, repo, access_token)
+    return await this.githubService.getHook(user)
 
   }
 
@@ -97,10 +98,14 @@ export class GithubController {
   }
 
   @Delete('hook/:idx')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  public async removeHook (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request): Promise<void> {
-    if (!access_token) throw new UnauthorizedException()
+  @HttpCode(HttpStatus.OK)
+  public async removeHook (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request): Promise<GithubHook[]> {
+
+    // 현재 로그인 중인 유저 정보 가져오기
+    const user: User|undefined = await this.userService.find({ access_token })
+    if (user === undefined) throw new UnauthorizedException()
 
     await this.githubService.removeHook(idx, access_token)
+    return await this.githubService.getHook(user)
   }
 }
