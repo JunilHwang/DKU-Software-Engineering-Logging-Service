@@ -98,7 +98,7 @@ export class GithubController {
     const stack = []
     payload.commits.forEach(({ modified }) => {
       modified.forEach(v => {
-        if (stack.indexOf(v) === -1) stack.push(v)
+        if (stack.indexOf(v) === -1 && v.indexOf('md') !== -1) stack.push(v)
       })
     })
     const routes = stack.map(v => `${repo}/${v}`)

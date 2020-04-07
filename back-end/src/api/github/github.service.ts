@@ -4,9 +4,15 @@ import { client_id, client_secret } from './secret'
 import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
 import { httpResponseCheck } from '@/helper';
 import { InjectRepository } from '@nestjs/typeorm'
-import { GithubHookEntity as GithubHook, UserEntity as User, PostEntity as Post } from '@/entity'
+import {
+  GithubHookEntity as GithubHook,
+  UserEntity as User,
+  PostEntity as Post,
+  PostUpdatedEntity as PostUpdated
+} from '@/entity'
 import { Repository } from 'typeorm'
 import { PostService } from '@/api/post/post.service'
+import { Base64 } from 'js-base64'
 
 const headers = {
   Accept: 'application/vnd.github.v3+json',
@@ -105,9 +111,28 @@ export class GithubService {
     const posts: Post[] = await this.postService.findAllByRoute(routes)
     if (posts.length === 0) return
 
-    posts.forEach(v => {
+    const updatedList: PostUpdated[] = await this.postService.createUpdated(posts)
 
-    })
+    const contents: GithubContent[] = await Promise.all(posts.map(post => {
+      const route: string = post.route
+      const [ user, repo, ...pathArr ] = route.split('/')
+      const path: string = pathArr.join('/')
+      return this.getContent(user, repo, path)
+    }))
+
+    await this.postService.saveAll(posts.map((v, k) => {
+      const githubContent: GithubContent = contents[k]
+      v.content = Base64.decode(githubContent.content)
+        .replace(/!\[(.*)\]\(([.|/].*)\)/gim, `![$1](${githubContent.download_url}/../$2)`)
+        .replace(/\[(.*)\]\(([.|/].*)\)/gim, `[$1](${githubContent.html_url}/../$2)`)
+      return v
+    }))
+
+    await this.postService.saveUpdatedAll(updatedList.map(v => {
+      v.updated = true
+      v.updatedAt = `${Date.now()}`
+      return v
+    }))
   }
 
 }

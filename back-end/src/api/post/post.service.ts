@@ -1,7 +1,12 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
-import { PostEntity as Post, UserEntity as User, PostViewEntity as PostView } from '@/entity'
+import {
+  PostEntity as Post,
+  UserEntity as User,
+  PostViewEntity as PostView,
+  PostUpdatedEntity as PostUpdated
+} from '@/entity'
 import { PostVO } from '@/domain/Post';
 import { saveBlob, removeBlob } from '@/helper'
 
@@ -10,7 +15,8 @@ export class PostService {
 
   constructor (
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
-    @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>
+    @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
+    @InjectRepository(PostUpdated) private readonly postUpdatedRepository: Repository<PostUpdated>
   ) {}
 
   public async create (writer: User, { content, title, sha, repository, description, thumbnail, route }: PostVO): Promise<void> {
@@ -106,5 +112,26 @@ export class PostService {
     } catch (e) {
       throw new BadRequestException()
     }
+  }
+
+  public async createUpdated (posts: Post[]): Promise<PostUpdated[]> {
+    return await Promise.all<PostUpdated>(
+      posts.map(v => {
+        const postUpdated: PostUpdated = new PostUpdated()
+        postUpdated.post = v
+        postUpdated.createdAt = `${Date.now()}`
+        postUpdated.updatedAt = '0'
+        postUpdated.updated = false
+        return this.postUpdatedRepository.save(postUpdated)
+      })
+    )
+  }
+
+  public async saveAll (posts: Post[]): Promise<Post[]> {
+    return await this.postRepository.save(posts)
+  }
+
+  public async saveUpdatedAll (updatedList: PostUpdated[]): Promise<PostUpdated[]> {
+    return await this.postUpdatedRepository.save(updatedList)
   }
 }

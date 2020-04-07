@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-  import {Vue, Component, Emit} from 'vue-property-decorator'
+import { Vue, Component, Emit } from 'vue-property-decorator'
 import { Base64 } from 'js-base64'
 import { Markdown } from '@/components/Markdown'
 
