@@ -34,9 +34,8 @@
           {{ scope.row.data.created_at | dateformat }}
         </template>
       </el-table-column>
-      <el-table-column label="관리" width="150" align="center">
+      <el-table-column label="삭제" width="150" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit-outline" size="mini" plain circle />
           <el-button @click="remove(scope.row.idx)" type="danger" icon="el-icon-delete" size="mini" plain circle />
         </template>
       </el-table-column>
@@ -87,7 +86,7 @@ export default class Hook extends Vue {
     }
   }
 
-  private async remove (idx: number) {
+  private remove (idx: number) {
     const confirmMsg: string = '정말로 삭제하시겠습니까?'
     const confirmTitle: string = 'Hook 삭제'
     const confirmButtonText: string = '확인'
@@ -110,15 +109,28 @@ export default class Hook extends Vue {
       })
   }
 
-  private async add (repo: GithubRepository) {
-    try {
-      await this.addHook(repo.full_name)
-      this.$message({ type: 'success', message: '추가 되었습니다.' })
-      this.repositories.close()
-    } catch (e) {
-      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 취소되었습니다.';
-      this.$message({ type: 'error', message })
-    }
+  private add (repo: GithubRepository) {
+    const confirmMsg: string = '정말로 추가하시겠습니까?'
+    const confirmTitle: string = 'Hook 추가'
+    const confirmButtonText: string = '확인'
+    const cancelButtonText: string = '취소'
+    const type: 'warning' = 'warning'
+
+    this
+      .$confirm(confirmMsg, confirmTitle, { type, confirmButtonText, cancelButtonText })
+      .then(async () => {
+        try {
+          await this.addHook(repo.full_name)
+          this.$message({ type: 'success', message: '추가 되었습니다.' })
+          this.repositories.close()
+        } catch (e) {
+          const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 취소되었습니다.';
+          this.$message({ type: 'error', message })
+        }
+      })
+      .catch(() => {
+        this.$message({ type: 'info', message: '취소되었습니다.' })
+      })
   }
 
   private async created () {
