@@ -17,7 +17,7 @@
       </el-table-column>
       <el-table-column label="저장소" align="center">
         <template slot-scope="scope">
-          <a :href="`https://github.com/${scope.row}`" target="_blank">
+          <a :href="`https://github.com/${scope.row.repo}`" target="_blank">
             <i class="el-icon-news" />
             {{ scope.row.repo }}
           </a>
@@ -31,7 +31,7 @@
       <el-table-column label="관리" width="150" align="center">
         <template>
           <el-button type="primary" icon="el-icon-edit-outline" size="mini" plain circle />
-          <el-button type="danger" icon="el-icon-delete" size="mini" plain circle />
+          <el-button @click="remove" type="danger" icon="el-icon-delete" size="mini" plain circle />
         </template>
       </el-table-column>
     </el-table>
@@ -46,7 +46,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { State, Action } from 'vuex-class'
 import { GithubHook } from '@Domain'
-import { AccessToken, FETCH_GITHUB_HOOK } from '@/middleware/store/types'
+import {AccessToken, ADD_GITHUB_HOOK, DELETE_GITHUB_HOOK, FETCH_GITHUB_HOOK} from '@/middleware/store/types'
 import { githubClientService } from '@/services'
 
 @Component
@@ -54,10 +54,12 @@ export default class Hook extends Vue {
   @State(state => state.github.hookList) hookList!: GithubHook[]
   @State(state => state.user.access_token) access_token!: AccessToken
   @Action(FETCH_GITHUB_HOOK) fetchHook!: ActionMethod
+  @Action(DELETE_GITHUB_HOOK) deleteHook!: ActionMethod
+  @Action(ADD_GITHUB_HOOK) addHook!: ActionMethod
 
   private async pingTest ({ repo, data: { id } }: GithubHook) {
     if (this.access_token === null) {
-      this.$message({ type: 'error', message: '로그인 후 이용해주세요' })
+      this.$message({ type: 'error', message: '다시 로그인 해주세요' })
       return
     }
     try {
@@ -68,8 +70,33 @@ export default class Hook extends Vue {
     }
   }
 
-  private created () {
-    this.fetchHook()
+  private async remove (idx: number) {
+    try {
+      await this.deleteHook(idx)
+      this.$message({ type: 'success', message: '삭제되었습니다.' })
+    } catch (e) {
+      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 삭제가 취소되었습니다.';
+      this.$message({ type: 'error', message })
+    }
+  }
+
+  private async add (repo: string) {
+    try {
+      await this.addHook(repo)
+      this.$message({ type: 'success', message: '추가 되었습니다.' })
+    } catch (e) {
+      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 취소되었습니다.';
+      this.$message({ type: 'error', message })
+    }
+  }
+
+  private async created () {
+    try {
+      await this.fetchHook()
+    } catch (e) {
+      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 목록을 가져올 수 없습니다.';
+      this.$message({ type: 'error', message })
+    }
   }
 }
 </script>

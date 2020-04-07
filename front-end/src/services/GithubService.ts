@@ -24,6 +24,14 @@ export default Object.freeze({
 
   async getHook (): Promise<GithubHook[]> {
     return await responseProcessor<GithubHook[]>($http.get(`${baseURI}/hook`))
+  },
+
+  async addHook (repo: string): Promise<GithubHook[]> {
+    return await responseProcessor<GithubHook[]>($http.post(`${baseURI}/hook`, { repo }))
+  },
+
+  async removeHook (idx: number): Promise<GithubHook[]> {
+    return await responseProcessor<GithubHook[]>($http.delete(`${baseURI}/hook/${idx}`))
   }
 
 })

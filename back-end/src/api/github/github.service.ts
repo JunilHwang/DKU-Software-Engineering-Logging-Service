@@ -61,7 +61,7 @@ export class GithubService {
   }
 
   public async addHook (user: User, repo: string, token: string): Promise<GithubHook> {
-    const requestURL = `${BASE_URL}/repos/${user.id}/${repo}/hooks`
+    const requestURL = `${BASE_URL}/repos/${repo}/hooks`
     const configURL = process.env.NODE_ENV === 'development'
                       ? 'http://49.172.17.25:8080'
                       : 'http://localhost:8080' // 추후에 변경 예
@@ -78,11 +78,11 @@ export class GithubService {
 
     const headers = { Authorization: `token ${token}` }
 
-    const count: number = await this.githubHookRepository.count({ repo: `${user.id}/${repo}` })
+    const count: number = await this.githubHookRepository.count({ repo })
     if (count !== 0) throw new BadRequestException()
 
     const githubHook = new GithubHook()
-    githubHook.repo = `${user.id}/${repo}`
+    githubHook.repo = repo
     githubHook.user = user
     githubHook.data = await httpResponseCheck($http.post(requestURL, data, { headers }))
     await this.githubHookRepository.save(githubHook)
