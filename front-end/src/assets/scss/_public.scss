@@ -4,3 +4,49 @@
     margin: 0 auto;
   }
 }
+
+a.point {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: "";
+    display: block;
+    height: 1px;
+    position: absolute;
+    bottom: -2px;
+    background: #06F;
+  }
+
+  &:hover {
+    color: #06f;
+  }
+
+  &.fromCenter {
+
+    &::after {
+      transition-property: left, right;
+      transition-duration: 0.3s;
+      left: 50%;
+      right: 50%;
+    }
+
+    &:hover::after {
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &.fromLeft {
+
+    &::after {
+      transition: width 0.5s;
+      left: 0;
+      width: 0;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+}

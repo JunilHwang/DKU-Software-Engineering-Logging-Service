@@ -36,6 +36,16 @@
 
     </main>
 
+    <section class="contentContainer original">
+      <h3>
+        <i class="el-icon-tickets" />
+        원본 문서
+      </h3>
+      <p>
+        <a :href="originalRepository" target="_blank" class="point fromLeft" v-html="post.route" />
+      </p>
+    </section>
+
     <div class="contentContainer">
 
       <comment-list @open-form="openForm" />
@@ -68,6 +78,14 @@ export default class Post extends Vue {
   @Action(DELETE_POST) deletePostAction!: ActionMethod
   @State(state => state.post.selectedPost) post!: PostType|null
   @State(state => state.user.profile) profile!: GithubProfile|null
+
+  private get originalRepository () {
+    if (this.post === null) return ''
+    const route = this.post.route.split('/')
+    const head: string = route.slice(0, 2).join('/')
+    const tail: string = route.slice(2).join('/')
+    return `https://github.com/${head}/blob/master/${tail}`
+  }
 
   private get isWriter () {
     return this.profile && this.post && this.profile.login === this.post.writer.id
@@ -146,10 +164,33 @@ export default class Post extends Vue {
 .contentContainer {
   width: 800px;
   padding: 30px;
-  margin: 0 auto 30px;
+  margin: 0 auto 20px;
   background: #fff;
   border-radius: 3px;
   box-shadow: 0 0 0 1px fade-out(#ddd, 0.5);
+}
+
+.original {
+
+  h3 {
+    font-weight: normal;
+    font-size: 20px;
+    margin: 0;
+
+    i {
+      transform: translateY(1px);
+    }
+  }
+
+  p {
+    color: #666;
+    margin: 15px 0 0;
+    font-family: enFont();
+  }
+
+  a {
+    padding-bottom: 3px;
+  }
 }
 
 .icon {

@@ -6,6 +6,7 @@ export interface Post {
   title: string
   content: string
   repository: string
+  route: string
   description: string
   sha: string
   createdAt: number
