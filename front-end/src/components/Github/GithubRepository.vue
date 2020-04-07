@@ -68,7 +68,7 @@ export default class Repository extends Vue {
       })
   }
 
-  async open (repository: GithubRepository) {
+  public async open (repository: GithubRepository) {
     this.opened = true
     this.repository = repository
 
@@ -83,7 +83,7 @@ export default class Repository extends Vue {
     this.showDirectory({ repo, user, sha })
   }
 
-  private close () {
+  public close () {
     this.opened = false
   }
 

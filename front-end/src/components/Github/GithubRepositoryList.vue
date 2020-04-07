@@ -31,7 +31,7 @@ export default class RepositoryList extends Vue {
 
   private opened = false
 
-  async open () {
+  public async open () {
     this.opened = true
     try {
       this.fetchRepo(this.profile)
@@ -40,7 +40,7 @@ export default class RepositoryList extends Vue {
     }
   }
 
-  close () {
+  public close () {
     this.opened = false
   }
 }

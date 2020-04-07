@@ -26,12 +26,12 @@ export default class GithubLinkEditor extends Vue {
     link: ''
   }
 
-  private open () {
+  public open () {
     this.opened = true
     this.formData.link = ''
   }
 
-  private close () {
+  public close () {
     this.opened = false
   }
 

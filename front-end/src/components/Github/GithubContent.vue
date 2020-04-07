@@ -31,7 +31,7 @@ export default class Content extends Vue {
   private content: string = ''
   private route: string[] = []
 
-  private open (content: string, route: string[], sha: string) {
+  public open (content: string, route: string[], sha: string) {
     this.sha = sha!
     this.opened = true
     this.route = route
@@ -51,7 +51,7 @@ export default class Content extends Vue {
 
   }
 
-  private close () {
+  public close () {
     this.opened = false
   }
 

@@ -12,7 +12,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { components } from './index';
 import { GithubRepository, PostVO } from '@Domain'
-import {eventBus} from "@/helper";
+import { eventBus } from '@/helper'
 
 @Component({ components })
 export default class GithubFactory extends Vue {

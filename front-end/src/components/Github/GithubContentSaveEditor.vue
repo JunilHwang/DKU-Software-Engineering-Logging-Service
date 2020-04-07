@@ -59,7 +59,7 @@ export default class GithubContentSaveEditor extends Vue {
     this.postData = { ...postVO, title, thumbnail: '', description: '' }
   }
 
-  private close () {
+  public close () {
     this.opened = false
   }
 
