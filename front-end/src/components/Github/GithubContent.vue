@@ -31,7 +31,7 @@ export default class Content extends Vue {
   private content: string = ''
   private route: string[] = []
 
-  open (content: string, route: string[], sha: string) {
+  private open (content: string, route: string[], sha: string) {
     this.sha = sha!
     this.opened = true
     this.route = route
@@ -49,6 +49,10 @@ export default class Content extends Vue {
                       /\[(.*)\]\(([.|/].*)\)/gim,
                       `[$1](${githubURL}/${head}/tree/master/${tail}/../$2)`)
 
+  }
+
+  private close () {
+    this.opened = false
   }
 
   @Emit()

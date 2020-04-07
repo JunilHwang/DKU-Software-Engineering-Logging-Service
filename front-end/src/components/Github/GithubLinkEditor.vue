@@ -31,6 +31,10 @@ export default class GithubLinkEditor extends Vue {
     this.formData.link = ''
   }
 
+  private close () {
+    this.opened = false
+  }
+
   @Emit()
   private async showContent () {
     const link: string = this.formData.link

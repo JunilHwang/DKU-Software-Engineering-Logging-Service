@@ -6,7 +6,7 @@
     </h3>
     <ul v-if="opened">
       <li v-for="(repository, k) in repositories" :key="k">
-        <a href="#" type="primary" @click.prevent="showRepository(repository)">
+        <a href="#" type="primary" @click.prevent="$emit('select', repository)">
           <i class="el-icon-unlock" />
           {{ repository.name }}
         </a>
@@ -16,12 +16,11 @@
 </template>
 
 <script lang="ts">
-  import {Vue, Component, Emit} from 'vue-property-decorator'
+import {Vue, Component, Emit} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { Action, State } from 'vuex-class'
 import { GithubProfile, GithubRepository } from '@Domain'
 import { FETCH_GITHUB_REPO } from '@/middleware/store/types/MutationType'
-import { eventBus } from '@/helper'
 
 @Component
 export default class RepositoryList extends Vue {
@@ -32,11 +31,6 @@ export default class RepositoryList extends Vue {
 
   private opened = false
 
-  @Emit()
-  showRepository (repository: GithubRepository) {
-    return repository
-  }
-
   async open () {
     this.opened = true
     try {
@@ -46,8 +40,8 @@ export default class RepositoryList extends Vue {
     }
   }
 
-  created () {
-    eventBus.$on('repositoryListOpen', this.open)
+  close () {
+    this.opened = false
   }
 }
 </script>

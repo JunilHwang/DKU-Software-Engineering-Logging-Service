@@ -83,6 +83,10 @@ export default class Repository extends Vue {
     this.showDirectory({ repo, user, sha })
   }
 
+  private close () {
+    this.opened = false
+  }
+
   @Emit()
   async showContent (tree: GithubTree) {
     const { type, path, sha } = tree

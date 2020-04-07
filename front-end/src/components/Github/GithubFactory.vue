@@ -1,6 +1,6 @@
 <template>
   <div>
-    <github-repository-list ref="repositories" @show-repository="showRepository" />
+    <github-repository-list ref="repositories" @select="showRepository" />
     <github-repository @show-content="showContent" ref="repository" />
     <github-content @save-editing="showSaveEditor" ref="content" />
     <github-content-save-editor ref="saveEditor" @all-close="allClose" />
@@ -12,28 +12,34 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { components } from './index';
 import { GithubRepository, PostVO } from '@Domain'
+import {eventBus} from "@/helper";
 
 @Component({ components })
 export default class GithubFactory extends Vue {
-  showRepository (repository: GithubRepository) {
+  private showRepository (repository: GithubRepository) {
     const target: any = this.$refs.repository
     target.open(repository)
   }
 
-  showContent (args: any) {
+  private showContent (args: any) {
     if (args === null) return
     const target: any = this.$refs.content
     target.open(...args)
   }
 
-  showSaveEditor (postVO: PostVO) {
+  private showSaveEditor (postVO: PostVO) {
     const target: any = this.$refs.saveEditor
     target.open(postVO)
   }
 
-  allClose () {
-    Object.values(this.$refs).forEach((v: any) => {
-      v.opened = false
+  private allClose () {
+    Object.values(this.$refs).forEach((v: any) => v.close())
+  }
+
+  private created () {
+    eventBus.$on('repositoryListOpen', () => {
+      const target: any = this.$refs.repositories
+      target.open()
     })
   }
 }
