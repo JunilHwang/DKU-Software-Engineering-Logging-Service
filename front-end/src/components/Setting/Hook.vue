@@ -4,6 +4,11 @@
       <i class="el-icon-document-copy" />
       <span>자동 반영 저장소 관리</span>
     </h2>
+    <ul class="description">
+      <li>Github Hook을 이용하여 commit 발생 시 <strong>등록된 포스트와 동기화</strong>합니다.</li>
+      <li>포스트로 등록한 파일의 위치나 이름이 달라질 경우, <strong>수동으로 동기화</strong>를 해야합니다.</li>
+      <li>저장소의 ID를 클릭하면 <strong>Ping Test</strong>를 할 수 있습니다.</li>
+    </ul>
     <el-table :data="hookList" class="table" :stripe="true" :header-row-class-name="() => 'tableHeader'">
       <el-table-column label="ID" prop="data.id" width="150" align="center" />
       <el-table-column label="저장소" align="center">
@@ -52,6 +57,12 @@ export default class Hook extends Vue {
 
 <style lang="scss">
 @import "../../assets/scss/lib";
+li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #666;
+}
+
 .table {
   font-font: enFont();
   font-size: 13px;
