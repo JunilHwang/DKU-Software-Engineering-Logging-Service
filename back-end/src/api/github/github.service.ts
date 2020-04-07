@@ -112,6 +112,7 @@ export class GithubService {
     if (posts.length === 0) return
 
     const updatedList: PostUpdated[] = await this.postService.createUpdated(posts)
+    console.log('updatedList: ', updatedList)
 
     const contents: GithubContent[] = await Promise.all(posts.map(post => {
       const route: string = post.route
@@ -119,20 +120,23 @@ export class GithubService {
       const path: string = pathArr.join('/')
       return this.getContent(user, repo, path)
     }))
+    console.log('contents: ', contents)
 
-    await this.postService.saveAll(posts.map((v, k) => {
+    const updatedPosts: Post[] = await this.postService.saveAll(posts.map((v, k) => {
       const githubContent: GithubContent = contents[k]
       v.content = Base64.decode(githubContent.content)
         .replace(/!\[(.*)\]\(([.|/].*)\)/gim, `![$1](${githubContent.download_url}/../$2)`)
         .replace(/\[(.*)\]\(([.|/].*)\)/gim, `[$1](${githubContent.html_url}/../$2)`)
       return v
     }))
+    console.log('updatedPosts: ', updatedPosts)
 
-    await this.postService.saveUpdatedAll(updatedList.map(v => {
+    const result: PostUpdated[] = await this.postService.saveUpdatedAll(updatedList.map(v => {
       v.updated = true
       v.updatedAt = `${Date.now()}`
       return v
     }))
+    console.log('result: ', result)
   }
 
 }
