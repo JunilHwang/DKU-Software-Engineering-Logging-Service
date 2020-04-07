@@ -1,14 +1,34 @@
   <template>
   <section class="settingContent">
     <h2 class="settingContentTitle">
+      <i class="el-icon-document-copy" />
       <span>자동 반영 저장소 관리</span>
-      <article v-for="v in hookList" :key="idx">
-        {{ v.repo }}
-      </article>
-      <p v-if="hookList.length === 0" class="none">
-        등록된 자동 반영 저장소가 없습니다.
-      </p>
     </h2>
+    <el-table :data="hookList" class="table" :stripe="true" :header-row-class-name="() => 'tableHeader'">
+      <el-table-column label="ID" prop="data.id" width="150" align="center" />
+      <el-table-column label="저장소" align="center">
+        <template slot-scope="scope">
+          <a :href="`https://github.com/${scope.row.repo}`" target="_blank">
+            <i class="el-icon-news" />
+            {{ scope.row.repo }}
+          </a>
+        </template>
+      </el-table-column>
+      <el-table-column label="등록일" width="200" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.data.created_at | dateformat }}
+        </template>
+      </el-table-column>
+      <el-table-column label="관리" width="150" align="center">
+        <template>
+          <el-button type="primary" icon="el-icon-edit-outline" size="mini" plain circle />
+          <el-button type="danger" icon="el-icon-delete" size="mini" plain circle />
+        </template>
+      </el-table-column>
+    </el-table>
+    <p v-if="hookList.length === 0" class="none">
+      등록된 자동 반영 저장소가 없습니다.
+    </p>
   </section>
 </template>
 
@@ -29,3 +49,50 @@ export default class Hook extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+@import "../../assets/scss/lib";
+.table {
+  font-font: enFont();
+  font-size: 13px;
+
+  &Header {
+    th {
+      background: lighten(#06F, 20%);
+      color: #fff;
+    }
+  }
+
+  i {
+    display: inline-block;
+    transform: translateY(1px);
+  }
+
+  a {
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: "";
+      display: block;
+      height: 1px;
+      left: 50%;
+      right: 50%;
+      position: absolute;
+      bottom: 0;
+      background: #06F;
+      transition-property: left, right;
+      transition-duration: 0.3s;
+    }
+
+    &:hover {
+      color: #06f;
+
+      &::after {
+        left: 0;
+        right: 0;
+      }
+    }
+  }
+}
+</style>

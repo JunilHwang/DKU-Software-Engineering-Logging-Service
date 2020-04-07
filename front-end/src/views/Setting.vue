@@ -88,13 +88,18 @@ h1 {
 <style lang="scss">
 .settingContent {
   margin: -15px;
-  padding: 20px;
+  padding: 30px;
 
   &Title {
-    margin: 0;
+    margin: 0 0 20px;
     letter-spacing: -1px;
-    font-size: 19px;
+    font-size: 21px;
     font-weight: 400;
+
+    span {
+      display: inline-block;
+      margin-left: 5px;
+    }
   }
 }
 </style>
