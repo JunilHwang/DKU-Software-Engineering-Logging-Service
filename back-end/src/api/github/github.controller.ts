@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Res, CacheTTL, HttpCode, HttpStatus, Post, Body, UnauthorizedException, Req, Delete } from '@nestjs/common'
+import { Controller, Get, Param, Query, Res, CacheTTL, HttpCode, HttpStatus, Post, Body, UnauthorizedException, Req, Delete, Inject, CACHE_MANAGER, CacheStore } from '@nestjs/common'
 import { Response, Request } from 'express'
 import { GithubService } from './github.service'
 import { client_id, redirectURL } from './secret'
@@ -12,7 +12,8 @@ const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${clie
 export class GithubController {
   constructor(
     private readonly githubService: GithubService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore
   ) {}
 
   @Get('repo/:user')
@@ -89,21 +90,20 @@ export class GithubController {
 
   @Post('hook/commit')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async hookPayload (@Body() payload: GithubHookPayload, @Req() req: Request): Promise<void> {
+  public async hookPayload (@Body() { ref, commits, repository: { full_name } }: GithubHookPayload, @Req() req: Request): Promise<void> {
     if (
       req.headers['x-github-event'] !== 'push' ||
-      payload.ref !== 'refs/heads/master'
+      ref !== 'refs/heads/master'
     ) return
-    const repo = payload.repository.full_name
-    const stack = []
-    payload.commits.forEach(({ modified }) => {
-      modified.forEach(v => {
-        if (stack.indexOf(v) === -1 && v.indexOf('md') !== -1) stack.push(v)
-      })
-    })
-    const routes = stack.map(v => `${repo}/${v}`)
 
-    await this.githubService.receiveHook(routes)
+
+    const reducer = (repo, v) => [ ...repo, ...v.modified]
+    const cacheDelete = list => list.forEach(v => this.cacheManager.del(`/api/post/${v}`))
+    const paths: string[] = commits.reduce(reducer, []).map(v => `${full_name}/${v}`)
+
+    // 캐시 삭제
+    this.cacheManager.del('/api/post')
+    this.githubService.receiveHook(paths).then(cacheDelete)
   }
 
   @Delete('hook/:idx')

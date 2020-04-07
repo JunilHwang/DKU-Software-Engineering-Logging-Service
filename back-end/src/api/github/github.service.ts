@@ -107,12 +107,13 @@ export class GithubService {
     await this.githubHookRepository.remove(hook)
   }
 
-  public async receiveHook (routes: string[]): Promise<void> {
+  public async receiveHook (routes: string[]): Promise<number[]> {
     const posts: Post[] = await this.postService.findAllByRoute(routes)
+    const isDev = process.env.NODE_ENV === 'development'
     if (posts.length === 0) return
 
     const updatedList: PostUpdated[] = await this.postService.createUpdated(posts)
-    console.log('updatedList: ', updatedList)
+    if (isDev) console.log('updatedList: ', updatedList)
 
     const contents: GithubContent[] = await Promise.all(posts.map(post => {
       const route: string = post.route
@@ -120,7 +121,7 @@ export class GithubService {
       const path: string = pathArr.join('/')
       return this.getContent(user, repo, path)
     }))
-    console.log('contents: ', contents)
+    if (isDev) console.log('contents: ', contents)
 
     const updatedPosts: Post[] = await this.postService.saveAll(posts.map((v, k) => {
       const githubContent: GithubContent = contents[k]
@@ -129,14 +130,16 @@ export class GithubService {
         .replace(/\[(.*)\]\(([.|/].*)\)/gim, `[$1](${githubContent.html_url}/../$2)`)
       return v
     }))
-    console.log('updatedPosts: ', updatedPosts)
+    if (isDev) console.log('updatedPosts: ', updatedPosts)
 
     const result: PostUpdated[] = await this.postService.saveUpdatedAll(updatedList.map(v => {
       v.updated = true
       v.updatedAt = `${Date.now()}`
       return v
     }))
-    console.log('result: ', result)
+    if (isDev) console.log('result: ', result)
+
+    return updatedPosts.map(v => v.idx)
   }
 
 }
