@@ -1,6 +1,6 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { PostEntity as Post, UserEntity as User, PostViewEntity as PostView } from '@/entity'
 import { PostVO } from '@/domain/Post';
 import { saveBlob, removeBlob } from '@/helper'
@@ -45,7 +45,7 @@ export class PostService {
 
   public async findAll (): Promise<PostView[]> {
     try {
-      return await this.postViewRepository.find({order: {idx: 'DESC'}})
+      return await this.postViewRepository.find({ order: { idx: 'DESC' } })
     } catch (e) {
       throw new BadRequestException()
     }
@@ -53,7 +53,15 @@ export class PostService {
 
   public async findAllByUser (writerId: string): Promise<PostView[]> {
     try {
-      return await this.postViewRepository.find({where: {writerId}, order: {idx: 'DESC'}})
+      return await this.postViewRepository.find({ where: { writerId }, order: { idx: 'DESC' }})
+    } catch (e) {
+      throw new BadRequestException()
+    }
+  }
+
+  public async findAllByRoute (routes: string[]): Promise<Post[]> {
+    try {
+      return await this.postRepository.find({ route: In(routes) })
     } catch (e) {
       throw new BadRequestException()
     }

@@ -89,12 +89,21 @@ export class GithubController {
 
   @Post('hook/commit')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public hookPayload (@Body() payload: GithubHookPayload, @Req() req: Request): Promise<void> {
+  public async hookPayload (@Body() payload: GithubHookPayload, @Req() req: Request): Promise<void> {
     if (
       req.headers['x-github-event'] !== 'push' ||
       payload.ref !== 'refs/heads/master'
     ) return
-    console.log(payload)
+    const repo = payload.repository.full_name
+    const stack = []
+    payload.commits.forEach(({ modified }) => {
+      modified.forEach(v => {
+        if (stack.indexOf(v) === -1) stack.push(v)
+      })
+    })
+    const routes = stack.map(v => `${repo}/${v}`)
+
+    await this.githubService.receiveHook(routes)
   }
 
   @Delete('hook/:idx')

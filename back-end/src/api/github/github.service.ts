@@ -1,11 +1,12 @@
-import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import $http from 'axios'
 import { client_id, client_secret } from './secret'
 import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
 import { httpResponseCheck } from '@/helper';
 import { InjectRepository } from '@nestjs/typeorm'
-import { GithubHookEntity as GithubHook, UserEntity as User } from '@/entity'
+import { GithubHookEntity as GithubHook, UserEntity as User, PostEntity as Post } from '@/entity'
 import { Repository } from 'typeorm'
+import { PostService } from '@/api/post/post.service'
 
 const headers = {
   Accept: 'application/vnd.github.v3+json',
@@ -19,6 +20,7 @@ export class GithubService {
 
   constructor(
     @InjectRepository(GithubHook) private readonly githubHookRepository: Repository<GithubHook>,
+    @Inject('PostService') private readonly postService: PostService
   ) {}
 
   public async getRepo (user: string, access_token: string): Promise<Array<GithubRepository>> {
@@ -97,6 +99,15 @@ export class GithubService {
     const headers = { Authorization: `token ${token}` }
     await httpResponseCheck($http.delete(requestURL, {headers}))
     await this.githubHookRepository.remove(hook)
+  }
+
+  public async receiveHook (routes: string[]): Promise<void> {
+    const posts: Post[] = await this.postService.findAllByRoute(routes)
+    if (posts.length === 0) return
+
+    posts.forEach(v => {
+
+    })
   }
 
 }

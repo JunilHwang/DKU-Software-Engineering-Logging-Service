@@ -121,7 +121,7 @@ export default class Post extends Vue {
             this.$message({ type: 'success', message: '포스트가 삭제되었습니다.' })
             await this.$router.push('/')
           } catch (e) {
-            const message: string =  e === 401 ? '포스트 삭제 권한이 없습니다.' : '오류로 인하여 포스트를 삭제할 수 없습니다'
+            const message: string =  e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 포스트를 삭제할 수 없습니다'
             this.$message({ type: 'error', message })
           }
         })
@@ -147,8 +147,7 @@ export default class Post extends Vue {
     try {
       await this.likePost(this.$route.params.idx)
     } catch (e) {
-      let message: string =  '오류로 인하여 좋아요를 완료할 수 없습니다.'
-      if (e === 401) message = '로그인 후 이용해주세요'
+      const message: string = e === 401 ? '다시 로그인 해주세' : '오류로 인하여 좋아요를 완료할 수 없습니다.'
       this.$message({ type: 'error', message })
     }
   }
