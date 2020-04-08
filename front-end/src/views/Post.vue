@@ -53,6 +53,8 @@
 
     </div>
 
+    <post-edit ref="postEditor" />
+
   </div>
 </template>
 
@@ -62,11 +64,14 @@ import { Action, State } from 'vuex-class'
 import { FETCH_COMMENT, FETCH_POST, LIKE_POST, DELETE_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
-import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader } from '@/components'
+import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit } from '@/components'
 import { GithubProfile } from '@Domain'
-import { eventBus } from '@/helper'
 
-const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader }
+const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit }
+
+interface DialogComponent extends Vue {
+  open: Function
+}
 
 @Component({ components })
 export default class Post extends Vue {
@@ -85,16 +90,16 @@ export default class Post extends Vue {
     return `https://github.com/${head}/blob/master/${tail}`
   }
 
-  private get isWriter () {
-    return this.profile && this.post && this.profile.login === this.post.writer.id
+  private get isWriter (): Boolean {
+    return !!this.profile && !!this.post && this.profile.login === this.post.writer.id
   }
 
-  private get isUser () {
+  private get isUser (): Boolean {
     return this.profile !== null
   }
 
-  private get likeActive () {
-    return this.isUser && this.post !== null && this.post.likeUsers.find(({ id }) => id === this.profile!.login)
+  private get likeActive (): Boolean {
+    return this.isUser && this.post !== null && !!this.post.likeUsers.find(({ id }) => id === this.profile!.login)
   }
 
   private async fetchPost () {
@@ -138,7 +143,7 @@ export default class Post extends Vue {
     this
       .$confirm(msg, title, { type, confirmButtonText, cancelButtonText })
       .then(() => {
-
+        (this.$refs.postEditor as DialogComponent).open({ ...this.post })
       })
       .catch(() => {
         this.$message({ type: 'info', message: '취소되었습니다.' })
