@@ -96,14 +96,15 @@ export class GithubController {
       ref !== 'refs/heads/master'
     ) return
 
-
     const reducer = (repo, v) => [ ...repo, ...v.modified]
     const cacheDelete = list => list.forEach(v => this.cacheManager.del(`/api/post/${v}`))
-    const paths: string[] = commits.reduce(reducer, []).map(v => `${full_name}/${v}`)
+    const routes: string[] = commits.reduce(reducer, []).map(v => `${full_name}/${v}`)
+
+    if (routes.length == 0) return
 
     // 캐시 삭제
     this.cacheManager.del('/api/post')
-    this.githubService.receiveHook(paths).then(cacheDelete)
+    this.githubService.receiveHook(routes).then(cacheDelete)
   }
 
   @Delete('hook/:idx')

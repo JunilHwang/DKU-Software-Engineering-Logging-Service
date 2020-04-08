@@ -108,8 +108,8 @@ export class GithubService {
   }
 
   public async receiveHook (routes: string[]): Promise<number[]> {
-    const posts: Post[] = await this.postService.findAllByRoute(routes)
     const isDev = process.env.NODE_ENV === 'development'
+    const posts: Post[] = await this.postService.findAllByRoute(routes)
     if (posts.length === 0) return
 
     const updatedList: PostUpdated[] = await this.postService.createUpdated(posts)
