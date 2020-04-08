@@ -1,8 +1,8 @@
 import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import $http from 'axios'
 import { client_id, client_secret } from './secret'
-import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob, blobToContent } from '@/domain/Github'
-import { httpResponseCheck } from '@/helper';
+import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
+import { httpResponseCheck, blobToContent } from '@/helper';
 import { InjectRepository } from '@nestjs/typeorm'
 import {
   GithubHookEntity as GithubHook,
