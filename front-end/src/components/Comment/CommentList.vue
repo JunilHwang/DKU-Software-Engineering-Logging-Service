@@ -20,16 +20,26 @@
         </li>
         <li class="commentCreatedAt">{{ createdAt*1 | fromNow }}</li>
         <li class="commentEdit" v-if="userProfile !== null">
-          <el-button class="xMini" @click="$emit('open-form', { idx, type: 'reply' })" type="default" plain>
-            답글
-          </el-button>
+          <el-button
+            @click="$emit('open-form', { idx, type: 'reply' })"
+            type="default"
+            class="xMini"
+            plain>답글</el-button>
           <template v-if="userProfile.login === id">
-            <el-button class="xMini" @click="$emit('open-form', { idx, type: 'update' })" type="default" plain>
-              수정
-            </el-button>
-            <el-button class="xMini" @click="remove(idx)" type="danger" plain>
-              삭제
-            </el-button>
+            <el-button
+              @click="$emit('open-form', { idx, type: 'update' })"
+              type="default"
+              class="xMini"
+              plain>수정</el-button>
+            <el-popconfirm
+              @onConfirm="remove(idx)"
+              title="댓글을 삭제하시겠습니까?"
+              cancel-button-text="취소"
+              confirm-button-text="확인">
+              <el-button slot="reference" class="xMini" type="danger" plain>
+                삭제
+              </el-button>
+            </el-popconfirm>
           </template>
         </li>
       </ul>
@@ -60,31 +70,14 @@ export default class CommentList extends Vue {
   @State(state => state.comment.commentList) commentList!: Comment[]
   @State(state => state.user.profile) userProfile!: GithubProfile|null
 
-  private remove (idx: number): void {
-    const confirmMsg: string = '정말로 삭제하시겠습니까?'
-    const confirmTitle: string = '댓글 삭제'
-    const confirmButtonText: string = '확인'
-    const cancelButtonText: string = '취소'
-    const type: 'warning' = 'warning'
-
-    const isChildren = this.commentList.find(v => v.parent === idx)
-    if (isChildren) {
-      this.$message({ type: 'warning', message: '답글이 있는 댓글은 삭제할 수 없습니다.' })
-      return
+  private async remove (idx: number): Promise<void> {
+    const post = this.$route.params.idx
+    try {
+      await this.deleteComment({ idx, post })
+      this.$message({ type: 'success', message: '댓글이 삭제되었습니다.' })
+    } catch (e) {
+      this.$message({ type: 'error', message: '오류로 인하여 댓글을 삭제할 수 없습니다.' })
     }
-
-    const confirmed = async (): Promise<void> => {
-      const post = this.$route.params.idx
-      try {
-        await this.deleteComment({ idx, post })
-        this.$message({ type: 'success', message: '댓글이 삭제되었습니다.' })
-      } catch (e) {
-        this.$message({ type: 'error', message: '오류로 인하여 댓글을 삭제할 수 없습니다.' })
-      }
-    }
-    const cancel = () => this.$message({ type: 'info', message: '취소되었습니다.' })
-
-    this.$confirm(confirmMsg, confirmTitle, { confirmButtonText, cancelButtonText, type }).then(confirmed).catch(cancel)
   }
 
 }
@@ -231,6 +224,7 @@ figure {
 .xMini {
   padding: 5px 7px;
   font-size: 11px;
+  margin-left: 5px !important;
 }
 
 
