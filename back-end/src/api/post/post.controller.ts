@@ -70,6 +70,7 @@ export class PostController {
   @HttpCode(HttpStatus.OK)
   public async refreshPost (
     @Param('idx') idx: number,
+    @Body('content') content: string,
     @Req() { cookies: { access_token } }: Request
   ): Promise<PostEntity> {
     this.refresh(idx)
@@ -77,7 +78,7 @@ export class PostController {
     const user: User|undefined = await this.userService.find({ access_token })
     if (user === undefined) throw new UnauthorizedException()
 
-    return await this.postService.refresh(idx)
+    return await this.postService.refresh(idx, content)
   }
 
   @Post('/like/:idx')

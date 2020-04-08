@@ -8,9 +8,7 @@ import {
   PostUpdatedEntity as PostUpdated
 } from '@/entity'
 import { PostVO } from '@/domain/Post'
-import {saveBlob, removeBlob, blobToContent} from '@/helper'
-import { GithubService } from '@/api/github/github.service'
-import {GithubContent} from "@/domain";
+import { saveBlob, removeBlob } from '@/helper'
 
 @Injectable()
 export class PostService {
@@ -18,8 +16,7 @@ export class PostService {
   constructor (
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
-    @InjectRepository(PostUpdated) private readonly postUpdatedRepository: Repository<PostUpdated>,
-    @Inject('GithubService') private readonly githubService: GithubService
+    @InjectRepository(PostUpdated) private readonly postUpdatedRepository: Repository<PostUpdated>
   ) {}
 
   public async create (writer: User, { content, title, sha, repository, description, thumbnail, route }: PostVO): Promise<void> {
@@ -103,17 +100,24 @@ export class PostService {
     }
   }
 
-  public async refresh (idx: number): Promise<Post> {
-    const post: Post = await this.find({ idx })
-    const [ user, repo, ...route ] = post.route.split('/')
-    const githubContent: GithubContent = await this.githubService.getContent(user, repo, route.join('/'))
-    post.content = blobToContent(githubContent)
-    return post
+  public async refresh (idx: number, content: string): Promise<Post> {
+    try {
+      const post: Post = await this.find({ idx })
+      const [ updated ] = await this.createUpdated([ post ])
+      post.content = content
+      updated.updatedAt = `${Date.now()}`
+      updated.updated = true
+      await this.postRepository.save(post)
+      await this.saveUpdatedAll([ updated ])
+      return post
+    } catch (e) {
+      throw new BadRequestException()
+    }
   }
 
   public async like (idx: number, user: User): Promise<Post> {
     try {
-      const post: Post = await this.find({idx})
+      const post: Post = await this.find({ idx })
       const index = post.likeUsers.findIndex(v => v.id === user.id)
       index !== -1
         ? post.likeUsers.splice(index, 1)
