@@ -12,8 +12,7 @@ const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${clie
 export class GithubController {
   constructor(
     private readonly githubService: GithubService,
-    private readonly userService: UserService,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore
+    private readonly userService: UserService
   ) {}
 
   @Get('repo/:user')
@@ -97,14 +96,12 @@ export class GithubController {
     ) return
 
     const reducer = (repo, v) => [ ...repo, ...v.modified]
-    const cacheDelete = list => list.forEach(v => this.cacheManager.del(`/api/post/${v}`))
     const routes: string[] = commits.reduce(reducer, []).map(v => `${full_name}/${v}`)
 
     if (routes.length == 0) return
 
     // 캐시 삭제
-    this.cacheManager.del('/api/post')
-    this.githubService.receiveHook(routes).then(cacheDelete)
+    await this.githubService.receiveHook(routes)
   }
 
   @Delete('hook/:idx')
