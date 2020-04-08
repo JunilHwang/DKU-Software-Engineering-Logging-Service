@@ -12,6 +12,13 @@
         </a>
       </li>
     </ul>
+    <div class="btnGroup center">
+      <el-tooltip content="캐시된 데이터를 강제로 제거합니다.">
+        <el-button @click="refresh" type="default" icon="el-icon-refresh" size="mini" plain>
+          새로고침
+        </el-button>
+      </el-tooltip>
+    </div>
   </el-dialog>
 </template>
 
@@ -43,6 +50,11 @@ export default class RepositoryList extends Vue {
   public close () {
     this.opened = false
   }
+
+  private refresh () {
+    this.repositories.forEach(({ full_name }) => localStorage.removeItem(full_name + '/sha'))
+    this.$message({ type: 'success', message: '캐시를 제거하였습니다.' })
+  }
 }
 </script>
 
@@ -50,7 +62,7 @@ export default class RepositoryList extends Vue {
 @import "../../assets/scss/lib";
 
 h3 {
-  margin: 0;
+  margin: 0 0 -20px;
   padding: 0;
   font-weight: 100;
   font-family: enFont();
