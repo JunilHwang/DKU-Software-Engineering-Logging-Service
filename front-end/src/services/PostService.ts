@@ -19,7 +19,7 @@ export default Object.freeze({
   },
 
   async like (idx: number): Promise<Post> {
-    return await responseProcessor<Post>($http.patch(`${baseURI}/${idx}`))
+    return await responseProcessor<Post>($http.post(`${baseURI}/like/${idx}`))
   },
 
   async remove (idx: number): Promise<PostView[]> {

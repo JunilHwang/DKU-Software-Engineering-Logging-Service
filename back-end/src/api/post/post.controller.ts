@@ -66,7 +66,7 @@ export class PostController {
     return await this.postService.update(idx, postVO)
   }
 
-  @Patch('/:idx')
+  @Post('/like/:idx')
   @HttpCode(HttpStatus.OK)
   public async likePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
     this.refresh(idx)
