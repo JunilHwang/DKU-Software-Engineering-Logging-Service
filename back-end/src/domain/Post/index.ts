@@ -10,6 +10,7 @@ export interface Post {
   description: string
   sha: string
   createdAt: number
+  thumbnail: boolean
   writer: User
   likeUsers: User[]
 }
@@ -26,4 +27,14 @@ export interface PostView {
   likes: number
 }
 
-export * from './PostVO'
+export interface PostVO {
+  idx?: number
+  title: string
+  content: string
+  repository: string
+  route: string
+  description: string
+  thumbnail: string
+  sha?: string
+  createdAt?: number
+}

@@ -11,12 +11,9 @@
         <a @click.prevent="toggleLike"
            href="#"
            class="iconWrap like"
-           :class="{ active: likeActive }"
-        >
+           :class="{ active: likeActive }">
           <fa icon="heart" />
-          <strong>
-            {{ post.likeUsers.length }}
-          </strong>
+          <strong v-html="post.likeUsers.length" />
         </a>
         <a href="#" class="iconWrap share">
           <fa icon="share-alt" />
@@ -25,7 +22,7 @@
           <fa icon="reply" />
         </a>
         <template v-if="isWriter">
-          <a @click.prevent href="#" class="iconWrap edit">
+          <a @click.prevent="editPost" href="#" class="iconWrap edit">
             <i class="el-icon-edit-outline" />
           </a>
           <a @click.prevent="deletePost" href="#" class="iconWrap delete">
@@ -67,6 +64,7 @@ import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader } from '@/components'
 import { GithubProfile } from '@Domain'
+import { eventBus } from '@/helper'
 
 const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader }
 
@@ -128,6 +126,23 @@ export default class Post extends Vue {
         .catch(() => {
           this.$message({ type: 'info', message: '포스트 삭제가 취소되었습니다.' })
         })
+  }
+
+  private async editPost () {
+    const confirmButtonText = '확인',
+          cancelButtonText = '취소',
+          type = 'warning',
+          msg = '정말로 수정 하시겠습니까?',
+          title = '포스트 수정'
+
+    this
+      .$confirm(msg, title, { type, confirmButtonText, cancelButtonText })
+      .then(() => {
+
+      })
+      .catch(() => {
+        this.$message({ type: 'info', message: '취소되었습니다.' })
+      })
   }
 
   private async fetchComment () {

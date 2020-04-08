@@ -14,21 +14,28 @@ import { components } from './index';
 import { GithubRepository, PostVO } from '@Domain'
 import { eventBus } from '@/helper'
 
+interface DialogComponent extends Vue {
+  open: Function
+}
+
 @Component({ components })
 export default class GithubFactory extends Vue {
+
+  private state: 'add'|'update' = 'add'
+
   private showRepository (repository: GithubRepository) {
-    const target: any = this.$refs.repository
+    const target = this.$refs.repository as DialogComponent
     target.open(repository)
   }
 
   private showContent (args: any) {
     if (args === null) return
-    const target: any = this.$refs.content
+    const target = this.$refs.content as DialogComponent
     target.open(...args)
   }
 
   private showSaveEditor (postVO: PostVO) {
-    const target: any = this.$refs.saveEditor
+    const target = this.$refs.saveEditor as DialogComponent
     target.open(postVO)
   }
 
@@ -38,7 +45,7 @@ export default class GithubFactory extends Vue {
 
   private created () {
     eventBus.$on('repositoryListOpen', () => {
-      const target: any = this.$refs.repositories
+      const target = this.$refs.repositories as DialogComponent
       target.open()
     })
   }
