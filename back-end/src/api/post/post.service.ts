@@ -142,6 +142,10 @@ export class PostService {
     )
   }
 
+  public async deleteUpdatedByPost (post: Post): Promise<void> {
+    await this.postUpdatedRepository.delete({ post })
+  }
+
   public async saveAll (posts: Post[]): Promise<Post[]> {
     return await this.postRepository.save(posts)
   }

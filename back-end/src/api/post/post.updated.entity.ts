@@ -6,7 +6,7 @@ export class PostUpdatedEntity {
   @PrimaryGeneratedColumn()
   idx: number
 
-  @ManyToOne(() => Post, { eager: true })
+  @ManyToOne(() => Post, { eager: true, cascade: true })
   post: Post
 
   @Column({ name: 'created_at' })

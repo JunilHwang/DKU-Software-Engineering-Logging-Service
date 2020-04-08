@@ -37,7 +37,7 @@ export class PostController {
 
     await this.postService.create(writer, postVO)
 
-    this.refresh()
+    this.refreshCache()
 
     return true
   }
@@ -46,7 +46,7 @@ export class PostController {
   @HttpCode(HttpStatus.OK)
   public async deletePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
 
-    this.refresh(idx)
+    this.refreshCache(idx)
 
     const post: PostEntity = await this.postService.find({ idx })
     const user: User = await this.userService.find({ access_token })
@@ -54,6 +54,7 @@ export class PostController {
     if (!(user && user.idx === post.writer.idx)) throw new UnauthorizedException()
 
     await this.commentService.deleteByPost(post)
+    await this.postService.deleteUpdatedByPost(post)
     await this.postService.delete(post)
 
     return await this.postService.findAll()
@@ -62,7 +63,7 @@ export class PostController {
   @Put('/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async updatePost (@Param('idx') idx: number, @Body() postVO: PostVO) {
-    this.refresh(idx)
+    this.refreshCache(idx)
     return await this.postService.update(idx, postVO)
   }
 
@@ -73,7 +74,7 @@ export class PostController {
     @Body('content') content: string,
     @Req() { cookies: { access_token } }: Request
   ): Promise<PostEntity> {
-    this.refresh(idx)
+    this.refreshCache(idx)
 
     const user: User|undefined = await this.userService.find({ access_token })
     if (user === undefined) throw new UnauthorizedException()
@@ -84,7 +85,7 @@ export class PostController {
   @Post('/like/:idx')
   @HttpCode(HttpStatus.OK)
   public async likePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
-    this.refresh(idx)
+    this.refreshCache(idx)
 
     const user: User|undefined = await this.userService.find({ access_token })
     if (user === undefined) throw new UnauthorizedException()
@@ -92,7 +93,7 @@ export class PostController {
     return await this.postService.like(idx, user)
   }
 
-  private refresh (idx: number = 0) {
+  private refreshCache (idx: number = 0) {
     this.cacheManager.del('/api/post')
     if (idx !== 0) this.cacheManager.del(`/api/post/${idx}`)
   }
