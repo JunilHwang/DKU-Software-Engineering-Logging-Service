@@ -9,10 +9,10 @@
       </el-form-item>
       <el-form-item label="포스트 경로" size="small" prop="route" required>
         <el-row type="flex" justify="space-between">
-          <el-col span="22">
+          <el-col :span="22">
             <el-input v-model="postData.route" disabled />
           </el-col>
-          <el-col span="2">
+          <el-col :span="2">
             <el-button type="default" icon="el-icon-edit-outline" plain />
           </el-col>
         </el-row>

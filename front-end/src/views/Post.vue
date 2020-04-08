@@ -8,26 +8,45 @@
       <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
 
       <div class="iconGroup">
-        <a @click.prevent="toggleLike"
-           href="#"
-           class="iconWrap like"
-           :class="{ active: likeActive }">
-          <fa icon="heart" />
-          <strong v-html="post.likeUsers.length" />
-        </a>
-        <a href="#" class="iconWrap share">
-          <fa icon="share-alt" />
-        </a>
+        <el-tooltip content="좋아요" placement="bottom">
+          <a @click.prevent="toggleLike"
+             href="#"
+             class="iconWrap like"
+             :class="{ active: likeActive }">
+            <fa icon="heart" />
+            <strong v-html="post.likeUsers.length" />
+          </a>
+        </el-tooltip>
+        <el-tooltip content="공유하기" placement="bottom">
+          <a href="#" class="iconWrap share">
+              <fa icon="share-alt" />
+          </a>
+        </el-tooltip>
         <a @click.prevent="$router.back()" href="#" class="iconWrap back">
           <fa icon="reply" />
         </a>
         <template v-if="isWriter">
-          <a @click.prevent="editPost" href="#" class="iconWrap edit">
+          <a slot="reference" @click.prevent="editPost" href="#" class="iconWrap edit">
             <i class="el-icon-edit-outline" />
           </a>
-          <a @click.prevent="deletePost" href="#" class="iconWrap delete">
-            <i class="el-icon-delete" />
-          </a>
+          <el-popconfirm
+            @onConfirm="refreshPost"
+            title="포스트를 업데이트 하시겠습니까?"
+            confirm-button-text="확인"
+            cancel-button-text="취소">
+            <a slot="reference" @click.prevent href="#" class="iconWrap refresh">
+              <i class="el-icon-refresh" />
+            </a>
+          </el-popconfirm>
+          <el-popconfirm
+            @onConfirm="deletePost"
+            title="정말로 삭제하시겠습니까?"
+            confirm-button-text="확인"
+            cancel-button-text="취소">
+            <a slot="reference" href="#" class="iconWrap delete" @click.prevent>
+              <i class="el-icon-delete" />
+            </a>
+          </el-popconfirm>
         </template>
       </div>
 
@@ -111,43 +130,26 @@ export default class Post extends Vue {
   }
 
   private async deletePost () {
-    const confirmButtonText = '확인',
-          cancelButtonText = '취소',
-          type = 'warning',
-          msg = '정말로 삭제하시겠습니까?',
-          title = '포스트 삭제'
-
-    this.$confirm(msg, title, { type, confirmButtonText, cancelButtonText })
-        .then(async () => {
-          try {
-            await this.deletePostAction(this.$route.params.idx)
-            this.$message({ type: 'success', message: '포스트가 삭제되었습니다.' })
-            await this.$router.push('/')
-          } catch (e) {
-            const message: string =  e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 포스트를 삭제할 수 없습니다'
-            this.$message({ type: 'error', message })
-          }
-        })
-        .catch(() => {
-          this.$message({ type: 'info', message: '포스트 삭제가 취소되었습니다.' })
-        })
+    try {
+      await this.deletePostAction(this.$route.params.idx)
+      this.$message({ type: 'success', message: '포스트가 삭제되었습니다.' })
+      await this.$router.push('/')
+    } catch (e) {
+      const message: string =  e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 포스트를 삭제할 수 없습니다'
+      this.$message({ type: 'error', message })
+    }
   }
 
   private async editPost () {
-    const confirmButtonText = '확인',
-          cancelButtonText = '취소',
-          type = 'warning',
-          msg = '정말로 수정 하시겠습니까?',
-          title = '포스트 수정'
+    (this.$refs.postEditor as DialogComponent).open({ ...this.post })
+  }
 
-    this
-      .$confirm(msg, title, { type, confirmButtonText, cancelButtonText })
-      .then(() => {
-        (this.$refs.postEditor as DialogComponent).open({ ...this.post })
-      })
-      .catch(() => {
-        this.$message({ type: 'info', message: '취소되었습니다.' })
-      })
+  private async refreshPost () {
+    try {
+      console.log('포스트 업데이트')
+    } catch (e) {
+
+    }
   }
 
   private async fetchComment () {
@@ -252,6 +254,12 @@ export default class Post extends Vue {
 
       &.delete {
         $color: #ff3860;
+        color: $color;
+        border-color: $color;
+      }
+
+      &.refresh {
+        $color: #06F;
         color: $color;
         border-color: $color;
       }
