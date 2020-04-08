@@ -36,7 +36,13 @@
       </el-table-column>
       <el-table-column label="삭제" width="150" align="center">
         <template slot-scope="scope">
-          <el-button @click="remove(scope.row.idx)" type="danger" icon="el-icon-delete" size="mini" plain circle />
+          <el-popconfirm
+            @onConfirm="remove(scope.row.idx)"
+            title="삭제하시겠습니까?"
+            confirm-button-text="확인"
+            cancel-button-text="취소">
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" plain circle />
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
