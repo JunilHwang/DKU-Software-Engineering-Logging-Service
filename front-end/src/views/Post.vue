@@ -80,7 +80,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
-import { FETCH_COMMENT, FETCH_POST, LIKE_POST, DELETE_POST } from '@/middleware/store/types'
+import { FETCH_COMMENT, FETCH_POST, LIKE_POST, DELETE_POST, REFRESH_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit } from '@/components'
@@ -98,6 +98,7 @@ export default class Post extends Vue {
   @Action(FETCH_COMMENT) fetchCommentAction!: ActionMethod
   @Action(LIKE_POST) likePost!: ActionMethod
   @Action(DELETE_POST) deletePostAction!: ActionMethod
+  @Action(REFRESH_POST) refreshPostAction!: ActionMethod
   @State(state => state.post.selectedPost) post!: PostType|null
   @State(state => state.user.profile) profile!: GithubProfile|null
 
@@ -146,9 +147,11 @@ export default class Post extends Vue {
 
   private async refreshPost () {
     try {
-      console.log('포스트 업데이트')
+      await this.refreshPostAction({ ...this.post })
+      this.$message({ type: 'success', message: '포스트가 업데이트 되었습니다.' })
     } catch (e) {
-
+      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 포스트를 업데이트할 수 없습니다.'
+      this.$message({ type: 'error', message })
     }
   }
 

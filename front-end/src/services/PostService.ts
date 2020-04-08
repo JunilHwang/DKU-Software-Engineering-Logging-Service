@@ -1,6 +1,7 @@
 import $http from 'axios'
-import { Post, PostVO, PostView } from '@Domain'
-import { responseProcessor } from '@/helper'
+import { Post, PostVO, PostView, GithubContent } from '@Domain'
+import { responseProcessor, blobToContent } from '@/helper'
+import { githubClientService } from './index'
 
 const baseURI = '/api/post'
 
@@ -24,5 +25,12 @@ export default Object.freeze({
 
   async remove (idx: number): Promise<PostView[]> {
     return await responseProcessor<PostView[]>($http.delete(`${baseURI}/${idx}`))
+  },
+
+  async refresh (idx: number, route: string): Promise<Post> {
+    const [ user, repo, ...path ] = route.split('/')
+    const githubContent: GithubContent = await githubClientService.getContent({ user, repo, path: path.join('/') })
+    const content = blobToContent(githubContent)
+    return await responseProcessor<Post>($http.patch(`${baseURI}/${idx}`, { content }))
   }
 })

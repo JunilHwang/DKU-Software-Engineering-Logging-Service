@@ -1,5 +1,5 @@
 import { Module, MutationAction, VuexModule } from 'vuex-module-decorators'
-import { FETCH_POST, FETCH_POST_ALL, LIKE_POST, DELETE_POST } from '../types'
+import { FETCH_POST, FETCH_POST_ALL, LIKE_POST, DELETE_POST, REFRESH_POST, UPDATE_POST } from '../types'
 import { Post, PostView } from '@Domain'
 import { postService } from '@/services'
 
@@ -29,6 +29,16 @@ export default class PostModule extends VuexModule {
   @MutationAction
   async [DELETE_POST] (idx: number) {
     return { postList: await postService.remove(idx) }
+  }
+
+  @MutationAction
+  async [REFRESH_POST] ({ idx, route }: Post) {
+    return { selectedPost: await postService.refresh(idx, route) }
+  }
+
+  @MutationAction
+  async [UPDATE_POST] ({ idx, route }: Post) {
+    return { selectedPost: await postService.refresh(idx, route) }
   }
 
 }

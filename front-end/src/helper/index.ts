@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import jsYaml from 'js-yaml'
+import { GithubContent } from '@Domain'
+import { Base64 } from 'js-base64'
+
 
 export * from './response'
 
@@ -48,3 +51,10 @@ export const sidebarAutoActive = (() => {
     })
   }
 })();
+
+
+export const blobToContent = ({ content, download_url, html_url }: GithubContent) => {
+  return Base64.decode(content)
+    .replace(/!\[(.*)\]\(([.|/].*)\)/gim, `![$1](${download_url}/../$2)`)
+    .replace(/\[(.*)\]\(([.|/].*)\)/gim, `[$1](${html_url}/../$2)`)
+}
