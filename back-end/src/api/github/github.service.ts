@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable, UnauthorizedException } from '
 import $http from 'axios'
 import { client_id, client_secret } from './secret'
 import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
-import { httpResponseCheck } from '@/helper';
+import { blobToContent, httpResponseCheck } from '@/helper';
 import { InjectRepository } from '@nestjs/typeorm'
 import {
   GithubHookEntity as GithubHook,
@@ -12,7 +12,6 @@ import {
 } from '@/entity'
 import { Repository } from 'typeorm'
 import { PostService } from '@/api/post/post.service'
-import { Base64 } from 'js-base64'
 
 const headers = {
   Accept: 'application/vnd.github.v3+json',
@@ -123,13 +122,9 @@ export class GithubService {
     }))
     if (isDev) console.log('contents: ', contents)
 
-    const updatedPosts: Post[] = await this.postService.saveAll(posts.map((v, k) => {
-      const githubContent: GithubContent = contents[k]
-      v.content = Base64.decode(githubContent.content)
-        .replace(/!\[(.*)\]\(([.|/].*)\)/gim, `![$1](${githubContent.download_url}/../$2)`)
-        .replace(/\[(.*)\]\(([.|/].*)\)/gim, `[$1](${githubContent.html_url}/../$2)`)
-      return v
-    }))
+    const updatedPosts: Post[] = await this.postService.saveAll(
+      posts.map((v, k) => (v.content = blobToContent(contents[k]), v))
+    )
     if (isDev) console.log('updatedPosts: ', updatedPosts)
 
     const result: PostUpdated[] = await this.postService.saveUpdatedAll(updatedList.map(v => {

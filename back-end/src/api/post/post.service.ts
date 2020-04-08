@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import {
@@ -7,8 +7,10 @@ import {
   PostViewEntity as PostView,
   PostUpdatedEntity as PostUpdated
 } from '@/entity'
-import { PostVO } from '@/domain/Post';
-import { saveBlob, removeBlob } from '@/helper'
+import { PostVO } from '@/domain/Post'
+import {saveBlob, removeBlob, blobToContent} from '@/helper'
+import { GithubService } from '@/api/github/github.service'
+import {GithubContent} from "@/domain";
 
 @Injectable()
 export class PostService {
@@ -16,7 +18,8 @@ export class PostService {
   constructor (
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
-    @InjectRepository(PostUpdated) private readonly postUpdatedRepository: Repository<PostUpdated>
+    @InjectRepository(PostUpdated) private readonly postUpdatedRepository: Repository<PostUpdated>,
+    @Inject('GithubService') private readonly githubService: GithubService
   ) {}
 
   public async create (writer: User, { content, title, sha, repository, description, thumbnail, route }: PostVO): Promise<void> {
@@ -98,6 +101,14 @@ export class PostService {
     } catch (e) {
       throw new BadRequestException()
     }
+  }
+
+  public async refresh (idx: number): Promise<Post> {
+    const post: Post = await this.find({ idx })
+    const [ user, repo, ...route ] = post.route.split('/')
+    const githubContent: GithubContent = await this.githubService.getContent(user, repo, route.join('/'))
+    post.content = blobToContent(githubContent)
+    return post
   }
 
   public async like (idx: number, user: User): Promise<Post> {

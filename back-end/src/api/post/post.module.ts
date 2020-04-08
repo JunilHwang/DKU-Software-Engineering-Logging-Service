@@ -5,11 +5,13 @@ import { PostService } from './post.service'
 import { PostEntity, PostViewEntity, PostUpdatedEntity } from '@/entity'
 import { UserModule } from '@/api/user/user.module'
 import { CommentModule } from '@/api/comment/comment.module'
+import { GithubModule } from '@/api/github/github.module'
 
 const entities = TypeOrmModule.forFeature([ PostEntity, PostViewEntity, PostUpdatedEntity ])
 
 @Module({
   imports: [
+    forwardRef(() => GithubModule),
     forwardRef(() => CommentModule),
     forwardRef(() => UserModule),
     CacheModule.register(),

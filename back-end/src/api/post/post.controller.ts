@@ -66,6 +66,20 @@ export class PostController {
     return await this.postService.update(idx, postVO)
   }
 
+  @Patch('/:idx')
+  @HttpCode(HttpStatus.OK)
+  public async refreshPost (
+    @Param('idx') idx: number,
+    @Req() { cookies: { access_token } }: Request
+  ): Promise<PostEntity> {
+    this.refresh(idx)
+
+    const user: User|undefined = await this.userService.find({ access_token })
+    if (user === undefined) throw new UnauthorizedException()
+
+    return await this.postService.refresh(idx)
+  }
+
   @Post('/like/:idx')
   @HttpCode(HttpStatus.OK)
   public async likePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
