@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common'
+import { CacheModule, forwardRef, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { PostController } from './post.controller'
 import { PostService } from './post.service'
@@ -12,6 +12,7 @@ const entities = TypeOrmModule.forFeature([ PostEntity, PostViewEntity, PostUpda
   imports: [
     forwardRef(() => CommentModule),
     forwardRef(() => UserModule),
+    CacheModule.register(),
     entities
   ],
   controllers: [ PostController ],

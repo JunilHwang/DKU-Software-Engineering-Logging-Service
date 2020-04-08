@@ -12,6 +12,7 @@ export class PostController {
     private readonly postService: PostService,
     private readonly userService: UserService,
     private readonly commentService: CommentService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore
   ) {}
 
   @Get()
@@ -36,12 +37,16 @@ export class PostController {
 
     await this.postService.create(writer, postVO)
 
+    this.refresh()
+
     return true
   }
 
   @Delete('/:idx')
   @HttpCode(HttpStatus.OK)
   public async deletePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
+
+    this.refresh(idx)
 
     const post: PostEntity = await this.postService.find({ idx })
     const user: User = await this.userService.find({ access_token })
@@ -57,16 +62,23 @@ export class PostController {
   @Put('/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async updatePost (@Param('idx') idx: number, @Body() postVO: PostVO) {
+    this.refresh(idx)
     return await this.postService.update(idx, postVO)
   }
 
   @Patch('/:idx')
   @HttpCode(HttpStatus.OK)
   public async likePost (@Param('idx') idx: number, @Req() { cookies: { access_token } }: Request) {
+    this.refresh(idx)
 
     const user: User|undefined = await this.userService.find({ access_token })
     if (user === undefined) throw new UnauthorizedException()
 
     return await this.postService.like(idx, user)
+  }
+
+  private refresh (idx: number = 0) {
+    this.cacheManager.del('/api/post')
+    if (idx !== 0) this.cacheManager.del(`/api/post/${idx}`)
   }
 }
