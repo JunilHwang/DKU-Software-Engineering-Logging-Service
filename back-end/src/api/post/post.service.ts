@@ -93,6 +93,7 @@ export class PostService {
   }
 
   public async update (post: Post, uploaded: string): Promise<Post> {
+    let uploading: number = -1
     try {
       if (!post.thumbnail) {
         removeBlob(post.sha)
@@ -103,7 +104,6 @@ export class PostService {
       await this.postRepository.update(post.idx, postDetail)
       return this.find({ idx: post.idx })
     } catch (e) {
-      removeBlob(post.sha)
       throw new BadRequestException()
     }
   }
