@@ -4,6 +4,7 @@ import { AppModule } from './app.module'
 import { Request, Response } from 'express'
 import { join } from 'path'
 import * as express from 'express'
+import { UPLOADED_PATH } from '@/helper'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -18,7 +19,7 @@ async function bootstrap() {
   app.setBaseViewsDir(staticPath)
   app.setViewEngine('hbs')
 
-  app.use('/uploaded', express.static(`${__dirname}/resources/uploaded`))
+  app.use('/uploaded', express.static(UPLOADED_PATH))
   app.use(cookieParser())
 
   if (process.env.NODE_ENV === 'development') {
