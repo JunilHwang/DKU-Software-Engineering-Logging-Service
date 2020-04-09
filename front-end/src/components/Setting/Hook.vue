@@ -92,27 +92,14 @@ export default class Hook extends Vue {
     }
   }
 
-  private remove (idx: number) {
-    const confirmMsg: string = '정말로 삭제하시겠습니까?'
-    const confirmTitle: string = 'Hook 삭제'
-    const confirmButtonText: string = '확인'
-    const cancelButtonText: string = '취소'
-    const type: 'warning' = 'warning'
-
-    this
-      .$confirm(confirmMsg, confirmTitle, { type, confirmButtonText, cancelButtonText })
-      .then(async () => {
-        try {
-          await this.deleteHook(idx)
-          this.$message({ type: 'success', message: '삭제되었습니다.' })
-        } catch (e) {
-          const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 삭제가 취소되었습니다.';
-          this.$message({ type: 'error', message })
-        }
-      })
-      .catch(() => {
-        this.$message({ type: 'info', message: '취소되었습니다.' })
-      })
+  private async remove (idx: number) {
+    try {
+      await this.deleteHook(idx)
+      this.$message({ type: 'success', message: '삭제되었습니다.' })
+    } catch (e) {
+      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 삭제가 취소되었습니다.';
+      this.$message({ type: 'error', message })
+    }
   }
 
   private add (repo: GithubRepository) {
