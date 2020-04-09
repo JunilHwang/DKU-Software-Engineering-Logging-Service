@@ -12,13 +12,9 @@ import {
 } from '@/entity'
 import { Repository } from 'typeorm'
 import { PostService } from '@/api/post/post.service'
+import { defaultAccessToken as token } from './secret'
 
 const BASE_URL = 'https://api.github.com'
-const rateLimit: { [key: string]: number } = {
-  limit: 0,
-  remaining: 0,
-  reset: 0,
-}
 
 export const responseCheck = async (response: Promise<AxiosResponse>) => {
   try {
@@ -41,9 +37,9 @@ export class GithubService {
     @Inject('PostService') private readonly postService: PostService
   ) {}
 
-  public async getRepo (user: string, access_token: string): Promise<Array<GithubRepository>> {
+  public async getRepo (user: string): Promise<Array<GithubRepository>> {
     try {
-      const headers = { Authorization: `token ${access_token}` }
+      const headers = { Authorization: `Basic ${token}` }
       const params = {sort: 'pushed', type: 'owner', direction: 'desc'}
       const url = `${BASE_URL}/users/${user}/repos`
       return await responseCheck($http.get(url, { params, headers }))
@@ -53,8 +49,13 @@ export class GithubService {
   }
 
   public async getContent (user: string, repo: string, path: string): Promise<GithubContent> {
-    const url = `${BASE_URL}/repos/${user}/${repo}/contents/${path}`
-    return await responseCheck($http.get(url))
+    try {
+      const headers = {Authorization: `Basic ${token}`}
+      const url = `${BASE_URL}/repos/${user}/${repo}/contents/${path}`
+      return await responseCheck($http.get(url, {headers}))
+    } catch (e) {
+      throw new UnauthorizedException()
+    }
   }
 
   public async getToken (code: string): Promise<GithubResponseToken> {
@@ -69,18 +70,20 @@ export class GithubService {
   }
 
   public async getTrees (user: string, repo: string, sha: string): Promise<GithubTrees> {
-    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/trees/${sha}`))
+    const headers = { Authorization: `Basic ${token}` }
+    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/trees/${sha}`, { headers }))
   }
 
   public async getBlob (user: string, repo: string, sha: string): Promise<GithubBlob> {
-    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`))
+    const headers = { Authorization: `Basic ${token}` }
+    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`, { headers }))
   }
 
   public async getHook (user: User): Promise<GithubHook[]> {
     return await this.githubHookRepository.find({ user })
   }
 
-  public async addHook (user: User, repo: string, token: string): Promise<GithubHook> {
+  public async addHook (user: User, repo: string, token: string): Promise<GithubHook[]> {
     const requestURL = `${BASE_URL}/repos/${repo}/hooks`
     const configURL = process.env.NODE_ENV === 'development'
                       ? 'http://49.172.17.25:8080'
@@ -107,7 +110,7 @@ export class GithubService {
     githubHook.data = await responseCheck($http.post(requestURL, data, { headers }))
     await this.githubHookRepository.save(githubHook)
 
-    return githubHook
+    return await this.getHook(user)
   }
 
   public async removeHook (idx: number, token: string): Promise<void> {
@@ -115,7 +118,7 @@ export class GithubService {
     const id: number = hook.data.id
     const requestURL = `${BASE_URL}/repos/${hook.repo}/hooks/${id}`
     const headers = { Authorization: `token ${token}` }
-    await responseCheck($http.delete(requestURL, {headers}))
+    await responseCheck($http.delete(requestURL, { headers }))
     await this.githubHookRepository.remove(hook)
   }
 
@@ -127,7 +130,7 @@ export class GithubService {
     const updatedList: PostUpdated[] = await this.postService.createUpdated(posts)
     if (isDev) console.log('updatedList: ', updatedList)
 
-    const contents: GithubContent[] = await Promise.all(posts.map(post => {
+    const contents: GithubContent[] = await Promise.all(posts.map(async post => {
       const route: string = post.route
       const [ user, repo, ...pathArr ] = route.split('/')
       const path: string = pathArr.join('/')

@@ -3,7 +3,8 @@ import { CommentService } from './comment.service'
 import { PostService } from '@/api/post/post.service'
 import { UserService } from '@/api/user/user.service'
 import { CommentVO } from '@/domain'
-import { CommentEntity as Comment } from './comment.entity'
+import { CommentEntity as Comment, UserEntity as User, PostEntity } from '@/entity'
+import { Token } from '@/middle'
 
 @Controller('/api')
 export class CommentController {
@@ -26,23 +27,20 @@ export class CommentController {
 
   @Post('/comment')
   @HttpCode(HttpStatus.OK)
-  async createdComment (@Body() { post, content, to = '', parent = 0 }, @Request() { cookies: { access_token } }): Promise<Comment[]> {
-
-    if ( !access_token ) throw new UnauthorizedException()
-
-    const writer = await this.userService.find({ access_token })
-    if ( !writer ) throw new UnauthorizedException()
-
-    const postEntity = await this.postService.find({ idx: post })
-    if ( !postEntity ) throw new BadRequestException()
+  async createdComment (@Body() { post, content, to = '', parent = 0 }, @Token() access_token: string): Promise<Comment[]> {
+    const writer: User = await this.userService.findByToken(access_token)
+    const postEntity: PostEntity = await this.postService.find({ idx: post })
+    if (!postEntity) throw new BadRequestException()
     await this.commentService.create({ content, parent, to, writer, post: postEntity })
     return await this.commentService.findCommentsByPost(post)
   }
 
   @Put('/comment/:idx')
   @HttpCode(HttpStatus.OK)
-  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO): Promise<Comment[]> {
+  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO, @Token() access_token: string): Promise<Comment[]> {
+    const writer: User = await this.userService.findByToken(access_token)
     const comment: Comment = await this.commentService.findComment({ idx })
+    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException()
     const post = await comment.post
     await this.commentService.update(idx, commentVO)
     return await this.commentService.findCommentsByPost(post.idx)
@@ -50,8 +48,10 @@ export class CommentController {
 
   @Delete('/comment/:idx')
   @HttpCode(HttpStatus.OK)
-  async deleteComment (@Param('idx') idx: number): Promise<Comment[]> {
+  async deleteComment (@Param('idx') idx: number, @Token() access_token: string): Promise<Comment[]> {
+    const writer: User = await this.userService.findByToken(access_token)
     const comment: Comment = await this.commentService.findComment({ idx })
+    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException()
     const post = await comment.post
     await this.commentService.delete({ idx })
     return await this.commentService.findCommentsByPost(post.idx)

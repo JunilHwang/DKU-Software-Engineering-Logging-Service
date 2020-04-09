@@ -5,6 +5,7 @@ import { client_id, redirectURL } from './secret'
 import { UserService } from '@/api/user/user.service'
 import { UserEntity as User, GithubHookEntity as GithubHook } from '@/entity'
 import { GithubHookPayload } from '@/domain'
+import { Token } from '@/middle'
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}&scope=admin:repo_hook`
 
@@ -19,8 +20,8 @@ export class GithubController {
   @Get('repo/:user')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
-  public async getRepo (@Param('user') user: string, @Req() { cookies: { access_token }}: Request) {
-    return await this.githubService.getRepo(user, access_token)
+  public async getRepo (@Param('user') user: string) {
+    return await this.githubService.getRepo(user)
   }
 
   @Get('content')
@@ -77,22 +78,21 @@ export class GithubController {
 
   @Post('hook')
   @HttpCode(HttpStatus.OK)
-  public async addHook (@Body('repo') repo: string, @Req() { cookies: { access_token } }): Promise<GithubHook[]> {
+  public async addHook (@Body('repo') repo: string, @Token() access_token: string): Promise<GithubHook[]> {
 
-    // 현재 로그인 중인 유저 정보 가져오기
-    const user: User|undefined = await this.userService.find({ access_token })
-    if (user === undefined) throw new UnauthorizedException()
-
-    await this.githubService.addHook(user, repo, access_token)
-    return await this.githubService.getHook(user)
+    return await this.githubService.addHook(
+      await this.userService.findByToken(access_token),
+      repo,
+      access_token
+    )
 
   }
 
   @Post('hook/commit')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async hookPayload (@Body() { ref, commits, repository: { full_name } }: GithubHookPayload, @Req() req: Request): Promise<void> {
+  public async hookPayload (@Body() { ref, commits, repository: { full_name } }: GithubHookPayload, @Req() { headers }: Request): Promise<void> {
     if (
-      req.headers['x-github-event'] !== 'push' ||
+      headers['x-github-event'] !== 'push' ||
       ref !== 'refs/heads/master'
     ) return
 

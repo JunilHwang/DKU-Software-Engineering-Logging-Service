@@ -1,4 +1,12 @@
-import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import {
@@ -100,9 +108,10 @@ export class PostService {
     }
   }
 
-  public async refresh (idx: number, content: string): Promise<Post> {
+  public async refresh (idx: number, content: string, user: User): Promise<Post> {
     try {
       const post: Post = await this.find({ idx })
+      if (post.writer.idx !== user.idx) throw new UnauthorizedException()
       const [ updated ] = await this.createUpdated([ post ])
       post.content = content
       updated.updatedAt = `${Date.now()}`
