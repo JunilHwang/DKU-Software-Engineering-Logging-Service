@@ -18,10 +18,11 @@ const BASE_URL = 'https://api.github.com'
 
 export const responseCheck = async (response: Promise<AxiosResponse>) => {
   try {
-    const { statusText, status, config: { method, url }, data } = await response
-    if (process.env.NODE_ENV !== 'production')
+    const { statusText, status, config: { method, url }, data, headers } = await response
+    if (process.env.NODE_ENV !== 'production') {
       console.log(method, url, status, statusText)
-
+      console.log('X-Ratelimit-Remaining: ', headers['x-ratelimit-remaining'])
+    }
     return data
   } catch ({ response }) {
     console.error(response)
