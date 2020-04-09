@@ -16,6 +16,7 @@ import { eventBus } from '@/helper'
 
 interface DialogComponent extends Vue {
   open: Function
+  close: Function
 }
 
 @Component({ components })

@@ -70,9 +70,20 @@
 
       <comment-dialog ref="commentDialog" />
 
-    </div>
+    </div>x
 
-    <post-edit ref="postEditor" />
+    <template v-if="isWriter">
+      <post-edit
+        ref="postEditor"
+        @open-link-editor="() => $refs.linkEditor.open()"
+        @update-route="updateRoute" />
+      <github-link-editor
+        ref="linkEditor"
+        @show-content="args => $refs.contentEditor.open(...args)" />
+      <github-content
+        ref="contentEditor"
+        @save-editing="args => $refs.postEditor.updateRoute(args)" />
+    </template>
 
   </div>
 </template>
@@ -83,13 +94,14 @@ import { Action, State } from 'vuex-class'
 import { FETCH_COMMENT, FETCH_POST, LIKE_POST, DELETE_POST, REFRESH_POST } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
-import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit } from '@/components'
+import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit, GithubLinkEditor, GithubContent } from '@/components'
 import { GithubProfile } from '@Domain'
 
-const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit }
+const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit, GithubLinkEditor, GithubContent }
 
 interface DialogComponent extends Vue {
   open: Function
+  close: Function
 }
 
 @Component({ components })
@@ -175,6 +187,13 @@ export default class Post extends Vue {
       const message: string = e === 401 ? '다시 로그인 해주세' : '오류로 인하여 좋아요를 완료할 수 없습니다.'
       this.$message({ type: 'error', message })
     }
+  }
+
+  private async updateRoute () {
+    const linkEditor = this.$refs.linkEditor as DialogComponent
+    const contentEditor = this.$refs.contentEditor as DialogComponent
+    linkEditor.close()
+    contentEditor.close()
   }
 
   private created () {

@@ -13,7 +13,7 @@
             <el-input v-model="postData.route" disabled />
           </el-col>
           <el-col :span="2">
-            <el-button type="default" icon="el-icon-edit-outline" plain />
+            <el-button @click="$emit('open-link-editor')" type="default" icon="el-icon-edit-outline" plain />
           </el-col>
         </el-row>
         * 저장소에서 해당 파일의 위치가 변경되었을 경우 업데이트 해주세요
@@ -41,13 +41,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import { Post } from '@Domain'
-import { postService } from '@/services'
-import { eventBus } from '@/helper'
-import {Action} from "vuex-class";
-import {UPDATE_POST} from "@/middleware/store/types";
-import {ActionMethod} from "vuex";
+import { Vue, Component, Emit } from 'vue-property-decorator'
+import { Post, PostVO } from '@Domain'
+import { Action } from 'vuex-class'
+import { UPDATE_POST } from '@/middleware/store/types'
+import { ActionMethod } from 'vuex'
 
 const reader: FileReader = new FileReader()
 
@@ -98,6 +96,13 @@ export default class PostEdit extends Vue {
     const input = this.$refs.thumbnailInput as HTMLInputElement
     input.value = ''
     this.postData!.thumbnail = false
+  }
+
+  @Emit()
+  public updateRoute ({ content, repository, route }: PostVO) {
+    this.postData!.content = content
+    this.postData!.repository = repository
+    this.postData!.route = route
   }
 
   private created () {

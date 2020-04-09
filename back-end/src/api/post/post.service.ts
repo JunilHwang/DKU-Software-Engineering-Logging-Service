@@ -100,7 +100,7 @@ export class PostService {
       } else if (post.thumbnail && uploaded !== `/uploaded/${post.sha}`) {
         saveBlob(uploaded, post.sha)
       }
-      const { idx, writer, likeUsers, content, ...postDetail } = post
+      const { idx, writer, likeUsers, ...postDetail } = post
       await this.postRepository.update(post.idx, postDetail)
       return this.find({ idx: post.idx })
     } catch (e) {
