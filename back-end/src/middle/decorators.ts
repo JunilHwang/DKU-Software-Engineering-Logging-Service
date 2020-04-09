@@ -1,9 +1,8 @@
-import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common'
+import { createParamDecorator, UnauthorizedException } from '@nestjs/common'
+import { Request } from 'express'
 
-export const Token = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): string => {
-    const request = ctx.switchToHttp().getRequest();
-    const token: string|null = request.cookies.access_token || null
+export const Token = createParamDecorator((data: undefined, req: Request): string => {
+    const token: string|null = req.cookies.access_token || null
     if (token === null) throw new UnauthorizedException()
     return token
   },

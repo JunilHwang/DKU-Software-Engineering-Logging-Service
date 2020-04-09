@@ -2,6 +2,7 @@ import {CacheTTL, Controller, Get, Query, Request, Param, HttpCode, HttpStatus} 
 import { UserService } from './user.service'
 import { PostService } from '@/api/post/post.service'
 import { UserEntity as User } from '@/entity';
+import { Token } from '@/middle'
 
 @Controller('/api/user')
 export class UserController {
@@ -21,7 +22,7 @@ export class UserController {
   @Get('/posts')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60 * 24)
-  public async getMyPosts (@Request() { cookies: { access_token } }) {
+  public async getMyPosts (@Token() access_token: string) {
     const { id } = await this.userService.find({ access_token })
     return await this.postService.findAllByUser(id)
   }
