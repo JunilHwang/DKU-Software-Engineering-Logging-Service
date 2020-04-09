@@ -30,17 +30,15 @@ export class PostController {
   }
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  public async createPost (@Body() postVO: PostVO, @Token() access_token: string) {
-
-    await this.postService.create(
-      await this.userService.findByToken(access_token),
-      postVO
-    )
+  @HttpCode(HttpStatus.OK)
+  public async createPost (@Body() postVO: PostVO, @Token() access_token: string): Promise<PostEntity> {
 
     this.refreshCache()
 
-    return true
+    return await this.postService.create(
+      await this.userService.findByToken(access_token),
+      postVO
+    )
   }
 
   @Delete('/:idx')

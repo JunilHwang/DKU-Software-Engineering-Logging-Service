@@ -13,6 +13,7 @@ export const DELETE_GITHUB_HOOK = 'github/deleteHook'
 // Post
 export const FETCH_POST = 'post/fetchOne'
 export const FETCH_POST_ALL = 'post/fetchAll'
+export const ADD_POST = 'post/add'
 export const LIKE_POST = 'post/like'
 export const DELETE_POST = 'post/delete'
 export const REFRESH_POST = 'post/refresh'

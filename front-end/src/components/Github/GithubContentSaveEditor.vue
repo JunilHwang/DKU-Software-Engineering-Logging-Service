@@ -30,15 +30,19 @@
 </template>
 
 <script lang="ts">
-  import {Vue, Component, Emit} from 'vue-property-decorator'
+import { Vue, Component, Emit } from 'vue-property-decorator'
+import { Action } from 'vuex-class'
+import { ActionMethod } from 'vuex'
 import { PostVO } from '@Domain'
-import {eventBus, getFrontMatter} from '@/helper'
-import { postService } from '@/services'
+import { eventBus, getFrontMatter } from '@/helper'
+import { ADD_POST } from '@/middleware/store/types'
 
 const reader: FileReader = new FileReader()
 
 @Component
 export default class GithubContentSaveEditor extends Vue {
+
+  @Action(ADD_POST) addPost!: ActionMethod
 
   private opened: boolean = false
   private postData: PostVO = {
@@ -70,12 +74,12 @@ export default class GithubContentSaveEditor extends Vue {
     frm.validate(async (valid: boolean) => {
       if (!valid) return false
 
-      const isSuccess = await postService.create(this.postData)
-
-      this.$message({ type: 'info', message: isSuccess ? '포스트가 등록되었습니다.' : '이미 등록된 포스트입니다.' })
-
-      if (isSuccess) {
+      try {
+        await this.addPost(this.postData)
+        this.$message({ type: 'success', message: '포스트가 등록되었습니다.' })
         eventBus.$emit('fetchPostAll')
+      } catch (e) {
+        this.$message({ type: 'error', message: '오류로 인하여 포스트를 등록할 수 없습니다.' })
       }
 
       this.opened = false
