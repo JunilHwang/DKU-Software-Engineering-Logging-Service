@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException
-} from '@nestjs/common'
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import {
@@ -100,10 +92,18 @@ export class PostService {
     }
   }
 
-  public async update (idx: number, { content, title }: PostVO): Promise<void> {
+  public async update (post: Post, uploaded: string): Promise<Post> {
     try {
-      await this.postRepository.update(idx, { content, title })
+      if (!post.thumbnail) {
+        removeBlob(post.sha)
+      } else if (post.thumbnail && uploaded !== `/uploaded/${post.sha}`) {
+        saveBlob(uploaded, post.sha)
+      }
+      const { idx, writer, likeUsers, content, ...postDetail } = post
+      await this.postRepository.update(post.idx, postDetail)
+      return this.find({ idx: post.idx })
     } catch (e) {
+      removeBlob(post.sha)
       throw new BadRequestException()
     }
   }
@@ -112,12 +112,8 @@ export class PostService {
     try {
       const post: Post = await this.find({ idx })
       if (post.writer.idx !== user.idx) throw new UnauthorizedException()
-      const [ updated ] = await this.createUpdated([ post ])
       post.content = content
-      updated.updatedAt = `${Date.now()}`
-      updated.updated = true
       await this.postRepository.save(post)
-      await this.saveUpdatedAll([ updated ])
       return post
     } catch (e) {
       throw new BadRequestException()

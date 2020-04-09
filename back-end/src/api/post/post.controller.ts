@@ -62,10 +62,17 @@ export class PostController {
   }
 
   @Put('/:idx')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  public async updatePost (@Param('idx') idx: number, @Body() postVO: PostVO) {
+  @HttpCode(HttpStatus.OK)
+  public async updatePost (
+    @Param('idx') idx: number,
+    @Body('post') post: PostEntity,
+    @Body('uploaded') uploaded: string,
+    @Token() access_token: string
+  ): Promise<PostEntity> {
     this.refreshCache(idx)
-    return await this.postService.update(idx, postVO)
+    const user: User = await this.userService.findByToken(access_token)
+    if (post.writer.idx !== user.idx) throw new UnauthorizedException()
+    return await this.postService.update(post, uploaded)
   }
 
   @Patch('/:idx')

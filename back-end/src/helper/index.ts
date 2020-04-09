@@ -9,12 +9,15 @@ export const UPLOADED_PATH: string = process.env.NODE_ENV === 'development'
 export const saveBlob = (blob: string, path: string) => {
   const buffer = new Buffer(blob.split(',')[1], 'base64')
   const fullPath = `${UPLOADED_PATH}/${path}`
+  removeBlob(path)
   fs.writeFileSync(fullPath, buffer)
 }
 
 export const removeBlob = (path: string) => {
   const fullPath = `${UPLOADED_PATH}/${path}`
-  fs.unlinkSync(fullPath)
+  if (fs.existsSync(fullPath)) {
+    fs.unlinkSync(fullPath)
+  }
 }
 
 export const blobToContent = ({ content, download_url, html_url }: GithubContent) => {
