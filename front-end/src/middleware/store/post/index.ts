@@ -37,8 +37,8 @@ export default class PostModule extends VuexModule {
   }
 
   @MutationAction
-  async [UPDATE_POST] (post: Post) {
-    return { selectedPost: await postService.update(post) }
+  async [UPDATE_POST] (post: Post, uploaded: string) {
+    return { selectedPost: await postService.update(post, uploaded) }
   }
 
 }

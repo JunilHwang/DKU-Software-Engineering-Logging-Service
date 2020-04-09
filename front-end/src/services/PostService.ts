@@ -34,7 +34,7 @@ export default Object.freeze({
     return await responseProcessor<Post>($http.patch(`${baseURI}/${idx}`, { content }))
   },
 
-  async update (post: Post): Promise<Post> {
-    return await responseProcessor<Post>($http.put(`${baseURI}/${post.idx}`, post))
+  async update (post: Post, uploaded: string): Promise<Post> {
+    return await responseProcessor<Post>($http.put(`${baseURI}/${post.idx}`, { post, uploaded }))
   }
 })

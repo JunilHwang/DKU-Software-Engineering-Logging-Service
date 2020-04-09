@@ -76,7 +76,7 @@ export default class PostEdit extends Vue {
     frm.validate(async (valid: boolean) => {
       if (!valid) return false
       try {
-        await this.update(this.postData)
+        await this.update(this.postData, this.uploadedThumbnail)
         this.$message({ type: 'success', message: '수정 되었습니다.' })
         this.opened = false
       } catch (e) {
