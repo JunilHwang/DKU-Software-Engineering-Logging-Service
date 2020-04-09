@@ -1,8 +1,8 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
-import $http from 'axios'
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
+import { default as $http, AxiosResponse } from 'axios'
 import { client_id, client_secret } from './secret'
 import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
-import { httpResponseCheck, blobToContent } from '@/helper';
+import { blobToContent } from '@/helper';
 import { InjectRepository } from '@nestjs/typeorm'
 import {
   GithubHookEntity as GithubHook,
@@ -13,12 +13,25 @@ import {
 import { Repository } from 'typeorm'
 import { PostService } from '@/api/post/post.service'
 
-const headers = {
-  Accept: 'application/vnd.github.v3+json',
-  'User-Agent': 'request'
+const BASE_URL = 'https://api.github.com'
+const rateLimit: { [key: string]: number } = {
+  limit: 0,
+  remaining: 0,
+  reset: 0,
 }
 
-const BASE_URL = 'https://api.github.com'
+export const responseCheck = async (response: Promise<AxiosResponse>) => {
+  try {
+    const { statusText, status, config: { method, url }, data } = await response
+    if (process.env.NODE_ENV !== 'production')
+      console.log(method, url, status, statusText)
+
+    return data
+  } catch ({ response }) {
+    console.error(response)
+    throw new InternalServerErrorException()
+  }
+}
 
 @Injectable()
 export class GithubService {
@@ -30,10 +43,10 @@ export class GithubService {
 
   public async getRepo (user: string, access_token: string): Promise<Array<GithubRepository>> {
     try {
-      const Authorization = `token ${access_token}`
+      const headers = { Authorization: `token ${access_token}` }
       const params = {sort: 'pushed', type: 'owner', direction: 'desc'}
       const url = `${BASE_URL}/users/${user}/repos`
-      return await httpResponseCheck($http.get(url, {params, headers: {...headers, Authorization}}))
+      return await responseCheck($http.get(url, { params, headers }))
     } catch (e) {
       throw new UnauthorizedException()
     }
@@ -41,26 +54,26 @@ export class GithubService {
 
   public async getContent (user: string, repo: string, path: string): Promise<GithubContent> {
     const url = `${BASE_URL}/repos/${user}/${repo}/contents/${path}`
-    return await httpResponseCheck($http.get(url, { headers }))
+    return await responseCheck($http.get(url))
   }
 
   public async getToken (code: string): Promise<GithubResponseToken> {
     const params = { client_id, client_secret, code }
     const headers = { Accept: 'application/json' }
-    return await httpResponseCheck($http.post(`https://github.com/login/oauth/access_token`, params, { headers }))
+    return await responseCheck($http.post(`https://github.com/login/oauth/access_token`, params, { headers }))
   }
 
   public async getProfile (token: string): Promise<GithubProfile> {
     const headers = { Authorization: `token ${token}` }
-    return await httpResponseCheck($http.get(`${BASE_URL}/user`, { headers }))
+    return await responseCheck($http.get(`${BASE_URL}/user`, { headers }))
   }
 
   public async getTrees (user: string, repo: string, sha: string): Promise<GithubTrees> {
-    return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/trees/${sha}`))
+    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/trees/${sha}`))
   }
 
   public async getBlob (user: string, repo: string, sha: string): Promise<GithubBlob> {
-    return await httpResponseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`))
+    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`))
   }
 
   public async getHook (user: User): Promise<GithubHook[]> {
@@ -91,7 +104,7 @@ export class GithubService {
     const githubHook = new GithubHook()
     githubHook.repo = repo
     githubHook.user = user
-    githubHook.data = await httpResponseCheck($http.post(requestURL, data, { headers }))
+    githubHook.data = await responseCheck($http.post(requestURL, data, { headers }))
     await this.githubHookRepository.save(githubHook)
 
     return githubHook
@@ -102,7 +115,7 @@ export class GithubService {
     const id: number = hook.data.id
     const requestURL = `${BASE_URL}/repos/${hook.repo}/hooks/${id}`
     const headers = { Authorization: `token ${token}` }
-    await httpResponseCheck($http.delete(requestURL, {headers}))
+    await responseCheck($http.delete(requestURL, {headers}))
     await this.githubHookRepository.remove(hook)
   }
 
