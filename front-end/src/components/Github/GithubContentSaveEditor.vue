@@ -56,6 +56,7 @@ export default class GithubContentSaveEditor extends Vue {
     const frontMatter = getFrontMatter(postVO.content)
     const title = frontMatter ? frontMatter.title : ''
     this.opened = true
+    this.thumbnailLoaded = false
     this.postData = { ...postVO, title, thumbnail: '', description: '' }
   }
 
@@ -81,9 +82,8 @@ export default class GithubContentSaveEditor extends Vue {
     })
   }
 
-  private thumbnailUpload (e: any) {
-    e.target.files.length
-    && reader.readAsDataURL(e.target.files[0])
+  private thumbnailUpload ({ target: { files } }: { target: { files: FileList } }) {
+    files.length && reader.readAsDataURL(files[0])
   }
 
   private thumbnailEdit () {
@@ -97,7 +97,7 @@ export default class GithubContentSaveEditor extends Vue {
     this.thumbnailLoaded = false
   }
 
-  created () {
+  private created () {
     reader.onloadend = (e: any) => {
       const thumbnail = e.target!.result as string
       this.postData = { ...this.postData, thumbnail }
@@ -106,60 +106,3 @@ export default class GithubContentSaveEditor extends Vue {
   }
 }
 </script>
-
-<style lang="scss">
-.fileUploadLabel {
-  input {
-    display: none
-  }
-  span {
-    display: inline-block;
-    border-radius: 3px;
-    background: #f0f9eb;
-    color: #67c23a;
-    border: 1px solid #c2e7b0;
-    font-size: 13px;
-    padding: 0 10px;
-    cursor: pointer;
-
-    &:hover {
-      background: #67c23a;
-      border-color: #67c23a;
-      color: #fff;
-    }
-  }
-}
-.thumbnail {
-  display: block;
-  &Wrap {
-    margin-top: 10px;
-    position: relative;
-    display: inline-block;
-
-    img {
-      vertical-align: middle;
-      border: 2px dashed #ddd;
-      max-width: 400px;
-      max-height: 300px;
-    }
-  }
-  &Edit {
-    position: absolute;
-    left:0;
-    top:0;
-    bottom:0;
-    right: 0;
-    background: fade-out(#000, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 0.3s;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-}
-</style>

@@ -32,5 +32,9 @@ export default Object.freeze({
     const githubContent: GithubContent = await githubClientService.getContent({ user, repo, path: path.join('/') })
     const content = blobToContent(githubContent)
     return await responseProcessor<Post>($http.patch(`${baseURI}/${idx}`, { content }))
+  },
+
+  async update (post: Post): Promise<Post> {
+    return await responseProcessor<Post>($http.put(`${baseURI}/${post.idx}`, post))
   }
 })

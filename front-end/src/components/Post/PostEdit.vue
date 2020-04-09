@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="포스트 수정하기" :visible.sync="opened" width="700px">
-    <el-form v-if="opened" :model="postData" ref="frm" label-width="100px" @submit.native.prevent="save">
+    <el-form v-if="opened && postData" :model="postData" ref="frm" label-width="100px" @submit.native.prevent="save">
       <el-form-item label="제목" size="small" prop="title" required>
         <el-input v-model="postData.title" />
       </el-form-item>
@@ -23,7 +23,7 @@
           <input ref="thumbnailInput" id="thumbnail" type="file" @change="thumbnailUpload" accept="image/*" />
           <span>썸네일 이미지 업로드</span>
         </label>
-        <div class="thumbnail" v-if="loadedThumbnail">
+        <div class="thumbnail" v-if="postData.thumbnail">
           <div class="thumbnailWrap">
             <img :src="uploadedThumbnail" alt="썸네일 이미지" />
             <div class="thumbnailEdit">
@@ -41,25 +41,70 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { Post } from '@Domain'
+import { postService } from '@/services'
+import { eventBus } from '@/helper'
+import {Action} from "vuex-class";
+import {UPDATE_POST} from "@/middleware/store/types";
+import {ActionMethod} from "vuex";
+
+const reader: FileReader = new FileReader()
 
 @Component
 export default class PostEdit extends Vue {
-  private postData: Post|null = null
+  @Action(UPDATE_POST) update!: ActionMethod
 
+  private postData: Post|null = null
   private opened: boolean = false
-  private loadedThumbnail: boolean = false
   private uploadedThumbnail: string = ''
 
   public open (postData: Post) {
     this.opened = true
     this.postData = postData
+    if (postData.thumbnail) {
+      this.uploadedThumbnail = `/uploaded/${postData.sha}`
+    }
   }
 
-  private save () { }
-  private thumbnailUpload () { }
-  private thumbnailEdit () { }
-  private thumbnailDelete () { }
+  public close () {
+    this.opened = false
+  }
+
+  private save () {
+    const frm: any = this.$refs.frm
+    frm.validate(async (valid: boolean) => {
+      if (!valid) return false
+      try {
+        await this.update(this.postData)
+        this.$message({ type: 'success', message: '수정 되었습니다.' })
+        this.opened = false
+      } catch (e) {
+        this.$message({ type: 'error', message: '오류로 인하여 포스트 수정을 완료할 수 없습니다.' })
+      }
+    })
+  }
+
+  private thumbnailUpload ({ target: { files } }: { target: { files: FileList } }) {
+    files.length && reader.readAsDataURL(files[0])
+  }
+
+  private thumbnailEdit () {
+    const input = this.$refs.thumbnailInput as HTMLInputElement
+    input.click()
+  }
+
+  private thumbnailDelete () {
+    const input = this.$refs.thumbnailInput as HTMLInputElement
+    input.value = ''
+    this.postData!.thumbnail = false
+  }
+
+  private created () {
+    reader.onloadend = (e: any) => {
+      this.postData!.thumbnail = true
+      this.uploadedThumbnail = e.target!.result
+    }
+  }
 }
 </script>
