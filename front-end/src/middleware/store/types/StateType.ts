@@ -1,2 +1,7 @@
 export type AccessToken = string|null
-export type RootState = { }
+export type RootState = {
+  user?: any
+  github?: any
+  post?: any
+  comment?: any
+}

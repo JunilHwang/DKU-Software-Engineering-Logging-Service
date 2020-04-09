@@ -1,6 +1,7 @@
 import $http from 'axios'
-import {GithubContent, ContentVO, Response, GithubHook} from '@Domain'
-import {responseProcessor} from "@/helper";
+import { GithubContent, ContentVO } from '@Domain'
+import { responseProcessor } from '@/helper'
+import { store } from '@/middleware'
 
 const githubURL = 'https://api.github.com'
 
@@ -8,7 +9,9 @@ export default Object.freeze({
 
   async getContent ({ user, repo, path }: ContentVO): Promise<GithubContent> {
     try {
-      return (await $http.get(`${githubURL}/repos/${user}/${repo}/contents/${path}`)).data
+      const token = store.state.user.access_token
+      const headers = { Authorization: `token ${token}` }
+      return (await $http.get(`${githubURL}/repos/${user}/${repo}/contents/${path}`, { headers })).data
     } catch ({ code, request }) {
       console.error(code, request)
       throw 'GithubClientService.getContent error'
@@ -18,7 +21,11 @@ export default Object.freeze({
   async getCommitSha ({ user, repo }: ContentVO) {
     const cache: string|null = localStorage.getItem(`${user}/${repo}/sha`)
     if (cache) return cache
-    const { data } = await $http.get(`${githubURL}/repos/${user}/${repo}/commits`)
+
+    const token = store.state.user.access_token
+    const headers = { Authorization: `token ${token}` }
+
+    const { data } = await $http.get(`${githubURL}/repos/${user}/${repo}/commits`, { headers })
     const sha = data[0].sha
 
     localStorage.setItem(`${user}/${repo}/sha`, sha)
