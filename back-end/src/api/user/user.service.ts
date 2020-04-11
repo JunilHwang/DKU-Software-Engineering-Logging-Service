@@ -9,7 +9,7 @@ export class UserService {
 
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
-  public find (params): Promise<User|undefined> {
+  public find (params: { id?: string; access_token?: string }): Promise<User|undefined> {
     try {
       return this.userRepository.findOne(params)
     } catch (e) {
@@ -20,7 +20,7 @@ export class UserService {
 
   public async findByToken (access_token: string): Promise<User> {
     try {
-      const user: User | undefined = await this.userRepository.findOne({access_token})
+      const user: User|undefined = await this.find({ access_token })
       if (user === undefined) throw 'ReLogin'
       return user
     } catch (e) {
@@ -29,12 +29,7 @@ export class UserService {
     }
   }
 
-  public async create (profile: GithubProfile, access_token: string): Promise<User> {
-    const [users, cnt] = await this.userRepository.findAndCount({ id: profile.login })
-    const user = cnt === 0 ? new User() : users[0]
-    user.id = profile.login
-    user.profile = profile
-    user.access_token = access_token
+  public save (user: User): Promise<User> {
     return this.userRepository.save(user)
   }
 

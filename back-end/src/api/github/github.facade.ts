@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
-import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from '@/domain/Github'
+import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob, GithubHookPayload } from '@/domain/Github'
 import { blobToContent } from '@/helper';
 import {
   GithubHookEntity as GithubHook,
@@ -42,9 +42,18 @@ export class GithubFacade {
     }
   }
 
-  public getToken (code: string): Promise<GithubResponseToken> {
+  public async getTokenAndUserCreate (code: string): Promise<string> {
     try {
-      return this.githubService.getToken(code)
+      const { access_token }: GithubResponseToken = await this.githubService.getToken(code)
+      const profile: GithubProfile = await this.githubService.getProfile(access_token)
+      const user: User = (await this.userService.find({ id: profile.login }))
+                         || new User()
+
+      user.id = profile.login
+      user.profile = profile
+      user.access_token = access_token
+      await this.userService.save(user)
+      return access_token
     } catch (e) {
       throw new InternalServerErrorException('Github API 요청 오류가 발생하였습니다.')
     }
@@ -77,18 +86,21 @@ export class GithubFacade {
   public async getHooks ({ user, access_token }: { user?: User; access_token?: string }): Promise<GithubHook[]> {
     try {
       return this.githubHookService.getHooks({
-        user: user ? user : await this.userService.findByToken(access_token)
+        user: user || (await this.userService.findByToken(access_token))
       })
     } catch (e) {
-      throw new BadRequestException('오류로 인하여 Hook 목록을 가져올 수 없습니다.')
+      switch (e) {
+        case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
+        default: throw new BadRequestException('오류로 인하여 Hook 목록을 가져올 수 없습니다.')
+      }
     }
   }
 
-  public async addHook ({ access_token, repo, token }: { [k: string]: string }): Promise<GithubHook[]> {
+  public async addHook ({ repo, token }: { [k: string]: string }): Promise<GithubHook[]> {
     try {
       const exist: GithubHook[] = await this.githubHookService.getHooks({ repo })
       if (exist.length) throw 'exist'
-      const user: User = await this.userService.findByToken(access_token)
+      const user: User = await this.userService.findByToken(token)
       const githubHook = new GithubHook()
       githubHook.repo = repo
       githubHook.user = user
@@ -104,13 +116,14 @@ export class GithubFacade {
     }
   }
 
-  public async removeHook (idx: number, token: string): Promise<void> {
+  public async removeHook (idx: number, token: string): Promise<GithubHook[]> {
     try {
       const user: User = await this.userService.findByToken(token)
       const hook: GithubHook = await this.githubHookService.getHook({ idx })
       if (user.idx !== hook.user.idx) throw 'Auth'
       const { data: { id }, repo }: GithubHook = hook
-      return this.githubHookService.removeHook({ id, repo, token })
+      await this.githubHookService.removeHook({ id, repo, token })
+      return await this.getHooks({ user })
     } catch (e) {
       switch (e) {
         case 'Auth': throw new UnauthorizedException('삭제할 권한이 없습니다.')
@@ -120,7 +133,12 @@ export class GithubFacade {
     }
   }
 
-  public async receiveHook (routes: string[]): Promise<number[]> {
+  public async receiveHook ({ commits, repository: { full_name } }: GithubHookPayload): Promise<number[]> {
+
+    const reducer = (repo, v) => [ ...repo, ...v.modified]
+    const routes: string[] = commits.reduce(reducer, []).map(v => `${full_name}/${v}`)
+
+    if (routes.length == 0) return []
 
     let posts: Post[],
         updatedList: PostUpdated[],
@@ -131,37 +149,33 @@ export class GithubFacade {
     try {
       posts = await this.postService.findIn('route', routes)
       if (posts.length === 0) return []
-    } catch (e) { posts = [] }
 
-    try {
       updatedList = await this.postUpdatedService.create(posts)
-    } catch (e) { updatedList = [] }
-    if (isDev) console.log('updatedList: ', updatedList)
+      if (isDev) console.log('updatedList: ', updatedList)
 
-    try {
       contents = await Promise.all(posts.map(async post => {
         const [user, repo, ...pathArr] = post.route.split('/')
         const path: string = pathArr.join('/')
-        return this.githubService.getContent({ user, repo, path })
+        return this.githubService.getContent({user, repo, path})
       }))
-    } catch (e) { contents = [] }
-    if (isDev) console.log('contents: ', contents)
+      if (isDev) console.log('contents: ', contents)
 
-    try {
       updatedPosts = await this.postService.saveAll(
         posts.map((v, k) => (v.content = blobToContent(contents[k]), v))
       )
-    } catch (e) { updatedPosts = [] }
-    if (isDev) console.log('updatedPosts: ', updatedPosts)
+      if (isDev) console.log('updatedPosts: ', updatedPosts)
 
-    try {
       result = await this.postUpdatedService.saveAll(updatedList.map(v => (
         v.updated = true, v.updatedAt = `${Date.now()}`, v
       )))
-    } catch (e) { result = [] }
-    if (isDev) console.log('result: ', result)
+      if (isDev) console.log('result: ', result)
 
-    return updatedPosts.map(v => v.idx)
+      return updatedPosts.map(v => v.idx)
+
+    } catch (e) {
+      console.error('githubFacade.receiveHook 실패')
+      return []
+    }
 
   }
 
