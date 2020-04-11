@@ -24,17 +24,19 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
-import { ADD_COMMENT } from '@/middleware/store/types'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
+
+const userStore = namespace('user')
+const commentStore = namespace('comment')
 
 @Component
 export default class CommentForm extends Vue {
-  @Prop({ type: String, default: '' }) content!: string
-  @Prop({ type: Number, default: 0 }) parent!: number
-  @Action(ADD_COMMENT) addComment!: ActionMethod
-  @State(state => state.user.access_token) access_token!: string|null
+  @Prop({ type: String, default: '' }) private content!: string
+  @Prop({ type: Number, default: 0 }) private parent!: number
+  @commentStore.Action private ADD_COMMENT!: ActionMethod
+  @userStore.State private access_token!: string|null
 
   private commentDetail = {
     content: ''
@@ -46,7 +48,7 @@ export default class CommentForm extends Vue {
 
   private async commentSubmit (): Promise<void> {
     try {
-      await this.addComment({
+      await this.ADD_COMMENT({
         content: this.commentDetail.content,
         parent: this.parent,
         post: parseInt(this.$route.params.idx)
