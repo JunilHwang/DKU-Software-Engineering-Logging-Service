@@ -25,23 +25,25 @@
 <script lang="ts">
 import {Vue, Component, Emit} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
-import { Action, State } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { GithubProfile, GithubRepository } from '@Domain'
-import { FETCH_GITHUB_REPO } from '@/middleware/store/types/MutationType'
+
+const githubStore = namespace('github')
+const userStore = namespace('user')
 
 @Component
 export default class RepositoryList extends Vue {
 
-  @State(state => state.github.repositories) repositories!: GithubRepository[]
-  @State(state => state.user.profile) profile!: GithubProfile
-  @Action(FETCH_GITHUB_REPO) fetchRepo!: ActionMethod
+  @githubStore.State private repositories!: GithubRepository[]
+  @userStore.State private profile!: GithubProfile
+  @githubStore.Action private FETCH_GITHUB_REPO!: ActionMethod
 
   private opened = false
 
   public async open () {
     this.opened = true
     try {
-      this.fetchRepo(this.profile)
+      this.FETCH_GITHUB_REPO(this.profile)
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 Repository를 가져올 수 없습니다.' })
     }

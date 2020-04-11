@@ -22,13 +22,14 @@
 </template>
 
 <script lang="ts">
-  import {Vue, Component, Emit} from 'vue-property-decorator'
-import { State } from 'vuex-class'
-import { GithubRepository, GithubTrees, GithubTree, GithubBlob, ContentVO } from '@Domain'
+import { Vue, Component, Emit } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+import { GithubRepository, GithubTrees, GithubTree, GithubBlob, GithubProfile, ContentVO } from '@Domain'
 import { githubService, githubClientService } from '@/services'
 import { Markdown } from '@/components'
 
 const components = { Markdown }
+const userStore = namespace('user')
 
 interface RepoRoute {
   path: string
@@ -39,8 +40,8 @@ interface RepoRoute {
 export default class Repository extends Vue {
 
   //========== mapper ==========//
-  @State(state => state.user.profile.login) user!: string
-  @State(state => state.user.access_token) access_token!: string
+  @userStore.State private profile!: GithubProfile|null
+  @userStore.State private access_token!: string
 
   //========== data ==========//
   private opened = false
@@ -73,7 +74,7 @@ export default class Repository extends Vue {
     this.repository = repository
 
     const repo: string = this.repository.name
-    const user: string = this.user
+    const user: string = this.profile!.login
 
     const sha: string = await githubClientService.getCommitSha({ repo, user })
     this.route = [
@@ -91,7 +92,7 @@ export default class Repository extends Vue {
   async showContent (tree: GithubTree) {
     const { type, path, sha } = tree
     const repo: string = this.repository!.name
-    const user: string = this.user
+    const user: string = this.profile!.login
     const params = { user, repo, sha }
 
     if (type === 'tree') {
@@ -119,7 +120,7 @@ export default class Repository extends Vue {
     }
 
     const repo: string = this.repository!.name
-    const user: string = this.user
+    const user: string = this.profile!.login
     const route: RepoRoute[] = [ ...this.route ]
 
     this.showDirectory({ user, repo, sha }).then(() => {
