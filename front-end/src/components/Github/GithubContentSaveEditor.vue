@@ -31,18 +31,18 @@
 
 <script lang="ts">
 import { Vue, Component, Emit } from 'vue-property-decorator'
-import { Action } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
 import { PostVO } from '@Domain'
 import { eventBus, getFrontMatter } from '@/helper'
-import { ADD_POST } from '@/middleware/store/types'
 
 const reader: FileReader = new FileReader()
+const postStore = namespace('post')
 
 @Component
 export default class GithubContentSaveEditor extends Vue {
 
-  @Action(ADD_POST) addPost!: ActionMethod
+  @postStore.Action private ADD_POST!: ActionMethod
 
   private opened: boolean = false
   private postData: PostVO = {
@@ -75,7 +75,7 @@ export default class GithubContentSaveEditor extends Vue {
       if (!valid) return false
 
       try {
-        await this.addPost(this.postData)
+        await this.ADD_POST(this.postData)
         this.$message({ type: 'success', message: '포스트가 등록되었습니다.' })
         eventBus.$emit('fetchPostAll')
       } catch (e) {

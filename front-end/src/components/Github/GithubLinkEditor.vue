@@ -13,13 +13,16 @@
 
 <script lang="ts">
 import { Component, Emit, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { eventBus } from '@/helper'
 import { githubClientService } from '@/services'
+import { GithubProfile } from '@Domain'
+
+const userStore = namespace('user')
 
 @Component
 export default class GithubLinkEditor extends Vue {
-  @State(state => state.user.profile.login) user!: string
+  @userStore.State private profile!: GithubProfile|null
 
   private opened = false
   private formData = {
@@ -56,7 +59,7 @@ export default class GithubLinkEditor extends Vue {
       return
     }
 
-    if (user !== this.user) {
+    if (this.profile && this.profile.login === user) {
       this.$message({ type, message: '다른 사용자의 컨텐츠는 가져올 수 없습니다.' })
       return
     }
