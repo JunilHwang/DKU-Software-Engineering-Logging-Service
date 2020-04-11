@@ -29,7 +29,7 @@
         </div>
         <ul class="userProfileNumbers">
           <li>
-            <el-button type="default" v-html="postList.length" circle plain />
+            <el-button type="default" v-html="posts.length" circle plain />
             <span>게시물</span>
           </li>
           <li>
@@ -42,7 +42,7 @@
           </li>
         </ul>
       </header>
-      <post-list :data="postList" />
+      <post-list :data="posts" />
     </div>
   </main>
 </template>
@@ -50,25 +50,25 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import { PostList } from '@/components'
-import { Action, State } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { Post, User as UserType } from '@Domain'
-import { FETCH_USER_POST, FETCH_USER } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 import { eventBus } from '@/helper'
 
 const components = { PostList }
+const userStore = namespace('user')
 
 @Component({ components })
 export default class User extends Vue {
 
-  @State(state => state.user.posts) postList!: Post[]
-  @State(state => state.user.user) user!: UserType|null
-  @Action(FETCH_USER_POST) fetchUserPost!: ActionMethod
-  @Action(FETCH_USER) fetchUser!: ActionMethod
+  @userStore.State private posts!: Post[]
+  @userStore.State private user!: UserType|null
+  @userStore.Action private FETCH_USER_POST!: ActionMethod
+  @userStore.Action private FETCH_USER!: ActionMethod
 
   @Watch('$route.path') async onRoutePath () {
     try {
-      await this.fetchUser(this.$route.params.userId)
+      await this.FETCH_USER(this.$route.params.userId)
       this.fetchPost()
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 사용자 정보를 가져올 수 없습니다.' })
@@ -77,7 +77,7 @@ export default class User extends Vue {
 
   async fetchPost () {
     try {
-      await this.fetchUserPost(this.$route.params.userId)
+      await this.FETCH_USER_POST(this.$route.params.userId)
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 사용자의 포스트를 가져올 수 없습니다.' })
     }
@@ -88,7 +88,7 @@ export default class User extends Vue {
   }
 
   created () {
-    this.fetchUser(this.$route.params.userId)
+    this.FETCH_USER(this.$route.params.userId)
     this.fetchPost()
 
     eventBus.$on('fetchPostAll', this.fetchPost)
