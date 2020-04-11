@@ -1,8 +1,7 @@
 import { Controller, Get, Param, Query, Res, CacheTTL, HttpCode, HttpStatus, Post, Body, UnauthorizedException, Req, Delete, Inject, CACHE_MANAGER, CacheStore } from '@nestjs/common'
 import { Response, Request } from 'express'
-import { GithubService } from './github.service'
+import { GithubFacade } from './github.facade'
 import { client_id, redirectURL } from './secret'
-import { UserService } from '@/api/user/user.service'
 import { UserEntity as User, GithubHookEntity as GithubHook } from '@/entity'
 import { GithubHookPayload } from '@/domain'
 import { Token } from '@/middle'
@@ -12,8 +11,7 @@ const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${clie
 @Controller('/api/github')
 export class GithubController {
   constructor(
-    private readonly githubService: GithubService,
-    private readonly userService: UserService,
+    private readonly githubFacade: GithubFacade,
     @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore
   ) {}
 
@@ -21,14 +19,14 @@ export class GithubController {
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getRepo (@Param('user') user: string) {
-    return await this.githubService.getRepo(user)
+    return await this.githubFacade.getRepo(user)
   }
 
   @Get('content')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getContent (@Query() { user, repo, path }) {
-    return await this.githubService.getContent(user, repo, path)
+    return await this.githubFacade.getContent(user, repo, path)
   }
 
   @Get('sign-in')
@@ -39,10 +37,10 @@ export class GithubController {
   @Get('authentication')
   public async authentication (@Query('code') code, @Res() res: Response) {
 
-    const { access_token } = await this.githubService.getToken(code)
+    const { access_token } = await this.githubFacade.getToken(code)
 
     await this.userService.create(
-      await this.githubService.getProfile(access_token),
+      await this.githubFacade.getProfile(access_token),
       access_token
     )
 
@@ -55,14 +53,14 @@ export class GithubController {
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getTrees (@Query() { user, repo, sha }) {
-    return await this.githubService.getTrees(user, repo, sha)
+    return await this.githubFacade.getTrees(user, repo, sha)
   }
 
   @Get('blob')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getBlob (@Query() { user, repo, sha }) {
-    return await this.githubService.getBlob(user, repo, sha)
+    return await this.githubFacade.getBlob(user, repo, sha)
   }
 
   @Get('hook')
@@ -73,14 +71,14 @@ export class GithubController {
     const user: User|undefined = await this.userService.find({ access_token })
     if (user === undefined) throw new UnauthorizedException()
 
-    return await this.githubService.getHook(user)
+    return await this.githubFacade.getHook(user)
   }
 
   @Post('hook')
   @HttpCode(HttpStatus.OK)
   public async addHook (@Body('repo') repo: string, @Token() access_token: string): Promise<GithubHook[]> {
 
-    return await this.githubService.addHook(
+    return await this.githubFacade.addHook(
       await this.userService.findByToken(access_token),
       repo,
       access_token
@@ -104,7 +102,7 @@ export class GithubController {
 
     // 캐시 삭제
     this.cacheManager.del('/api/post')
-    this.githubService.receiveHook(routes).then(cacheDelete)
+    this.githubFacade.receiveHook(routes).then(cacheDelete)
   }
 
   @Delete('hook/:idx')
@@ -115,7 +113,7 @@ export class GithubController {
     const user: User|undefined = await this.userService.find({ access_token })
     if (user === undefined) throw new UnauthorizedException()
 
-    await this.githubService.removeHook(idx, access_token)
-    return await this.githubService.getHook(user)
+    await this.githubFacade.removeHook(idx, access_token)
+    return await this.githubFacade.getHook(user)
   }
 }
