@@ -24,7 +24,7 @@ export class UserService {
 
   public async findByToken (access_token: string): Promise<User> {
     const user: User|undefined = await this.userRepository.findOne({ access_token })
-    if (user === undefined) throw new UnauthorizedException('권한이 없습니다.')
+    if (user === undefined) throw new UnauthorizedException('다시 로그읺 ㅐ주세요')
     return user
   }
 

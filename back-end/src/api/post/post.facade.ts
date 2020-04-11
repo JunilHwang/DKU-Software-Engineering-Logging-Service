@@ -1,23 +1,28 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { In, Repository } from 'typeorm'
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
+import { PostService } from './post.service'
+import { PostViewService } from './post.view.service'
+import { PostUpdatedService  } from './post.updated.service'
+import { UserService } from '@/api/user/user.service'
+import { CommentService } from '@/api/comment/comment.service'
 import {
   PostEntity as Post,
-  UserEntity as User,
+  PostUpdatedEntity as PostUpdated,
   PostViewEntity as PostView,
-  PostUpdatedEntity as PostUpdated
+  UserEntity as User
 } from '@/entity'
-import { PostVO } from '@/domain/Post'
-import { saveBlob, removeBlob } from '@/helper'
+import {PostVO} from "@/domain";
+import {removeBlob, saveBlob} from "@/helper";
+import {In} from "typeorm";
 
 @Injectable()
-export class PostService {
-
-  constructor (
-    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
-    @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
-    @InjectRepository(PostUpdated) private readonly postUpdatedRepository: Repository<PostUpdated>
-  ) {}
+export class PostFacade {
+  constructor(
+    @Inject('PostService') private readonly postService: PostService,
+    @Inject('PostViewService') private readonly postViewService: PostViewService,
+    @Inject('PostUpdatedService') private readonly postUpdatedService: PostUpdatedService,
+    @Inject('CommentService') private readonly commentService: CommentService,
+    @Inject('UserService') private readonly userService: UserService,
+  ) { }
 
   public async create (writer: User, { content, title, sha, repository, description, thumbnail, route }: PostVO): Promise<Post> {
 
@@ -46,6 +51,14 @@ export class PostService {
     } catch (e) {
       console.error(e)
       throw new InternalServerErrorException('오류로 인하여 포스트를 등록할 수 없습니다.')
+    }
+  }
+
+  public async findAll (): Promise<PostView[]> {
+    try {
+      return await this.postViewService.findAll()
+    } catch (e) {
+      throw new BadRequestException('오류로 인하여 포스트한 목록을 가져올 수 없습니다.')
     }
   }
 

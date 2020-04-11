@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Request, UnauthorizedException } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UnauthorizedException } from '@nestjs/common'
 import { CommentService } from './comment.service'
 import { PostService } from '@/api/post/post.service'
 import { UserService } from '@/api/user/user.service'
@@ -30,7 +30,6 @@ export class CommentController {
   async createdComment (@Body() { post, content, to = '', parent = 0 }, @Token() access_token: string): Promise<Comment[]> {
     const writer: User = await this.userService.findByToken(access_token)
     const postEntity: PostEntity = await this.postService.find({ idx: post })
-    if (!postEntity) throw new BadRequestException()
     await this.commentService.create({ content, parent, to, writer, post: postEntity })
     return await this.commentService.findCommentsByPost(post)
   }
@@ -40,7 +39,7 @@ export class CommentController {
   async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO, @Token() access_token: string): Promise<Comment[]> {
     const writer: User = await this.userService.findByToken(access_token)
     const comment: Comment = await this.commentService.findComment({ idx })
-    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException()
+    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException('수정할 권한이 없습니다.')
     const post = await comment.post
     await this.commentService.update(idx, commentVO)
     return await this.commentService.findCommentsByPost(post.idx)
@@ -51,7 +50,7 @@ export class CommentController {
   async deleteComment (@Param('idx') idx: number, @Token() access_token: string): Promise<Comment[]> {
     const writer: User = await this.userService.findByToken(access_token)
     const comment: Comment = await this.commentService.findComment({ idx })
-    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException()
+    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException('삭제할 권한이 없습니다.')
     const post = await comment.post
     await this.commentService.delete({ idx })
     return await this.commentService.findCommentsByPost(post.idx)

@@ -11,7 +11,7 @@ import { PostVO } from '@/domain/Post'
 import { saveBlob, removeBlob } from '@/helper'
 
 @Injectable()
-export class PostService {
+export class PostViewService {
 
   constructor (
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
@@ -49,6 +49,15 @@ export class PostService {
     }
   }
 
+  public async findAll (): Promise<PostView[]> {
+    try {
+      return await this.postViewRepository.find({ order: { idx: 'DESC' } })
+    } catch (e) {
+      console.error(e)
+      throw new BadRequestException('오류로 인하여 포스트한 목록을 가져올 수 없습니다.')
+    }
+  }
+
   public async findAllByUser (writerId: string): Promise<PostView[]> {
     try {
       return await this.postViewRepository.find({ where: { writerId }, order: { idx: 'DESC' }})
@@ -75,8 +84,8 @@ export class PostService {
     } catch (e) {
       console.error(e)
       throw e === 'NotFound'
-        ? new BadRequestException('해당 포스트를 찾을 수 없습니다.')
-        : new InternalServerErrorException('오류로 인하여 포스트를 가져올 수 없습니다.')
+            ? new BadRequestException('해당 포스트를 찾을 수 없습니다.')
+            : new InternalServerErrorException('오류로 인하여 포스트를 가져올 수 없습니다.')
     }
   }
 

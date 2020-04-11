@@ -1,17 +1,13 @@
-import { Body, CACHE_MANAGER, CacheStore, CacheTTL, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Patch, Post, Put, Req, UnauthorizedException } from '@nestjs/common'
-import { PostService } from './post.service'
-import { UserService } from '@/api/user/user.service'
+import { Body, CACHE_MANAGER, CacheStore, CacheTTL, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Patch, Post, Put, UnauthorizedException } from '@nestjs/common'
 import { PostVO } from '@/domain/Post'
 import { UserEntity as User, PostEntity } from '@/entity'
-import { CommentService } from '@/api/comment/comment.service'
 import { Token } from '@/middle'
+import { PostFacade } from './post.facade'
 
 @Controller('/api/post')
 export class PostController {
   constructor (
-    private readonly postService: PostService,
-    private readonly userService: UserService,
-    private readonly commentService: CommentService,
+    private readonly postFacade: PostFacade,
     @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore
   ) {}
 
@@ -19,14 +15,14 @@ export class PostController {
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getPosts () {
-    return await this.postService.findAll()
+    return await this.postFacade.findAll()
   }
 
   @Get('/:idx')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
   public async getPost (@Param('idx') idx: number) {
-    return await this.postService.find({ idx })
+    return await this.postFacade.find(idx)
   }
 
   @Post()
@@ -50,7 +46,7 @@ export class PostController {
     const post: PostEntity = await this.postService.find({ idx })
     const user: User = await this.userService.findByToken(access_token)
 
-    if (user.idx !== post.writer.idx) throw new UnauthorizedException('다시 로그인 해주세요')
+    if (user.idx !== post.writer.idx) throw new UnauthorizedException('삭제할 권한이 없습니다.')
 
     await this.commentService.deleteByPost(post)
     await this.postService.delete(post)
@@ -68,7 +64,7 @@ export class PostController {
   ): Promise<PostEntity> {
     this.refreshCache(idx)
     const user: User = await this.userService.findByToken(access_token)
-    if (post.writer.idx !== user.idx) throw new UnauthorizedException('다시 로그인 해주세요')
+    if (post.writer.idx !== user.idx) throw new UnauthorizedException('수정할 권한이 없습니다.')
     return await this.postService.update(post, uploaded)
   }
 
