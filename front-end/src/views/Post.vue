@@ -3,7 +3,12 @@
 
     <main class="contentContainer">
 
-      <post-header :post="post" @delete="deletePost" />
+      <post-header
+        :post="post"
+        @refresh="refreshPost"
+        @edit="editPost"
+        @delete="deletePost"
+      />
 
       <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
 

@@ -18,7 +18,26 @@
       </div>
       <ul class="bottomButtons">
         <li v-if="isWriter">
-          <el-button type="primary" size="small" icon="el-icon-edit-outline" plain circle />
+          <el-popconfirm
+            @onConfirm="$emit('refresh')"
+            title="포스트를 업데이트 하시겠습니까?"
+            confirm-button-text="확인"
+            cancel-button-text="취소">
+            <el-button
+              slot="reference"
+              type="default"
+              size="small"
+              icon="el-icon-refresh"
+              plain circle />
+          </el-popconfirm>
+        </li>
+        <li v-if="isWriter">
+          <el-button
+            @click="$emit('edit')"
+            type="default"
+            size="small"
+            icon="el-icon-edit-outline"
+            plain circle />
         </li>
         <li v-if="isWriter">
           <el-popconfirm
@@ -26,7 +45,7 @@
             title="정말로 삭제하시겠습니까?"
             confirm-button-text="확인"
             cancel-button-text="취소">
-            <el-button slot="reference" type="danger" size="small" icon="el-icon-delete" plain circle />
+            <el-button slot="reference" type="default" size="small" icon="el-icon-delete" plain circle />
           </el-popconfirm>
         </li>
         <li>

@@ -1,4 +1,4 @@
-import { Module, MutationAction, VuexModule } from 'vuex-module-decorators'
+import {Action, Module, MutationAction, VuexModule} from 'vuex-module-decorators'
 import { FETCH_POST, FETCH_POST_ALL, ADD_POST, LIKE_POST, DELETE_POST, REFRESH_POST, UPDATE_POST } from '../types'
 import { Post, PostView, PostVO } from '@Domain'
 import { postService } from '@/services'
@@ -21,9 +21,9 @@ export default class PostModule extends VuexModule {
     return { postList: await postService.fetchAll() }
   }
 
-  @MutationAction
+  @Action
   async [ADD_POST] (postVO: PostVO) {
-    return { postList: await postService.create(postVO) }
+    await postService.create(postVO)
   }
 
   @MutationAction
