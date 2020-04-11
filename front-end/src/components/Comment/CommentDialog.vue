@@ -27,19 +27,20 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
-import { UPDATE_COMMENT, FETCH_ONE_COMMENT, ADD_COMMENT } from '@/middleware/store/types'
+import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
 import { Comment } from '@Domain'
 
+const commentStore = namespace('comment')
+
 @Component
 export default class CommentForm extends Vue {
-  @Prop({ type: String, default: '' }) content!: string
-  @Prop({ type: Number, default: 0 }) parent!: number
-  @State(state => state.comment.selectedComment) comment!: Comment|null
-  @Action(FETCH_ONE_COMMENT) fetch!: ActionMethod
-  @Action(ADD_COMMENT) create!: ActionMethod
-  @Action(UPDATE_COMMENT) update!: ActionMethod
+  @Prop({ type: String, default: '' }) private content!: string
+  @Prop({ type: Number, default: 0 }) private parent!: number
+  @commentStore.State('selectedComment') private comment!: Comment|null
+  @commentStore.Action private FETCH_ONE_COMMENT!: ActionMethod
+  @commentStore.Action private ADD_COMMENT!: ActionMethod
+  @commentStore.Action private UPDATE_COMMENT!: ActionMethod
 
   private opened: boolean = false
   private title: string = '댓글 수정'
@@ -55,7 +56,7 @@ export default class CommentForm extends Vue {
   private async commentReply (): Promise<void> {
     try {
       const comment: Comment = this.comment!
-      await this.create({
+      await this.ADD_COMMENT({
         parent: comment.parent === 0 ? comment.idx : comment.parent,
         to: comment.writer.id,
         post: this.$route.params.idx,
@@ -71,7 +72,7 @@ export default class CommentForm extends Vue {
 
   private async commentUpdate (): Promise<void> {
     try {
-      await this.update({
+      await this.UPDATE_COMMENT({
         idx: this.comment!.idx,
         content: this.commentDetail.content
       })
@@ -92,7 +93,7 @@ export default class CommentForm extends Vue {
   public async open ({ idx, type }: { idx: number, type: 'reply'|'update' }) {
     const isUpdate = type === 'update'
     try {
-      await this.fetch(idx)
+      await this.FETCH_ONE_COMMENT(idx)
       this.opened = true
       this.type = type
       this.title = isUpdate ? '댓글 수정' : '답글 작성'
