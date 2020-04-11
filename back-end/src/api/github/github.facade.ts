@@ -120,42 +120,45 @@ export class GithubFacade {
     }
   }
 
-  public async receiveHook (routes: string[]) {
+  public async receiveHook (routes: string[]): Promise<number[]> {
 
-    let posts: Post[]
-    let updatedList: PostUpdated[]
-    let contents: GithubContent[]
+    let posts: Post[],
+        updatedList: PostUpdated[],
+        contents: GithubContent[],
+        updatedPosts: Post[],
+        result: PostUpdated[]
 
     try {
       posts = await this.postService.findIn('route', routes)
       if (posts.length === 0) return []
-    } catch (e) { return [] }
+    } catch (e) { posts = [] }
 
     try {
       updatedList = await this.postUpdatedService.create(posts)
-    } catch (e) { return [] }
+    } catch (e) { updatedList = [] }
     if (isDev) console.log('updatedList: ', updatedList)
 
-
-    contents = await Promise.all(posts.map(async post => {
-      const route: string = post.route
-      const [ user, repo, ...pathArr ] = route.split('/')
-      const path: string = pathArr.join('/')
-      return this.githubService.getContent({ user, repo, path })
-    }))
-
+    try {
+      contents = await Promise.all(posts.map(async post => {
+        const [user, repo, ...pathArr] = post.route.split('/')
+        const path: string = pathArr.join('/')
+        return this.githubService.getContent({ user, repo, path })
+      }))
+    } catch (e) { contents = [] }
     if (isDev) console.log('contents: ', contents)
 
-    const updatedPosts: Post[] = await this.postService.saveAll(
-      posts.map((v, k) => (v.content = blobToContent(contents[k]), v))
-    )
+    try {
+      updatedPosts = await this.postService.saveAll(
+        posts.map((v, k) => (v.content = blobToContent(contents[k]), v))
+      )
+    } catch (e) { updatedPosts = [] }
     if (isDev) console.log('updatedPosts: ', updatedPosts)
 
-    const result: PostUpdated[] = await this.postService.saveUpdatedAll(updatedList.map(v => {
-      v.updated = true
-      v.updatedAt = `${Date.now()}`
-      return v
-    }))
+    try {
+      result = await this.postUpdatedService.saveAll(updatedList.map(v => (
+        v.updated = true, v.updatedAt = `${Date.now()}`, v
+      )))
+    } catch (e) { result = [] }
     if (isDev) console.log('result: ', result)
 
     return updatedPosts.map(v => v.idx)
