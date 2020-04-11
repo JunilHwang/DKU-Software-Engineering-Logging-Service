@@ -73,10 +73,8 @@ export class PostFacade {
   }
 
   public async delete (idx: number, access_token: string): Promise<PostView[]> {
-    const user: User = await this.userService.findByToken(access_token)
-
     try {
-
+      const user: User = await this.userService.findByToken(access_token)
       const post: Post = await this.postService.find({ idx })
 
       if (user.idx !== post.writer.idx) throw 'Auth'
@@ -90,18 +88,20 @@ export class PostFacade {
       return this.findAll()
 
     } catch (e) {
-      throw e === 'Auth'
-            ? new UnauthorizedException('삭제할 권한이 없습니다.')
-            : new BadRequestException('오류로 인하여 포스트 삭제가 중단 되었습니다.')
+      switch (e) {
+        case 'Auth' : throw new UnauthorizedException('삭제할 권한이 없습니다.')
+        case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
+        default: throw new BadRequestException('오류로 인하여 포스트 삭제가 중단 되었습니다.')
+      }
     }
   }
 
   public async update (post: Post, uploaded: string, access_token: string): Promise<Post> {
 
-    const user: User = await this.userService.findByToken(access_token)
-    if (post.writer.idx !== user.idx) throw new UnauthorizedException('수정할 권한이 없습니다.')
-
     try {
+
+      const user: User = await this.userService.findByToken(access_token)
+      if (post.writer.idx !== user.idx) throw 'Auth'
 
       if (!post.thumbnail) {
         removeBlob(post.sha)
@@ -112,30 +112,36 @@ export class PostFacade {
       await this.postService.update(post)
 
     } catch (e) {
-      throw new BadRequestException('오류로 인하여 포스트 수정이 중단 되었습니다.')
+      switch (e) {
+        case 'Auth' : throw new UnauthorizedException('수정할 권한이 없습니다.')
+        case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
+        default: throw new BadRequestException('오류로 인하여 포스트 수정이 중단 되었습니다.')
+      }
     }
 
     return this.find({ idx: post.idx })
   }
 
   public async refresh (idx: number, content: string, access_token: string): Promise<Post> {
-    const user: User = await this.userService.findByToken(access_token)
     try {
+      const user: User = await this.userService.findByToken(access_token)
       const post: Post = await this.find({ idx })
       if (post.writer.idx !== user.idx) throw 'Auth'
       post.content = content
       await this.postService.saveAll([ post ])
       return post
     } catch (e) {
-      throw e === 'Auth'
-            ? new UnauthorizedException('다시 로그인 해주세요')
-            : new InternalServerErrorException('오류로 인하여 포스트 업데이트가 중단 되었습니다.')
+      switch (e) {
+        case 'Auth' : throw new UnauthorizedException('업데이트할 권한이 없습니다.')
+        case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
+        default: throw new BadRequestException('오류로 인하여 포스트 업데이트가 중단 되었습니다.')
+      }
     }
   }
 
   public async like (idx: number, access_token: string): Promise<Post> {
-    const user: User = await this.userService.find(access_token)
     try {
+      const user: User = await this.userService.find(access_token)
       const post: Post = await this.postService.find({ idx })
       const index = post.likeUsers.findIndex(v => v.id === user.id)
       index !== -1
@@ -144,7 +150,10 @@ export class PostFacade {
       await this.postService.saveAll([ post ])
       return post
     } catch (e) {
-      throw new BadRequestException('오류로 인하여 좋아요를 완료할 수 없습니다.')
+      switch (e) {
+        case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
+        default: throw new BadRequestException('오류로 인하여 좋아요를 완료할 수 없습니다.')
+      }
     }
   }
 }

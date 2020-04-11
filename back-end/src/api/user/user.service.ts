@@ -21,7 +21,7 @@ export class UserService {
   public async findByToken (access_token: string): Promise<User> {
     try {
       const user: User | undefined = await this.userRepository.findOne({access_token})
-      if (user === undefined) throw new UnauthorizedException('다시 로그인 해주세요')
+      if (user === undefined) throw 'ReLogin'
       return user
     } catch (e) {
       console.error(e)
