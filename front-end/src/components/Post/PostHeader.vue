@@ -61,13 +61,16 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Post } from '@Domain'
-import { State } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { GithubProfile } from '@Domain'
+
+const userStore = namespace('user')
 
 @Component
 export default class PostHeader extends Vue {
-  @Prop({ type: Object }) post!: Post
-  @State(state => state.user.profile) profile!: GithubProfile|null
+  @Prop({ type: Object }) private post!: Post
+  @userStore.State private profile!: GithubProfile|null
+
   get isWriter () {
     return this.profile && this.profile.login === this.post.writer.id
   }

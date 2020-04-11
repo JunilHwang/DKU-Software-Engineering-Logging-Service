@@ -43,15 +43,15 @@
 <script lang="ts">
 import { Vue, Component, Emit } from 'vue-property-decorator'
 import { Post, PostVO } from '@Domain'
-import { Action } from 'vuex-class'
-import { UPDATE_POST } from '@/middleware/store/types'
+import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
 
 const reader: FileReader = new FileReader()
+const postStore = namespace('post')
 
 @Component
 export default class PostEdit extends Vue {
-  @Action(UPDATE_POST) update!: ActionMethod
+  @postStore.Action private UPDATE_POST!: ActionMethod
 
   private postData: Post|null = null
   private opened: boolean = false
@@ -74,7 +74,7 @@ export default class PostEdit extends Vue {
     frm.validate(async (valid: boolean) => {
       if (!valid) return false
       try {
-        await this.update([ this.postData, this.uploadedThumbnail ])
+        await this.UPDATE_POST([ this.postData, this.uploadedThumbnail ])
         this.$message({ type: 'success', message: '수정 되었습니다.' })
         this.opened = false
       } catch (e) {

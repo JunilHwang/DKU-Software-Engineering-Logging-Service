@@ -59,21 +59,23 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
-import { State, Action } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { GithubHook, GithubRepository } from '@Domain'
-import { AccessToken, ADD_GITHUB_HOOK, DELETE_GITHUB_HOOK, FETCH_GITHUB_HOOK } from '@/middleware/store/types'
+import { AccessToken } from '@/middleware/store/types'
 import { githubClientService } from '@/services'
 import { GithubRepositoryList } from '@/components'
 
 const components = { GithubRepositoryList }
+const userStore = namespace('user')
+const githubStore = namespace('github')
 
 @Component({ components })
 export default class Hook extends Vue {
-  @State(state => state.github.hookList) hookList!: GithubHook[]
-  @State(state => state.user.access_token) access_token!: AccessToken
-  @Action(FETCH_GITHUB_HOOK) fetchHook!: ActionMethod
-  @Action(DELETE_GITHUB_HOOK) deleteHook!: ActionMethod
-  @Action(ADD_GITHUB_HOOK) addHook!: ActionMethod
+  @userStore.State private access_token!: AccessToken
+  @githubStore.State private hookList!: GithubHook[]
+  @githubStore.Action private FETCH_GITHUB_HOOK!: ActionMethod
+  @githubStore.Action private DELETE_GITHUB_HOOK!: ActionMethod
+  @githubStore.Action private ADD_GITHUB_HOOK!: ActionMethod
 
   private get repositories (): any {
     return this.$refs.repositories
@@ -94,7 +96,7 @@ export default class Hook extends Vue {
 
   private async remove (idx: number) {
     try {
-      await this.deleteHook(idx)
+      await this.DELETE_GITHUB_HOOK(idx)
       this.$message({ type: 'success', message: '삭제되었습니다.' })
     } catch (e) {
       const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 삭제가 취소되었습니다.';
@@ -113,7 +115,7 @@ export default class Hook extends Vue {
       .$confirm(confirmMsg, confirmTitle, { type, confirmButtonText, cancelButtonText })
       .then(async () => {
         try {
-          await this.addHook(repo.full_name)
+          await this.ADD_GITHUB_HOOK(repo.full_name)
           this.$message({ type: 'success', message: '추가 되었습니다.' })
           this.repositories.close()
         } catch (e) {
@@ -128,7 +130,7 @@ export default class Hook extends Vue {
 
   private async created () {
     try {
-      await this.fetchHook()
+      await this.FETCH_GITHUB_HOOK()
     } catch (e) {
       const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 목록을 가져올 수 없습니다.';
       this.$message({ type: 'error', message })
