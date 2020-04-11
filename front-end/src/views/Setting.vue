@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { AccessToken } from '@/middleware/store/types'
 import { Hook, Profile } from '@/components'
 
@@ -23,10 +23,11 @@ interface TabMenu {
 }
 
 const components = { Hook, Profile }
+const userStore = namespace('userStore')
 
 @Component({ components })
 export default class Setting extends Vue {
-  @State(state => state.user.access_token) access_token!: AccessToken
+  @userStore.State private access_token!: AccessToken
 
   @Watch('access_token') onAccessToken () {
     this.accessCheck()
@@ -37,14 +38,14 @@ export default class Setting extends Vue {
     { title: 'Profile', component: 'Profile' },
   ]
 
-  accessCheck () {
+  private accessCheck () {
     if (this.access_token === null) {
       this.$message({ type: 'warning', message: '비회원은 접근할 수 없습니다' })
       this.$router.push('/')
     }
   }
 
-  created () {
+  private created () {
     this.accessCheck()
   }
 }

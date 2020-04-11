@@ -9,28 +9,28 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { PostList } from '@/components'
-import { Action, State} from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { Post} from '@Domain'
-import { FETCH_POST_ALL} from '@/middleware/store/types'
-import { ActionMethod} from 'vuex'
-import { eventBus} from '@/helper'
+import { ActionMethod } from 'vuex'
+import { eventBus } from '@/helper'
 
 const components = { PostList }
+const postStore = namespace('post')
 
 @Component({ components })
 export default class Home extends Vue {
 
-  @State(state => state.post.postList) postList!: Post[]
-  @Action(FETCH_POST_ALL) fetchAll!: ActionMethod
+  @postStore.State private postList!: Post[]
+  @postStore.Action private FETCH_POST_ALL!: ActionMethod
 
   async created () {
     try {
-      await this.fetchAll()
+      await this.FETCH_POST_ALL()
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 포스트 목록을 가져올 수 없습니다.' })
     }
 
-    eventBus.$on('fetchPostAll', this.fetchAll)
+    eventBus.$on('fetchPostAll', this.FETCH_POST_ALL)
 
   }
 }
