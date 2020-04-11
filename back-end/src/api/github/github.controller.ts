@@ -35,26 +35,34 @@ export class GithubController {
   }
 
   @Get('authentication')
-  public async authentication (@Query('code') code, @Res() res: Response): Promise<void> {
-
+  public async authentication (
+    @Query('code') code: string,
+    @Res() res: Response
+  ): Promise<void> {
     const token: string = await this.githubFacade.getTokenAndUserCreate(code)
-
     res.cookie('access_token', token, { maxAge: 1000 * 60 * 60 })
     res.status(HttpStatus.MOVED_PERMANENTLY).redirect('/')
-
   }
 
   @Get('trees')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
-  public getTrees (@Query() { user, repo, sha }): Promise<GithubTrees> {
+  public getTrees (
+    @Query('user') user: string,
+    @Query('repo') repo: string,
+    @Query('sha') sha: string
+  ): Promise<GithubTrees> {
     return this.githubFacade.getTrees({ user, repo, sha })
   }
 
   @Get('blob')
   @HttpCode(HttpStatus.OK)
   @CacheTTL(60 * 60)
-  public getBlob (@Query() { user, repo, sha }): Promise<GithubBlob> {
+  public getBlob (
+    @Query('user') user: string,
+    @Query('repo') repo: string,
+    @Query('sha') sha: string
+  ): Promise<GithubBlob> {
     return this.githubFacade.getBlob({ user, repo, sha })
   }
 
@@ -66,28 +74,31 @@ export class GithubController {
 
   @Post('hook')
   @HttpCode(HttpStatus.OK)
-  public addHook (@Body('repo') repo: string, @Token() access_token: string): Promise<GithubHook[]> {
+  public addHook (
+    @Body('repo') repo: string,
+    @Token() access_token: string
+  ): Promise<GithubHook[]> {
     return this.githubFacade.addHook({ repo, access_token })
   }
 
   @Post('hook/commit')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async hookPayload (@Body() payload: GithubHookPayload, @Req() { headers }: Request): Promise<void> {
-    if (
-      headers['x-github-event'] !== 'push' ||
-      payload.ref !== 'refs/heads/master'
-    ) return
-
+  public async hookPayload (
+    @Body() payload: GithubHookPayload,
+    @Req() { headers: { ['x-github-event']: event } }: Request
+  ): Promise<void> {
+    if (event !== 'push' || payload.ref !== 'refs/heads/master') return
     const cacheDelete = list => list.forEach(v => this.cacheManager.del(`/api/post/${v}`))
-
-    // 캐시 삭제
     this.cacheManager.del('/api/post')
     this.githubFacade.receiveHook(payload).then(cacheDelete)
   }
 
   @Delete('hook/:idx')
   @HttpCode(HttpStatus.OK)
-  public removeHook (@Param('idx') idx: number, @Token() access_token: string): Promise<GithubHook[]> {
+  public removeHook (
+    @Param('idx') idx: number,
+    @Token() access_token: string
+  ): Promise<GithubHook[]> {
     return this.githubFacade.removeHook(idx, access_token)
   }
 }
