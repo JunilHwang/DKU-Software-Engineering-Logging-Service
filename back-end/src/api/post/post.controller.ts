@@ -53,7 +53,6 @@ export class PostController {
     if (user.idx !== post.writer.idx) throw new UnauthorizedException()
 
     await this.commentService.deleteByPost(post)
-    await this.postService.deleteUpdatedByPost(post)
     await this.postService.delete(post)
 
     return await this.postService.findAll()
