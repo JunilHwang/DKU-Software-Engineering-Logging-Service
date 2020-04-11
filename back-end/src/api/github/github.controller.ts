@@ -1,9 +1,9 @@
-import { Controller, Get, Param, Query, Res, CacheTTL, HttpCode, HttpStatus, Post, Body, UnauthorizedException, Req, Delete, Inject, CACHE_MANAGER, CacheStore } from '@nestjs/common'
+import { Controller, Get, Param, Query, Res, CacheTTL, HttpCode, HttpStatus, Post, Body, Req, Delete, Inject, CACHE_MANAGER, CacheStore } from '@nestjs/common'
 import { Response, Request } from 'express'
 import { GithubFacade } from './github.facade'
 import { client_id, redirectURL } from './secret'
-import { UserEntity as User, GithubHookEntity as GithubHook } from '@/entity'
-import {GithubHookPayload, GithubTrees, GithubContent, GithubRepository, GithubBlob} from '@/domain'
+import { GithubHookEntity as GithubHook } from '@/entity'
+import { GithubHookPayload, GithubTrees, GithubContent, GithubRepository, GithubBlob } from '@/domain'
 import { Token } from '@/middle'
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}&scope=admin:repo_hook`
