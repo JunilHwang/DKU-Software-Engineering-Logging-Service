@@ -13,10 +13,10 @@ import {
   PostEntity as Post,
   PostUpdatedEntity as PostUpdated
 } from '@/entity'
-import { PostService } from '@/api/post/post.service'
 import { GithubService } from './github.service'
 import { GithubHookService } from './github.hook.service'
-import { defaultAccessToken as token } from './secret'
+import { UserService } from '@/api/user/user.service'
+import { PostService } from '@/api/post/post.service'
 
 @Injectable()
 export class GithubFacade {
@@ -25,6 +25,7 @@ export class GithubFacade {
     @Inject('GithubService') private readonly githubService: GithubService,
     @Inject('GithubHookService') private readonly githubHookService: GithubHookService,
     @Inject('PostService') private readonly postService: PostService,
+    @Inject('UserService') private readonly userService: UserService,
   ) {}
 
   public getRepo (user: string): Promise<GithubRepository[]> {
@@ -59,48 +60,48 @@ export class GithubFacade {
     }
   }
 
-  public async getTrees (user: string, repo: string, sha: string): Promise<GithubTrees> {
-    const headers = { Authorization: `Basic ${token}` }
-    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/trees/${sha}`, { headers }))
+  public getTrees (params: { [k: string]: string }): Promise<GithubTrees> {
+    try {
+      return this.githubService.getTrees(params)
+    } catch (e) {
+      throw new InternalServerErrorException('Github API 요청 오류가 발생하였습니다.')
+    }
   }
 
-  public async getBlob (user: string, repo: string, sha: string): Promise<GithubBlob> {
-    const headers = { Authorization: `Basic ${token}` }
-    return await responseCheck($http.get(`${BASE_URL}/repos/${user}/${repo}/git/blobs/${sha}`, { headers }))
+  public getBlob (params: { [k: string]: string }): Promise<GithubBlob> {
+    try {
+      return this.githubService.getBlob(params)
+    } catch (e) {
+      throw new InternalServerErrorException('Github API 요청 오류가 발생하였습니다.')
+    }
   }
 
-  public async getHook (user: User): Promise<GithubHook[]> {
-    return await this.githubHookRepository.find({ user })
+  public getHooks ({ user, access_token }: { user?: User; access_token?: string }): Promise<GithubHook[]> {
+    try {
+      return this.githubHookService.getHooks({
+        user: user ? user : await this.userService.findByToken(access_token)
+      })
+    } catch (e) {
+      throw new BadRequestException('오류로 인하여 Hook 목록을 가져올 수 없습니다.')
+    }
   }
 
   public async addHook (user: User, repo: string, token: string): Promise<GithubHook[]> {
-    const requestURL = `${BASE_URL}/repos/${repo}/hooks`
-    const configURL = process.env.NODE_ENV === 'development'
-      ? 'http://49.172.17.25:8080'
-      : 'http://localhost:8080' // 추후에 변경 예
-    const data = {
-      name: 'web',
-      active: true,
-      events: [ 'push' ],
-      config: {
-        url: `${configURL}/api/github/hook/commit`,
-        content_type: 'json',
-        insecure_ssl: 0
-      }
+
+    const exist: GithubHook[] = await this.githubHookService.getHooks({ repo })
+    if (exist.length) throw new BadRequestException('이미 등록된 훅입니다.')
+
+    try {
+      const githubHook = new GithubHook()
+      githubHook.repo = repo
+      githubHook.user = user
+      githubHook.data = await this.githubHookService.postHook({ repo, token })
+      await this.githubHookService.saveHook(githubHook)
+    } catch (e) {
+      throw new BadRequestException('오류로 인하여 훅을 추가가 중단되었습니다.')
     }
 
-    const headers = { Authorization: `token ${token}` }
-
-    const count: number = await this.githubHookRepository.count({ repo })
-    if (count !== 0) throw new BadRequestException()
-
-    const githubHook = new GithubHook()
-    githubHook.repo = repo
-    githubHook.user = user
-    githubHook.data = await responseCheck($http.post(requestURL, data, { headers }))
-    await this.githubHookRepository.save(githubHook)
-
-    return await this.getHook(user)
+    return await this.getHooks(user)
   }
 
   public async removeHook (idx: number, token: string): Promise<void> {

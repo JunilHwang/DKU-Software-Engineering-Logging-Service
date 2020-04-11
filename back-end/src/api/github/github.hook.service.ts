@@ -13,11 +13,11 @@ export class GithubHookService {
     @Inject('GithubAdapter') private readonly githubAdapter: GithubAdapter
   ) {}
 
-  public getHooks (user: User): Promise<GithubHook[]> {
+  public getHooks (params: { user?: User; repo?: string }): Promise<GithubHook[]> {
     try {
-      return this.githubHookRepository.find({ user })
+      return this.githubHookRepository.find(params)
     } catch (e) {
-      console.log('githubHookService.getHook', e)
+      console.log('githubHookService.getHooks', e)
       throw e
     }
   }
