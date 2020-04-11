@@ -31,10 +31,7 @@ export class PostController {
 
     this.refreshCache()
 
-    return await this.postService.create(
-      await this.userService.findByToken(access_token),
-      postVO
-    )
+    return await this.postFacade.create(access_token, postVO)
   }
 
   @Delete('/:idx')
@@ -43,15 +40,7 @@ export class PostController {
 
     this.refreshCache(idx)
 
-    const post: PostEntity = await this.postService.find({ idx })
-    const user: User = await this.userService.findByToken(access_token)
-
-    if (user.idx !== post.writer.idx) throw new UnauthorizedException('삭제할 권한이 없습니다.')
-
-    await this.commentService.deleteByPost(post)
-    await this.postService.delete(post)
-
-    return await this.postService.findAll()
+    return await this.postFacade.delete(idx, access_token)
   }
 
   @Put('/:idx')
@@ -63,23 +52,21 @@ export class PostController {
     @Token() access_token: string
   ): Promise<PostEntity> {
     this.refreshCache(idx)
-    const user: User = await this.userService.findByToken(access_token)
-    if (post.writer.idx !== user.idx) throw new UnauthorizedException('수정할 권한이 없습니다.')
-    return await this.postService.update(post, uploaded)
+    return await this.postFacade.update(post, uploaded, access_token)
   }
 
   @Patch('/:idx')
   @HttpCode(HttpStatus.OK)
   public async refreshPost (@Param('idx') idx: number, @Body('content') content: string, @Token() access_token: string): Promise<PostEntity> {
     this.refreshCache(idx)
-    return await this.postService.refresh(idx, content, await this.userService.find({ access_token }))
+    return await this.postFacade.refresh(idx, content, access_token)
   }
 
   @Post('/like/:idx')
   @HttpCode(HttpStatus.OK)
   public async likePost (@Param('idx') idx: number, @Token() access_token: string) {
     this.refreshCache(idx)
-    return await this.postService.like(idx, await this.userService.find(access_token))
+    return await this.postFacade.like(idx, access_token)
   }
 
   private refreshCache (idx: number = 0) {

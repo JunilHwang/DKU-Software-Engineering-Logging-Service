@@ -14,7 +14,8 @@ export const saveBlob = (blob: string, path: string) => {
   try {
     fs.writeFileSync(fullPath, buffer)
   } catch (e) {
-    throw new InternalServerErrorException('오류로 인하여 파일을 업로드할 수 없습니다.')
+    console.log(e)
+    throw e
   }
 }
 
@@ -23,7 +24,8 @@ export const removeBlob = (path: string) => {
   try {
     if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath)
   } catch (e) {
-    throw new InternalServerErrorException('오류로 인하여 파일을 삭제할 수 없습니다.')
+    console.log(e)
+    throw e
   }
 }
 
