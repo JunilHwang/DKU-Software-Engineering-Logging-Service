@@ -4,7 +4,7 @@ import user from './user'
 import github from './github'
 import post from './post'
 import comment from './comment'
-import { RootState } from './types';
+import { RootState } from './types'
 
 Vue.use(Vuex)
 

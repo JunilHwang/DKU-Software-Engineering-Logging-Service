@@ -5,7 +5,6 @@ import { TreeRepository} from 'typeorm'
 import { CommentVO } from '@/domain'
 
 @Injectable()
-@Catch(BadRequestException)
 export class CommentService {
 
   constructor (

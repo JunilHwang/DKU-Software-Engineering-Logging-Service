@@ -1,4 +1,12 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import {
+  BadRequestException,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import {
@@ -21,8 +29,12 @@ export class PostService {
 
   public async create (writer: User, { content, title, sha, repository, description, thumbnail, route }: PostVO): Promise<Post> {
     try {
+      console.log(route)
       const cnt = await this.postRepository.count({ route })
-      if (cnt !== 0) throw new BadRequestException('이미 등록된 포스트입니다.')
+      console.log(cnt)
+      if (cnt !== 0) {
+        throw new HttpException('이미 등록된 포스트입니다.', HttpStatus.BAD_GATEWAY)
+      }
 
       const post: Post = new Post()
       const isThumbnail = thumbnail.length > 0

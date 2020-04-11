@@ -46,7 +46,7 @@ export default class GithubLinkEditor extends Vue {
 
     if (!link.includes('https://github.com')) {
       this.$message({ type, message })
-      return
+      return null
     }
 
     const reg: RegExp = link.includes('/blob/') ? /(https?:\/\/.*?\/)(.*?\/.*?)\/(blob\/.*?)\/(.*)/ : /(https?:\/\/.*?\/)(.*)/
@@ -56,17 +56,17 @@ export default class GithubLinkEditor extends Vue {
 
     if (!path.includes('.md')) {
       this.$message({ type, message: 'Markdown 파일만 가져올 수 있습니다.' })
-      return
+      return null
     }
 
-    if (this.profile && this.profile.login === user) {
+    if (this.profile && this.profile.login.toLowerCase() !== user.toLowerCase()) {
       this.$message({ type, message: '다른 사용자의 컨텐츠는 가져올 수 없습니다.' })
-      return
+      return null
     }
 
     if ([user, repo, path].includes(undefined)) {
       this.$message({ type, message })
-      return
+      return null
     }
 
     const result = await githubClientService.getContent({ user, repo, path })
