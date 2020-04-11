@@ -32,14 +32,17 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { MutationMethod } from 'vuex'
+import { namespace } from 'vuex-class'
 import { GithubProfile } from '@Domain'
-import { SIGN_OUT } from '@/middleware/store/types'
 import { eventBus } from '@/helper'
+
+const userStore = namespace('user')
 
 @Component
 export default class SiteHeader extends Vue {
-  @State(state => state.user.profile) profile!: GithubProfile|null
+  @userStore.State private profile!: GithubProfile|null
+  @userStore.Mutation private SIGN_OUT!: MutationMethod
 
   signIn () {
     location.replace('/api/github/sign-in')
@@ -53,7 +56,7 @@ export default class SiteHeader extends Vue {
 
   logout () {
     this.$message({ type: 'info', message: '로그아웃 되었습니다'})
-    this.$store.commit(SIGN_OUT)
+    this.SIGN_OUT()
     const target: HTMLElement = this.$refs.submenu as HTMLElement
     target.classList.remove('active')
   }
