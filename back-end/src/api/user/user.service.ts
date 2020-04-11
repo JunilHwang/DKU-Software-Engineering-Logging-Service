@@ -9,6 +9,26 @@ export class UserService {
 
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
+  public find (params): Promise<User|undefined> {
+    try {
+      return this.userRepository.findOne(params)
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  public async findByToken (access_token: string): Promise<User> {
+    try {
+      const user: User | undefined = await this.userRepository.findOne({access_token})
+      if (user === undefined) throw new UnauthorizedException('다시 로그인 해주세요')
+      return user
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
   public async create (profile: GithubProfile, access_token: string): Promise<User> {
     const [users, cnt] = await this.userRepository.findAndCount({ id: profile.login })
     const user = cnt === 0 ? new User() : users[0]
@@ -16,22 +36,6 @@ export class UserService {
     user.profile = profile
     user.access_token = access_token
     return this.userRepository.save(user)
-  }
-
-  public find (params): Promise<User|undefined> {
-    return this.userRepository.findOne(params)
-  }
-
-  public async findByToken (access_token: string): Promise<User> {
-    const user: User|undefined = await this.userRepository.findOne({ access_token })
-    if (user === undefined) throw new UnauthorizedException('다시 로그읺 ㅐ주세요')
-    return user
-  }
-
-  public async getToken (id: string): Promise<string> {
-    const sql: string = `SELECT access_token FROM user WHERE id = '${id}'`
-    const [ { access_token } ]: User[] = await this.userRepository.query(sql)
-    return access_token
   }
 
 }

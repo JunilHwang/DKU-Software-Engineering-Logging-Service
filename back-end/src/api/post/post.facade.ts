@@ -54,14 +54,6 @@ export class PostFacade {
     }
   }
 
-  public async findAllByUser (writerId: string): Promise<PostView[]> {
-    try {
-      return await this.postViewService.findAllByUser(writerId)
-    } catch (e) {
-      throw new BadRequestException(`오류로 인하여 ${writerId}님이 작성 포스트 목록을 가져올 수 없습니다.`)
-    }
-  }
-
   public async findAllByRoute (routes: string[]): Promise<Post[]> {
     try {
       return await this.postService.findIn<string>('route', routes)

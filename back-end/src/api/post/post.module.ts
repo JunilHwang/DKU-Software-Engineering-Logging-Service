@@ -19,6 +19,6 @@ const entities = TypeOrmModule.forFeature([ PostEntity, PostViewEntity, PostUpda
   ],
   controllers: [ PostController ],
   providers: [ PostService, PostViewService, PostUpdatedService, PostFacade ],
-  exports: [ PostService ]
+  exports: [ PostService, PostViewService ]
 })
 export class PostModule {}
