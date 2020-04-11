@@ -50,7 +50,7 @@ export class PostController {
     const post: PostEntity = await this.postService.find({ idx })
     const user: User = await this.userService.findByToken(access_token)
 
-    if (user.idx !== post.writer.idx) throw new UnauthorizedException()
+    if (user.idx !== post.writer.idx) throw new UnauthorizedException('다시 로그인 해주세요')
 
     await this.commentService.deleteByPost(post)
     await this.postService.delete(post)
@@ -68,7 +68,7 @@ export class PostController {
   ): Promise<PostEntity> {
     this.refreshCache(idx)
     const user: User = await this.userService.findByToken(access_token)
-    if (post.writer.idx !== user.idx) throw new UnauthorizedException()
+    if (post.writer.idx !== user.idx) throw new UnauthorizedException('다시 로그인 해주세요')
     return await this.postService.update(post, uploaded)
   }
 
@@ -87,7 +87,11 @@ export class PostController {
   }
 
   private refreshCache (idx: number = 0) {
-    this.cacheManager.del('/api/post')
-    if (idx !== 0) this.cacheManager.del(`/api/post/${idx}`)
+    try {
+      this.cacheManager.del('/api/post')
+      if (idx !== 0) this.cacheManager.del(`/api/post/${idx}`)
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
