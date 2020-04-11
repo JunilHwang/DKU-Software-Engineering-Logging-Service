@@ -19,13 +19,13 @@
           <span class="commentWriterID" v-html="id" />
         </li>
         <li class="commentCreatedAt">{{ createdAt*1 | fromNow }}</li>
-        <li class="commentEdit" v-if="userProfile !== null">
+        <li class="commentEdit" v-if="profile !== null">
           <el-button
             @click="$emit('open-form', { idx, type: 'reply' })"
             type="default"
             class="xMini"
             plain>답글</el-button>
-          <template v-if="userProfile.login === id">
+          <template v-if="profile.login === id">
             <el-button
               @click="$emit('open-form', { idx, type: 'update' })"
               type="default"
@@ -55,25 +55,26 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
-import { Action, State } from 'vuex-class'
-import { DELETE_COMMENT } from '@/middleware/store/types'
+import { namespace } from 'vuex-class'
 import { Comment, GithubProfile } from '@Domain'
 import CommentForm from './CommentForm.vue'
 
 const components = { CommentForm }
+const commentStore = namespace('comment')
+const userStore = namespace('user')
 
 @Component({ components })
 export default class CommentList extends Vue {
-  @Action(DELETE_COMMENT) deleteComment!: ActionMethod
-  @State(state => state.comment.commentList) commentList!: Comment[]
-  @State(state => state.user.profile) userProfile!: GithubProfile|null
+  @commentStore.Action private DELETE_COMMENT!: ActionMethod
+  @commentStore.State private commentList!: Comment[]
+  @userStore.State private profile!: GithubProfile|null
 
   private async remove (idx: number): Promise<void> {
     const post = this.$route.params.idx
     try {
-      await this.deleteComment({ idx, post })
+      await this.DELETE_COMMENT({ idx, post })
       this.$message({ type: 'success', message: '댓글이 삭제되었습니다.' })
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 댓글을 삭제할 수 없습니다.' })

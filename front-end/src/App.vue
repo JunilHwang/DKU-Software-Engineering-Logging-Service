@@ -11,27 +11,25 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { namespace } from 'vuex-class'
 import { GithubFactory, SiteHeader, SiteFooter } from '@/components'
-import { SIGN_IN } from '@/middleware/store/types/MutationType'
 import { AccessToken } from '@/middleware/store/types'
 import { ActionMethod } from 'vuex'
 
 const components = { GithubFactory, SiteHeader, SiteFooter }
+const userStore = namespace('user')
 
 @Component({ components })
 export default class App extends Vue {
-  @State(state => state.user.access_token)
-  private token: AccessToken | undefined
-
-  @Action(SIGN_IN) signIn: ActionMethod | undefined
+  @userStore.State private access_token!: AccessToken
+  @userStore.Action private SIGN_IN!: ActionMethod
 
   async created () {
     try {
-      const { token, signIn } = this
-      token
-      && signIn
-      && await signIn(token)
+      const { access_token, SIGN_IN } = this
+      access_token
+      && SIGN_IN
+      && await SIGN_IN(access_token)
     } catch (e) {
       this.$message({ type: 'error', message: '로그인을 하는 동안 오류가 발생했습니다.' })
     }

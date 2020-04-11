@@ -1,16 +1,16 @@
 <template>
-  <div v-if="post !== null">
+  <div v-if="selectedPost !== null">
 
     <main class="contentContainer">
 
       <post-header
-        :post="post"
+        :post="selectedPost"
         @refresh="refreshPost"
         @edit="editPost"
         @delete="deletePost"
       />
 
-      <markdown :content="post.content" :title="post.title" :is-sidebar="true" />
+      <markdown :content="selectedPost.content" :title="selectedPost.title" :is-sidebar="true" />
 
       <div class="iconGroup">
         <el-tooltip content="좋아요" placement="bottom">
@@ -19,7 +19,7 @@
              class="iconWrap like"
              :class="{ active: likeActive }">
             <fa icon="heart" />
-            <strong v-html="post.likeUsers.length" />
+            <strong v-html="selectedPost.likeUsers.length" />
           </a>
         </el-tooltip>
         <el-tooltip content="공유하기" placement="bottom">
@@ -63,7 +63,7 @@
         원본 문서
       </h3>
       <p>
-        <a :href="originalRepository" target="_blank" class="point fromLeft" v-html="post.route" />
+        <a :href="originalRepository" target="_blank" class="point fromLeft" v-html="selectedPost.route" />
       </p>
     </section>
 
@@ -75,7 +75,7 @@
 
       <comment-dialog ref="commentDialog" />
 
-    </div>x
+    </div>
 
     <template v-if="isWriter">
       <post-edit
@@ -95,8 +95,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
-import { FETCH_COMMENT, FETCH_POST, LIKE_POST, DELETE_POST, REFRESH_POST } from '@/middleware/store/types'
+import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
 import { Post as PostType } from '@Domain'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit, GithubLinkEditor, GithubContent } from '@/components'
@@ -109,26 +108,30 @@ interface DialogComponent extends Vue {
   close: Function
 }
 
+const postStore = namespace('post')
+const commentStore = namespace('comment')
+const userStore = namespace('user')
+
 @Component({ components })
 export default class Post extends Vue {
-  @Action(FETCH_POST) fetchPostAction!: ActionMethod
-  @Action(FETCH_COMMENT) fetchCommentAction!: ActionMethod
-  @Action(LIKE_POST) likePost!: ActionMethod
-  @Action(DELETE_POST) deletePostAction!: ActionMethod
-  @Action(REFRESH_POST) refreshPostAction!: ActionMethod
-  @State(state => state.post.selectedPost) post!: PostType|null
-  @State(state => state.user.profile) profile!: GithubProfile|null
+  @postStore.Action private FETCH_POST!: ActionMethod
+  @postStore.Action private LIKE_POST!: ActionMethod
+  @postStore.Action private DELETE_POST!: ActionMethod
+  @postStore.Action private REFRESH_POST!: ActionMethod
+  @commentStore.Action private FETCH_COMMENT!: ActionMethod
+  @postStore.State private selectedPost!: PostType|null
+  @userStore.State private profile!: GithubProfile|null
 
   private get originalRepository () {
-    if (this.post === null) return ''
-    const route = this.post.route.split('/')
+    if (this.selectedPost === null) return ''
+    const route = this.selectedPost.route.split('/')
     const head: string = route.slice(0, 2).join('/')
     const tail: string = route.slice(2).join('/')
     return `https://github.com/${head}/blob/master/${tail}`
   }
 
   private get isWriter (): Boolean {
-    return !!this.profile && !!this.post && this.profile.login === this.post.writer.id
+    return !!this.profile && !!this.selectedPost && this.profile.login === this.selectedPost.writer.id
   }
 
   private get isUser (): Boolean {
@@ -136,12 +139,12 @@ export default class Post extends Vue {
   }
 
   private get likeActive (): Boolean {
-    return this.isUser && this.post !== null && !!this.post.likeUsers.find(({ id }) => id === this.profile!.login)
+    return this.isUser && this.selectedPost !== null && !!this.selectedPost.likeUsers.find(({ id }) => id === this.profile!.login)
   }
 
   private async fetchPost () {
     try {
-      await this.fetchPostAction(this.$route.params.idx)
+      await this.FETCH_POST(this.$route.params.idx)
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
     }
@@ -149,7 +152,7 @@ export default class Post extends Vue {
 
   private async deletePost () {
     try {
-      await this.deletePostAction(this.$route.params.idx)
+      await this.DELETE_POST(this.$route.params.idx)
       this.$message({ type: 'success', message: '포스트가 삭제되었습니다.' })
       await this.$router.push('/')
     } catch (e) {
@@ -159,12 +162,12 @@ export default class Post extends Vue {
   }
 
   private async editPost () {
-    (this.$refs.postEditor as DialogComponent).open({ ...this.post })
+    (this.$refs.postEditor as DialogComponent).open({ ...this.selectedPost })
   }
 
   private async refreshPost () {
     try {
-      await this.refreshPostAction({ ...this.post })
+      await this.REFRESH_POST({ ...this.selectedPost })
       this.$message({ type: 'success', message: '포스트가 업데이트 되었습니다.' })
     } catch (e) {
       const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 포스트를 업데이트할 수 없습니다.'
@@ -174,7 +177,7 @@ export default class Post extends Vue {
 
   private async fetchComment () {
     try {
-      await this.fetchCommentAction(this.$route.params.idx)
+      await this.FETCH_COMMENT(this.$route.params.idx)
     } catch (e) {
       this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
     }
@@ -187,7 +190,7 @@ export default class Post extends Vue {
 
   private async toggleLike () {
     try {
-      await this.likePost(this.$route.params.idx)
+      await this.LIKE_POST(this.$route.params.idx)
     } catch (e) {
       const message: string = e === 401 ? '다시 로그인 해주세' : '오류로 인하여 좋아요를 완료할 수 없습니다.'
       this.$message({ type: 'error', message })
