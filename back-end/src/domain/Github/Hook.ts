@@ -14,7 +14,7 @@ export interface GithubHookLastResponse {
 
 export interface GithubHookData {
   type: string,
-  id: number,
+  id: string,
   name: string,
   active: boolean,
   events: string[],

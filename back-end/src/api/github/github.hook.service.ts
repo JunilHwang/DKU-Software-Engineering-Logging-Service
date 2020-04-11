@@ -22,6 +22,15 @@ export class GithubHookService {
     }
   }
 
+  public getHook (params: { idx?: number }): Promise<GithubHook|undefined> {
+    try {
+      return this.githubHookRepository.findOne(params)
+    } catch (e) {
+      console.log('githubHookService.getHook', e)
+      throw e
+    }
+  }
+
   public postHook (params: { [k: string]: string }): Promise<GithubHookData> {
     try {
       return this.githubAdapter.postHook(params)
@@ -40,10 +49,10 @@ export class GithubHookService {
     }
   }
 
-  public async removeHook ({ id, repo, token }: { [k: string]: string }): Promise<void> {
+  public async removeHook (params: { [k: string]: string }): Promise<void> {
     try {
-      await this.githubAdapter.removeHook({ id, repo, token })
-      await this.githubHookRepository.delete({ repo })
+      await this.githubAdapter.removeHook(params)
+      await this.githubHookRepository.delete({ repo: params.repo })
     } catch (e) {
       console.log('githubHookService.removeHook', e)
       throw e

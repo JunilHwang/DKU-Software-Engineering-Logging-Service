@@ -36,7 +36,7 @@ export class PostUpdatedService {
       )
     } catch (e) {
       console.error(e)
-      return []
+      throw e
     }
   }
 
@@ -45,7 +45,7 @@ export class PostUpdatedService {
       return await this.postUpdatedRepository.save(updatedList)
     } catch (e) {
       console.error(e)
-      return []
+      throw e
     }
   }
 }
