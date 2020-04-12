@@ -1,7 +1,5 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UnauthorizedException } from '@nestjs/common'
-import { CommentService } from './comment.service'
-import { PostService } from '@/api/post/post.service'
-import { UserService } from '@/api/user/user.service'
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UnauthorizedException } from '@nestjs/common'
+import { CommentFacade } from './comment.facade'
 import { CommentVO } from '@/domain'
 import { CommentEntity as Comment, UserEntity as User, PostEntity } from '@/entity'
 import { Token } from '@/middle'
@@ -10,49 +8,44 @@ import { Token } from '@/middle'
 export class CommentController {
 
   constructor (
-    private readonly commentService: CommentService,
-    private readonly postService: PostService,
-    private readonly userService: UserService,
+    private readonly commentFacade: CommentFacade,
   ) {}
 
   @Get('/comments/:post')
-  async getComments (@Param('post') post: number): Promise<Comment[]> {
-    return await this.commentService.findCommentsByPost(post)
+  getComments (@Param('post') post: number): Promise<Comment[]> {
+    return this.commentFacade.findCommentsByPost(post)
   }
 
   @Get('/comment/:idx')
-  async getComment (@Param('idx') idx: number): Promise<Comment> {
-    return await this.commentService.findComment({ idx })
+  getComment (@Param('idx') idx: number): Promise<Comment> {
+    return this.commentFacade.findComment({ idx })
   }
 
   @Post('/comment')
   @HttpCode(HttpStatus.OK)
-  async createdComment (@Body() { post, content, to = '', parent = 0 }, @Token() access_token: string): Promise<Comment[]> {
-    const writer: User = await this.userService.findByToken(access_token)
-    const postEntity: PostEntity = await this.postService.find({ idx: post })
-    await this.commentService.create({ content, parent, to, writer, post: postEntity })
-    return await this.commentService.findCommentsByPost(post)
+  createdComment (
+    @Body() { post, content, to = '', parent = 0 },
+    @Token() access_token: string
+  ): Promise<Comment[]> {
+    return this.commentFacade.create({ content, parent, to, access_token, post })
   }
 
   @Put('/comment/:idx')
   @HttpCode(HttpStatus.OK)
-  async updateComment (@Param('idx') idx: number, @Body() commentVO: CommentVO, @Token() access_token: string): Promise<Comment[]> {
-    const writer: User = await this.userService.findByToken(access_token)
-    const comment: Comment = await this.commentService.findComment({ idx })
-    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException('수정할 권한이 없습니다.')
-    const post = await comment.post
-    await this.commentService.update(idx, commentVO)
-    return await this.commentService.findCommentsByPost(post.idx)
+  updateComment (
+    @Param('idx') idx: number,
+    @Body('content') content: string,
+    @Token() access_token: string
+  ): Promise<Comment[]> {
+    return this.commentFacade.update(idx, content, access_token)
   }
 
   @Delete('/comment/:idx')
   @HttpCode(HttpStatus.OK)
-  async deleteComment (@Param('idx') idx: number, @Token() access_token: string): Promise<Comment[]> {
-    const writer: User = await this.userService.findByToken(access_token)
-    const comment: Comment = await this.commentService.findComment({ idx })
-    if (comment.writer.idx !== writer.idx) throw new UnauthorizedException('삭제할 권한이 없습니다.')
-    const post = await comment.post
-    await this.commentService.delete({ idx })
-    return await this.commentService.findCommentsByPost(post.idx)
+  deleteComment (
+    @Param('idx') idx: number,
+    @Token() access_token: string
+  ): Promise<Comment[]> {
+    return this.commentFacade.delete(idx, access_token)
   }
 }

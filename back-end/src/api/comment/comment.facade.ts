@@ -9,7 +9,7 @@ interface CommentCreateVO {
   post: number
   content: string
   parent: number
-  to?: string
+  to: string
   access_token: string
 }
 
@@ -39,7 +39,7 @@ export class CommentFacade {
     }
   }
 
-  async create ({ post, content, parent, to, access_token }: CommentCreateVO): Promise<void> {
+  async create ({ post, content, parent, to, access_token }: CommentCreateVO): Promise<Comment[]> {
     try {
       const comment: Comment = new Comment()
       const postEntity: Post|undefined = await this.postService.find({ idx: post })
@@ -62,6 +62,7 @@ export class CommentFacade {
         comment.od = od + 1
       }
       await this.commentService.save(comment)
+      return await this.findCommentsByPost(post)
 
     } catch (e) {
       switch (e) {
@@ -72,9 +73,13 @@ export class CommentFacade {
     }
   }
 
-  async update (idx: number, content: string): Promise<void> {
+  async update (idx: number, content: string, access_token: string): Promise<Comment[]> {
     try {
+      const writer: User = await this.userService.findByToken(access_token)
+      const comment: Comment = await this.commentService.findComment({ idx })
+      if (comment.writer.idx !== writer.idx) throw 'Auth'
       await this.commentService.update(idx, content)
+      return this.findCommentsByPost((await comment.post).idx)
     } catch (e) {
       switch (e) {
         case 'Auth' : throw new UnauthorizedException('수정 권한이 없습니다.')
@@ -84,9 +89,13 @@ export class CommentFacade {
     }
   }
 
-  async delete (params): Promise<void> {
+  async delete (idx: number, access_token: string): Promise<Comment[]> {
     try {
-      await this.commentService.delete(params)
+      const writer: User = await this.userService.findByToken(access_token)
+      const comment: Comment = await this.commentService.findComment({ idx })
+      if (comment.writer.idx !== writer.idx) throw 'Auth'
+      await this.commentService.delete({ idx })
+      return await this.findCommentsByPost((await comment.post).idx)
     } catch (e) {
       switch (e) {
         case 'Auth' : throw new UnauthorizedException('삭제 권한이 없습니다.')
