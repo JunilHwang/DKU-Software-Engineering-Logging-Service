@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common'
 import { CommentEntity as Comment, PostEntity as Post, UserEntity as User } from '@/entity'
 import { CommentVO } from '@/domain'
 import { CommentService } from './comment.service'
@@ -58,7 +58,7 @@ export class CommentFacade {
         comment.to = to
         const last: Comment = await this.commentService.getLastOfParent(parent)
         const od: number = last.od
-        await this.commentService.incrementOdAfter({ od, parent })
+        await this.commentService.incrementOdAfter({ od, post })
         comment.od = od + 1
       }
       await this.commentService.save(comment)
@@ -66,6 +66,7 @@ export class CommentFacade {
     } catch (e) {
       switch (e) {
         case 'NotFound' : throw new BadRequestException('유효한 포스트가 아닙니다.')
+        case 'ReLogin' : throw new UnauthorizedException('다시 로그인 해주세요')
         default: throw new BadRequestException('오류로 인하여 댓글을 추가가 중단 되었습니다.')
       }
     }

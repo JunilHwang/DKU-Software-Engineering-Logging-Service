@@ -19,9 +19,9 @@ export class PostService {
     }
   }
 
-  public find (params: { idx?: number; route?: string }): Promise<Post> {
+  public async find (params: { idx?: number; route?: string }): Promise<Post> {
     try {
-      return this.postRepository.findOne(params)
+      return await this.postRepository.findOne(params)
     } catch (e) {
       console.error(e)
       throw e

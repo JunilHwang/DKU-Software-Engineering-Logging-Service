@@ -11,54 +11,88 @@ export class CommentService {
     @InjectRepository(Comment) private readonly commentRepository: TreeRepository<Comment>,
   ) {}
 
-  findCommentsByPost (post: number): Promise<Comment[]> {
+  public async findCommentsByPost (post: number): Promise<Comment[]> {
     try {
-      return this.commentRepository.find({ where: { post }, order: { od: 'ASC' } })
+      return await this.commentRepository.find({ where: { post }, order: { od: 'ASC' } })
     } catch (e) {
       console.error(e)
       throw e
     }
   }
 
-  findComment (params): Promise<Comment|undefined> {
-    return this.commentRepository.findOne(params)
-  }
-
-  getOd (post: number): Promise<number> {
-    return this.commentRepository.count({ where: { post } })
-  }
-
-  getLastOfParent () {
-
-  }
-
-  async create ({ post, writer, content, parent, to }): Promise<void> {
-    if (parent === 0) {
-      comment.od = await this.commentRepository.count({ post })
-    } else {
-      comment.to = to
-      const last: Comment = await this.commentRepository.findOne({
-        where: [ { idx: parent }, { parent } ],
-        order: { od: 'DESC' }
-      })
-      const od: number = last.od
-      await this.commentRepository.query(`UPDATE comment SET od = od + 1 WHERE post = ${(await post).idx} and od > ${od}`)
-      comment.od = od + 1
+  public async findComment (params): Promise<Comment|undefined> {
+    try {
+      return await this.commentRepository.findOne(params)
+    } catch (e) {
+      console.error(e)
+      throw e
     }
-
-    await this.commentRepository.save(comment)
   }
 
-  async update (idx: number, { content }: CommentVO) {
-    await this.commentRepository.update(idx, { content })
+  public async getOd (post: number): Promise<number> {
+    try {
+      return await this.commentRepository.count({where: {post}})
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 
-  async delete (params): Promise<void> {
-    await this.commentRepository.delete(params)
+  public async getLastOfParent (parent: number): Promise<Comment> {
+    try {
+      return await this.commentRepository.findOne({
+        where: [{idx: parent}, {parent}],
+        order: {od: 'DESC'}
+      })
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 
-  async deleteByPost (post: Post): Promise<void> {
-    const comments: Comment[] = await this.commentRepository.find({ where: { post } })
-    await this.commentRepository.remove(comments)
+  public async incrementOdAfter ({ post, od }: { [k: string]: number }): Promise<void> {
+    try {
+      await this.commentRepository.query(`UPDATE comment SET od = od + 1 WHERE post = ${post} and od > ${od}`)
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  public async save (comment: Comment): Promise<Comment> {
+    try {
+      return await this.commentRepository.save(comment)
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  public async update (idx: number, { content }: CommentVO) {
+    try {
+      await this.commentRepository.update(idx, {content})
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  public async delete (params): Promise<void> {
+    try {
+      await this.commentRepository.delete(params)
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  public async deleteByPost (post: Post): Promise<void> {
+    try {
+      const comments: Comment[] = await this.commentRepository.find({where: {post}})
+      await this.commentRepository.remove(comments)
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 }
