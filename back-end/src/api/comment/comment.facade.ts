@@ -67,21 +67,32 @@ export class CommentFacade {
       switch (e) {
         case 'NotFound' : throw new BadRequestException('유효한 포스트가 아닙니다.')
         case 'ReLogin' : throw new UnauthorizedException('다시 로그인 해주세요')
-        default: throw new BadRequestException('오류로 인하여 댓글을 추가가 중단 되었습니다.')
+        default: throw new BadRequestException('오류로 인하여 댓글 추가가 중단 되었습니다.')
       }
     }
   }
 
-  async update (idx: number, { content }: CommentVO) {
-    await this.commentRepository.update(idx, { content })
+  async update (idx: number, content: string): Promise<void> {
+    try {
+      await this.commentService.update(idx, content)
+    } catch (e) {
+      switch (e) {
+        case 'Auth' : throw new UnauthorizedException('수정 권한이 없습니다.')
+        case 'ReLogin' : throw new UnauthorizedException('다시 로그인 해주세요')
+        default: throw new BadRequestException('오류로 인하여 댓글 수정이 중단 되었습니다.')
+      }
+    }
   }
 
   async delete (params): Promise<void> {
-    await this.commentRepository.delete(params)
-  }
-
-  async deleteByPost (post: Post): Promise<void> {
-    const comments: Comment[] = await this.commentRepository.find({ where: { post } })
-    await this.commentRepository.remove(comments)
+    try {
+      await this.commentService.delete(params)
+    } catch (e) {
+      switch (e) {
+        case 'Auth' : throw new UnauthorizedException('삭제 권한이 없습니다.')
+        case 'ReLogin' : throw new UnauthorizedException('다시 로그인 해주세요')
+        default: throw new BadRequestException('오류로 인하여 댓글을 삭제할 수 없습니다.')
+      }
+    }
   }
 }

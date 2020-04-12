@@ -68,9 +68,9 @@ export class CommentService {
     }
   }
 
-  public async update (idx: number, { content }: CommentVO) {
+  public async update (idx: number, content: string) {
     try {
-      await this.commentRepository.update(idx, {content})
+      await this.commentRepository.update(idx, { content })
     } catch (e) {
       console.error(e)
       throw e
