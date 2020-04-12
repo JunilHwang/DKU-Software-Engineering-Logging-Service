@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UnauthorizedException } from '@nestjs/common'
 import { CommentFacade } from './comment.facade'
-import { CommentVO } from '@/domain'
-import { CommentEntity as Comment, UserEntity as User, PostEntity } from '@/entity'
+import { CommentEntity as Comment } from '@/entity'
 import { Token } from '@/middle'
 
 @Controller('/api')
@@ -24,7 +23,10 @@ export class CommentController {
   @Post('/comment')
   @HttpCode(HttpStatus.OK)
   createdComment (
-    @Body() { post, content, to = '', parent = 0 },
+    @Body('post') post: number,
+    @Body('content') content: string,
+    @Body('to') to: string = '',
+    @Body('parent') parent: number = 0,
     @Token() access_token: string
   ): Promise<Comment[]> {
     return this.commentFacade.create({ content, parent, to, access_token, post })

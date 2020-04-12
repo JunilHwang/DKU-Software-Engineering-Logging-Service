@@ -1,6 +1,5 @@
 import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common'
 import { CommentEntity as Comment, PostEntity as Post, UserEntity as User } from '@/entity'
-import { CommentVO } from '@/domain'
 import { CommentService } from './comment.service'
 import { UserService } from '@/api/user/user.service'
 import { PostService } from '@/api/post/post.service'

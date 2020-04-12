@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CommentEntity as Comment, PostEntity as Post } from '@/entity'
 import { TreeRepository} from 'typeorm'
-import { CommentVO } from '@/domain'
 
 @Injectable()
 export class CommentService {
