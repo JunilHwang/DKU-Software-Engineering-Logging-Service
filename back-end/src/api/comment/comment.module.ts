@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common'
 import { CommentService } from './comment.service'
+import { CommentFacade } from './comment.facade'
 import { CommentController } from './comment.controller'
 import { PostModule } from '@/api/post/post.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -10,7 +11,7 @@ const entities = TypeOrmModule.forFeature([ CommentEntity ])
 
 @Module({
   imports: [ forwardRef(() => PostModule), forwardRef(() => UserModule), entities ],
-  providers: [ CommentService ],
+  providers: [ CommentService, CommentFacade ],
   controllers: [ CommentController ],
   exports: [ CommentService ]
 })

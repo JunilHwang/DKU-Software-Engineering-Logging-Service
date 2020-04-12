@@ -19,11 +19,9 @@ export class PostService {
     }
   }
 
-  public async find (params): Promise<Post> {
+  public find (params: { idx?: number; route?: string }): Promise<Post> {
     try {
-      const post = await this.postRepository.findOne(params)
-      if (post === undefined) throw 'NotFound'
-      return post
+      return this.postRepository.findOne(params)
     } catch (e) {
       console.error(e)
       throw e

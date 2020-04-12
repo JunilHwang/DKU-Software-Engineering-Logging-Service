@@ -30,7 +30,12 @@ export class UserService {
   }
 
   public save (user: User): Promise<User> {
-    return this.userRepository.save(user)
+    try {
+      return this.userRepository.save(user)
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 
 }

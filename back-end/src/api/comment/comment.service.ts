@@ -1,4 +1,4 @@
-import { BadRequestException, Catch, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CommentEntity as Comment, PostEntity as Post } from '@/entity'
 import { TreeRepository} from 'typeorm'
@@ -12,22 +12,27 @@ export class CommentService {
   ) {}
 
   findCommentsByPost (post: number): Promise<Comment[]> {
-    return this.commentRepository.find({ where: { post }, order: { od: 'ASC' } })
+    try {
+      return this.commentRepository.find({ where: { post }, order: { od: 'ASC' } })
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 
   findComment (params): Promise<Comment|undefined> {
     return this.commentRepository.findOne(params)
   }
 
-  async create ({ post, writer, content, parent, to }): Promise<void> {
-    const comment: Comment = new Comment()
-    comment.post = Promise.resolve(post)
-    comment.writer = writer
-    comment.parent = parent
-    comment.createdAt = Date.now()
-    comment.parent = parent
-    comment.content = content
+  getOd (post: number): Promise<number> {
+    return this.commentRepository.count({ where: { post } })
+  }
 
+  getLastOfParent () {
+
+  }
+
+  async create ({ post, writer, content, parent, to }): Promise<void> {
     if (parent === 0) {
       comment.od = await this.commentRepository.count({ post })
     } else {

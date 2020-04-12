@@ -54,17 +54,11 @@ export class PostFacade {
     }
   }
 
-  public async findAllByRoute (routes: string[]): Promise<Post[]> {
-    try {
-      return await this.postService.findIn<string>('route', routes)
-    } catch (e) {
-      throw new BadRequestException('오류로 인하여 포스트 목록을 가져올 수 없습니다.')
-    }
-  }
-
   public async find (params): Promise<Post> {
     try {
-      return await this.postService.find(params)
+      const post: Post|undefined = await this.postService.find(params)
+      if (post === undefined) throw 'NotFound'
+      return post
     } catch (e) {
       throw e === 'NotFound'
         ? new BadRequestException('해당 포스트를 찾을 수 없습니다.')
@@ -141,7 +135,7 @@ export class PostFacade {
 
   public async like (idx: number, access_token: string): Promise<Post> {
     try {
-      const user: User = await this.userService.find(access_token)
+      const user: User = await this.userService.findByToken(access_token)
       const post: Post = await this.postService.find({ idx })
       const index = post.likeUsers.findIndex(v => v.id === user.id)
       index !== -1
