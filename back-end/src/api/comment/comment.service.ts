@@ -28,6 +28,15 @@ export class CommentService {
     }
   }
 
+  public async findReply (idx: number): Promise<Comment[]> {
+    try {
+      return await this.commentRepository.find({ parent: idx })
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
   public async getOd (post: number): Promise<number> {
     try {
       return await this.commentRepository.count({where: {post}})
@@ -76,9 +85,9 @@ export class CommentService {
     }
   }
 
-  public async delete (params): Promise<void> {
+  public async delete (comment: Comment): Promise<void> {
     try {
-      await this.commentRepository.delete(params)
+      await this.commentRepository.remove(comment)
     } catch (e) {
       console.error(e)
       throw e
