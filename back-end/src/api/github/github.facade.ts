@@ -1,4 +1,11 @@
-import { BadRequestException, Inject, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException
+} from '@nestjs/common'
 import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob, GithubHookPayload } from '@/domain/Github'
 import { blobToContent } from '@/helper';
 import {
@@ -126,7 +133,7 @@ export class GithubFacade {
       return await this.getHooks({ user })
     } catch (e) {
       switch (e) {
-        case 'Auth': throw new UnauthorizedException('삭제할 권한이 없습니다.')
+        case 'Auth': throw new ForbiddenException('삭제할 권한이 없습니다.')
         case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
         default: throw new BadRequestException('오류로 인하여 Hook 추가가 중단되었습니다.')
       }

@@ -1,4 +1,11 @@
-import { BadRequestException, Inject, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException
+} from '@nestjs/common'
 import { PostService } from './post.service'
 import { PostViewService } from './post.view.service'
 import { PostUpdatedService  } from './post.updated.service'
@@ -83,7 +90,7 @@ export class PostFacade {
 
     } catch (e) {
       switch (e) {
-        case 'Auth' : throw new UnauthorizedException('삭제할 권한이 없습니다.')
+        case 'Auth' : throw new ForbiddenException('삭제할 권한이 없습니다.')
         case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
         default: throw new BadRequestException('오류로 인하여 포스트 삭제가 중단 되었습니다.')
       }
@@ -107,7 +114,7 @@ export class PostFacade {
 
     } catch (e) {
       switch (e) {
-        case 'Auth' : throw new UnauthorizedException('수정할 권한이 없습니다.')
+        case 'Auth' : throw new ForbiddenException('수정할 권한이 없습니다.')
         case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
         default: throw new BadRequestException('오류로 인하여 포스트 수정이 중단 되었습니다.')
       }
@@ -126,7 +133,7 @@ export class PostFacade {
       return post
     } catch (e) {
       switch (e) {
-        case 'Auth' : throw new UnauthorizedException('업데이트할 권한이 없습니다.')
+        case 'Auth' : throw new ForbiddenException('업데이트할 권한이 없습니다.')
         case 'ReLogin': throw new UnauthorizedException('다시 로그인 해주세요.')
         default: throw new BadRequestException('오류로 인하여 포스트 업데이트가 중단 되었습니다.')
       }

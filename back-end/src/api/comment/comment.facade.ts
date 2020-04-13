@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common'
+import {BadRequestException, ForbiddenException, Inject, Injectable, UnauthorizedException} from '@nestjs/common'
 import { CommentEntity as Comment, PostEntity as Post, UserEntity as User } from '@/entity'
 import { CommentService } from './comment.service'
 import { UserService } from '@/api/user/user.service'
@@ -81,7 +81,7 @@ export class CommentFacade {
       return this.findCommentsByPost((await comment.post).idx)
     } catch (e) {
       switch (e) {
-        case 'Auth' : throw new UnauthorizedException('수정 권한이 없습니다.')
+        case 'Auth' : throw new ForbiddenException('수정 권한이 없습니다.')
         case 'ReLogin' : throw new UnauthorizedException('다시 로그인 해주세요')
         default: throw new BadRequestException('오류로 인하여 댓글 수정이 중단 되었습니다.')
       }
@@ -97,7 +97,7 @@ export class CommentFacade {
       return await this.findCommentsByPost((await comment.post).idx)
     } catch (e) {
       switch (e) {
-        case 'Auth' : throw new UnauthorizedException('삭제 권한이 없습니다.')
+        case 'Auth' : throw new ForbiddenException('삭제 권한이 없습니다.')
         case 'ReLogin' : throw new UnauthorizedException('다시 로그인 해주세요')
         default: throw new BadRequestException('오류로 인하여 댓글을 삭제할 수 없습니다.')
       }
