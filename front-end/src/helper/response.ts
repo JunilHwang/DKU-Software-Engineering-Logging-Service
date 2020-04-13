@@ -9,8 +9,7 @@ export const responseProcessor = async <T>(response: Promise<AxiosResponse<Respo
     return result
   } catch (e) {
     if (e.status === 401) store.commit('user/SIGN_OUT')
-    console.log(e.response)
     eventBus.$message({ type: 'error', message: e.response.data.message })
-    throw e
+    throw 'API 호출 오류'
   }
 }
