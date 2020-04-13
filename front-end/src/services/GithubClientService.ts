@@ -32,7 +32,7 @@ export default Object.freeze({
     return sha
   },
 
-  async hookPingTest (repo: string, id: number, token: string): Promise<void> {
+  async hookPingTest (repo: string, id: string, token: string): Promise<void> {
     const headers = { Authorization: `token ${token}` }
     const url: string = `${githubURL}/repos/${repo}/hooks/${id}/pings`
     await responseProcessor<void>($http.post(url, null, { headers }))

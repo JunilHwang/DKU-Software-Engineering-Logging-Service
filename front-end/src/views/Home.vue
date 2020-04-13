@@ -24,12 +24,7 @@ export default class Home extends Vue {
   @postStore.Action private FETCH_POST_ALL!: ActionMethod
 
   async created () {
-    try {
-      await this.FETCH_POST_ALL()
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 포스트 목록을 가져올 수 없습니다.' })
-    }
-
+    await this.FETCH_POST_ALL()
     eventBus.$on('fetchPostAll', this.FETCH_POST_ALL)
 
   }

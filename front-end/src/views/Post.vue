@@ -143,22 +143,13 @@ export default class Post extends Vue {
   }
 
   private async fetchPost () {
-    try {
-      await this.FETCH_POST(this.$route.params.idx)
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
-    }
+    await this.FETCH_POST(this.$route.params.idx)
   }
 
   private async deletePost () {
-    try {
-      await this.DELETE_POST(this.$route.params.idx)
-      this.$message({ type: 'success', message: '포스트가 삭제되었습니다.' })
-      await this.$router.push('/')
-    } catch (e) {
-      const message: string =  e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 포스트를 삭제할 수 없습니다'
-      this.$message({ type: 'error', message })
-    }
+    await this.DELETE_POST(this.$route.params.idx)
+    this.$message({ type: 'success', message: '포스트가 삭제되었습니다.' })
+    await this.$router.push('/')
   }
 
   private async editPost () {
@@ -166,21 +157,12 @@ export default class Post extends Vue {
   }
 
   private async refreshPost () {
-    try {
-      await this.REFRESH_POST({ ...this.selectedPost })
-      this.$message({ type: 'success', message: '포스트가 업데이트 되었습니다.' })
-    } catch (e) {
-      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 포스트를 업데이트할 수 없습니다.'
-      this.$message({ type: 'error', message })
-    }
+    await this.REFRESH_POST({ ...this.selectedPost })
+    this.$message({ type: 'success', message: '포스트가 업데이트 되었습니다.' })
   }
 
   private async fetchComment () {
-    try {
-      await this.FETCH_COMMENT(this.$route.params.idx)
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 포스트를 가져올 수 없습니다.' })
-    }
+    await this.FETCH_COMMENT(this.$route.params.idx)
   }
 
   private openForm (params: { idx: number, type: 'reply'|'update' }) {
@@ -189,12 +171,7 @@ export default class Post extends Vue {
   }
 
   private async toggleLike () {
-    try {
-      await this.LIKE_POST(this.$route.params.idx)
-    } catch (e) {
-      const message: string = e === 401 ? '다시 로그인 해주세' : '오류로 인하여 좋아요를 완료할 수 없습니다.'
-      this.$message({ type: 'error', message })
-    }
+    await this.LIKE_POST(this.$route.params.idx)
   }
 
   private async updateRoute () {

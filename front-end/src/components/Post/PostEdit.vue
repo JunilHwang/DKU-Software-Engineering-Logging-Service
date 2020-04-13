@@ -73,13 +73,9 @@ export default class PostEdit extends Vue {
     const frm: any = this.$refs.frm
     frm.validate(async (valid: boolean) => {
       if (!valid) return false
-      try {
-        await this.UPDATE_POST([ this.postData, this.uploadedThumbnail ])
-        this.$message({ type: 'success', message: '수정 되었습니다.' })
-        this.opened = false
-      } catch (e) {
-        this.$message({ type: 'error', message: '오류로 인하여 포스트 수정을 완료할 수 없습니다.' })
-      }
+      await this.UPDATE_POST([ this.postData, this.uploadedThumbnail ])
+      this.$message({ type: 'success', message: '수정 되었습니다.' })
+      this.opened = false
     })
   }
 

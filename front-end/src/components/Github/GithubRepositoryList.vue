@@ -42,11 +42,7 @@ export default class RepositoryList extends Vue {
 
   public async open () {
     this.opened = true
-    try {
-      this.FETCH_GITHUB_REPO(this.profile)
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 Repository를 가져올 수 없습니다.' })
-    }
+    this.FETCH_GITHUB_REPO(this.profile)
   }
 
   public close () {

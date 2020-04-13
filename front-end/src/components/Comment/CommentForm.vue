@@ -47,17 +47,13 @@ export default class CommentForm extends Vue {
   }
 
   private async commentSubmit (): Promise<void> {
-    try {
-      await this.ADD_COMMENT({
-        content: this.commentDetail.content,
-        parent: this.parent,
-        post: parseInt(this.$route.params.idx)
-      })
-      this.commentDetail.content = ''
-      this.$message({ type: 'success', message: '댓글이 추가되었습니다.' })
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 댓글을 추가할 수 없습니다.' })
-    }
+    await this.ADD_COMMENT({
+      content: this.commentDetail.content,
+      parent: this.parent,
+      post: parseInt(this.$route.params.idx)
+    })
+    this.commentDetail.content = ''
+    this.$message({ type: 'success', message: '댓글이 추가되었습니다.' })
   }
 
   private created (): void {

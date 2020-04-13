@@ -73,12 +73,8 @@ export default class CommentList extends Vue {
 
   private async remove (idx: number): Promise<void> {
     const post = this.$route.params.idx
-    try {
-      await this.DELETE_COMMENT({ idx, post })
-      this.$message({ type: 'success', message: '댓글이 삭제되었습니다.' })
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 댓글을 삭제할 수 없습니다.' })
-    }
+    await this.DELETE_COMMENT({ idx, post })
+    this.$message({ type: 'success', message: '댓글이 삭제되었습니다.' })
   }
 
 }

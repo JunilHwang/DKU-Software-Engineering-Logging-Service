@@ -25,14 +25,10 @@ export default class App extends Vue {
   @userStore.Action private SIGN_IN!: ActionMethod
 
   async created () {
-    try {
-      const { access_token, SIGN_IN } = this
-      access_token
-      && SIGN_IN
-      && await SIGN_IN(access_token)
-    } catch (e) {
-      this.$message({ type: 'error', message: '로그인을 하는 동안 오류가 발생했습니다.' })
-    }
+    const { access_token, SIGN_IN } = this
+    access_token
+    && SIGN_IN
+    && await SIGN_IN(access_token)
   }
 }
 </script>

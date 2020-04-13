@@ -73,15 +73,9 @@ export default class GithubContentSaveEditor extends Vue {
     const frm: any = this.$refs.frm
     frm.validate(async (valid: boolean) => {
       if (!valid) return false
-
-      try {
-        await this.ADD_POST(this.postData)
-        this.$message({ type: 'success', message: '포스트가 등록되었습니다.' })
-        eventBus.$emit('fetchPostAll')
-      } catch (e) {
-        this.$message({ type: 'error', message: '오류로 인하여 포스트를 등록할 수 없습니다.' })
-      }
-
+      await this.ADD_POST(this.postData)
+      this.$message({ type: 'success', message: '포스트가 등록되었습니다.' })
+      eventBus.$emit('fetchPostAll')
       this.opened = false
     })
   }

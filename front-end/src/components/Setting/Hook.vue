@@ -95,13 +95,8 @@ export default class Hook extends Vue {
   }
 
   private async remove (idx: number) {
-    try {
-      await this.DELETE_GITHUB_HOOK(idx)
-      this.$message({ type: 'success', message: '삭제되었습니다.' })
-    } catch (e) {
-      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 삭제가 취소되었습니다.';
-      this.$message({ type: 'error', message })
-    }
+    await this.DELETE_GITHUB_HOOK(idx)
+    this.$message({ type: 'success', message: '삭제되었습니다.' })
   }
 
   private add (repo: GithubRepository) {
@@ -114,14 +109,9 @@ export default class Hook extends Vue {
     this
       .$confirm(confirmMsg, confirmTitle, { type, confirmButtonText, cancelButtonText })
       .then(async () => {
-        try {
-          await this.ADD_GITHUB_HOOK(repo.full_name)
-          this.$message({ type: 'success', message: '추가 되었습니다.' })
-          this.repositories.close()
-        } catch (e) {
-          const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 취소되었습니다.';
-          this.$message({ type: 'error', message })
-        }
+        await this.ADD_GITHUB_HOOK(repo.full_name)
+        this.$message({ type: 'success', message: '추가 되었습니다.' })
+        this.repositories.close()
       })
       .catch(() => {
         this.$message({ type: 'info', message: '취소되었습니다.' })
@@ -129,12 +119,7 @@ export default class Hook extends Vue {
   }
 
   private async created () {
-    try {
-      await this.FETCH_GITHUB_HOOK()
-    } catch (e) {
-      const message: string = e === 401 ? '다시 로그인 해주세요' : '오류로 인하여 목록을 가져올 수 없습니다.';
-      this.$message({ type: 'error', message })
-    }
+    await this.FETCH_GITHUB_HOOK()
   }
 }
 </script>

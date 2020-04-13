@@ -54,34 +54,26 @@ export default class CommentForm extends Vue {
   }
 
   private async commentReply (): Promise<void> {
-    try {
-      const comment: Comment = this.comment!
-      await this.ADD_COMMENT({
-        parent: comment.parent === 0 ? comment.idx : comment.parent,
-        to: comment.writer.id,
-        post: this.$route.params.idx,
-        content: this.commentDetail.content
-      })
-      this.commentDetail.content = ''
-      this.$message({ type: 'success', message: '답글 작성이 완료되었습니다.' })
-      this.opened = false
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 답글 작성이 취소되었습니다.' })
-    }
+    const comment: Comment = this.comment!
+    await this.ADD_COMMENT({
+      parent: comment.parent === 0 ? comment.idx : comment.parent,
+      to: comment.writer.id,
+      post: this.$route.params.idx,
+      content: this.commentDetail.content
+    })
+    this.commentDetail.content = ''
+    this.$message({ type: 'success', message: '답글 작성이 완료되었습니다.' })
+    this.opened = false
   }
 
   private async commentUpdate (): Promise<void> {
-    try {
-      await this.UPDATE_COMMENT({
-        idx: this.comment!.idx,
-        content: this.commentDetail.content
-      })
-      this.commentDetail.content = ''
-      this.$message({ type: 'success', message: '댓글이 수정되었습니다.' })
-      this.opened = false
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 댓글을 추가할 수 없습니다.' })
-    }
+    await this.UPDATE_COMMENT({
+      idx: this.comment!.idx,
+      content: this.commentDetail.content
+    })
+    this.commentDetail.content = ''
+    this.opened = false
+    this.$message({ type: 'success', message: '댓글이 수정되었습니다.' })
   }
 
   private commentSubmit () {
@@ -92,15 +84,11 @@ export default class CommentForm extends Vue {
 
   public async open ({ idx, type }: { idx: number, type: 'reply'|'update' }) {
     const isUpdate = type === 'update'
-    try {
-      await this.FETCH_ONE_COMMENT(idx)
-      this.opened = true
-      this.type = type
-      this.title = isUpdate ? '댓글 수정' : '답글 작성'
-      this.commentDetail.content = isUpdate ? this.comment!.content : ''
-    } catch (e) {
-      this.$message({ type: 'error', message: '오류로 인하여 댓글 정보를 가져올 수 없습니다.' })
-    }
+    await this.FETCH_ONE_COMMENT(idx)
+    this.opened = true
+    this.type = type
+    this.title = isUpdate ? '댓글 수정' : '답글 작성'
+    this.commentDetail.content = isUpdate ? this.comment!.content : ''
   }
 }
 </script>
