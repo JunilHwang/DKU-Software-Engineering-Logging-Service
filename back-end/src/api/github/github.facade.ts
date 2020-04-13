@@ -103,15 +103,15 @@ export class GithubFacade {
     }
   }
 
-  public async addHook ({ repo, token }: { [k: string]: string }): Promise<GithubHook[]> {
+  public async addHook ({ repo, access_token }: { [k: string]: string }): Promise<GithubHook[]> {
     try {
       const exist: GithubHook[] = await this.githubHookService.getHooks({ repo })
       if (exist.length) throw 'exist'
-      const user: User = await this.userService.findByToken(token)
+      const user: User = await this.userService.findByToken(access_token)
       const githubHook = new GithubHook()
       githubHook.repo = repo
       githubHook.user = user
-      githubHook.data = await this.githubHookService.postHook({ repo, token })
+      githubHook.data = await this.githubHookService.postHook({ repo, access_token })
       await this.githubHookService.saveHook(githubHook)
       return await this.getHooks({ user })
     } catch (e) {

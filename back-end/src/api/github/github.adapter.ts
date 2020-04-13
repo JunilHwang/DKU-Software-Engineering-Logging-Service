@@ -61,7 +61,7 @@ export class GithubAdapter {
     return adapter<GithubBlob>($http.get(url, { headers }))
   }
 
-  public postHook ({ repo, token }: { [k: string]: string }): Promise<GithubHookData> {
+  public postHook ({ repo, access_token }: { [k: string]: string }): Promise<GithubHookData> {
     const url = `${BASE_URL}/repos/${repo}/hooks`
     const configURL = process.env.NODE_ENV === 'development'
                       ? 'http://49.172.17.25:8080'
@@ -77,7 +77,7 @@ export class GithubAdapter {
       }
     }
 
-    const headers = { Authorization: `token ${token}` }
+    const headers = { Authorization: `token ${access_token}` }
     return adapter<GithubHookData>($http.post(url, data, { headers }))
   }
 
