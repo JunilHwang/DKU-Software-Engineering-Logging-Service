@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from 'domain/src'
+import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob } from 'domain/'
 import { GithubAdapter } from './github.adapter'
 
 @Injectable()

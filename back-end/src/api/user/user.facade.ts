@@ -5,7 +5,7 @@ import {
   InternalServerErrorException
 } from '@nestjs/common'
 import { UserEntity as User } from './user.entity'
-import { GithubProfile } from 'domain/src'
+import { GithubProfile } from 'domain/'
 import { UserService } from './user.service'
 import { PostViewService } from '@/api/post/post.view.service'
 import { PostViewEntity as PostView } from "@/api/post/post.view.entity";

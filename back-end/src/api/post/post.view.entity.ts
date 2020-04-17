@@ -1,5 +1,5 @@
 import { Column, ViewColumn, ViewEntity } from 'typeorm'
-import { GithubProfile } from 'domain/src'
+import { GithubProfile } from 'domain/'
 
 @ViewEntity({
   expression: `

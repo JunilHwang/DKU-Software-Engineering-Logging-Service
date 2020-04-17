@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { GithubProfile } from 'domain/src'
+import { GithubProfile } from 'domain/'
 
 @Entity({ name: 'user' })
 export class UserEntity {
