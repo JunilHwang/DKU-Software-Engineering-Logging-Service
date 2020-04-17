@@ -1,7 +1,8 @@
 import $http from 'axios'
 import { GithubContent, ContentVO } from 'domain/src'
 import { responseProcessor, eventBus } from '@/helper'
-import { store } from '@/main'
+import Cookie from 'js-cookie'
+// import { store } from '@/main'
 
 const githubURL = 'https://api.github.com'
 
@@ -9,7 +10,7 @@ export default Object.freeze({
 
   async getContent ({ user, repo, path }: ContentVO): Promise<GithubContent> {
     try {
-      const token = store.state.user.access_token
+      const token = Cookie.get('access_token')
       const headers = { Authorization: `token ${token}` }
       return (await $http.get(`${githubURL}/repos/${user}/${repo}/contents/${path}`, { headers })).data
     } catch (e) {
@@ -28,7 +29,7 @@ export default Object.freeze({
     const cache: string|null = localStorage.getItem(`${user}/${repo}/sha`)
     if (cache) return cache
 
-    const token = store.state.user.access_token
+    const token = Cookie.get('access_token')
     const headers = { Authorization: `token ${token}` }
 
     const { data } = await $http.get(`${githubURL}/repos/${user}/${repo}/commits`, { headers })
