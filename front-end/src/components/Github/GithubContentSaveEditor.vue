@@ -36,7 +36,7 @@ import { ActionMethod } from 'vuex'
 import { PostVO } from 'domain/src'
 import { eventBus, getFrontMatter } from '@/helper'
 
-const reader: FileReader = new FileReader()
+const reader: FileReader|null = typeof window !== 'undefined' ? new FileReader() : null;
 const postStore = namespace('post')
 
 @Component
@@ -81,7 +81,7 @@ export default class GithubContentSaveEditor extends Vue {
   }
 
   private thumbnailUpload ({ target: { files } }: { target: { files: FileList } }) {
-    files.length && reader.readAsDataURL(files[0])
+    files.length && reader && reader.readAsDataURL(files[0])
   }
 
   private thumbnailEdit () {
@@ -96,6 +96,7 @@ export default class GithubContentSaveEditor extends Vue {
   }
 
   private created () {
+    if (reader === null) return
     reader.onloadend = (e: any) => {
       const thumbnail = e.target!.result as string
       this.postData = { ...this.postData, thumbnail }

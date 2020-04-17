@@ -7,6 +7,7 @@ const bundlePath = join(__dirname, '../../resources/vue-ssr-server-bundle.json')
 @Injectable()
 export class AppService {
   public getSSR (context: { [k: string]: string }): Promise<string> {
+    // require('jsdom-global')()
     const renderer = createBundleRenderer(bundlePath, {
       runInNewContext: false
     })

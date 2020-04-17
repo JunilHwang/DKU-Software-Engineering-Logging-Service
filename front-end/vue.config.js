@@ -26,7 +26,6 @@ module.exports = {
   },
 
   chainWebpack: config => {
-    require('jsdom-global')()
     if (isSSR) {
       config.target('node')
       config.optimization.delete('splitChunks')
@@ -35,7 +34,6 @@ module.exports = {
     } else {
       const highlight = require('highlight.js');
       const highlightDefineVue = require('highlightjs-vue');
-
       highlightDefineVue(highlight);
       highlight.initHighlightingOnLoad();
     }

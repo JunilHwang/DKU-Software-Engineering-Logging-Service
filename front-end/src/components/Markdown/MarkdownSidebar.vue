@@ -22,6 +22,8 @@ export default class MarkdownSidebar extends Vue {
   @Prop({ type: String, default: '' }) content!: string
 
   get sidebar () {
+    if (typeof document === 'undefined') return []
+
     const wrap = document.createElement('div')
     wrap.innerHTML = this.content
     const head = wrap.querySelectorAll<HTMLElement>('h2,h3')
