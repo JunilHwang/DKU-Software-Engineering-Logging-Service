@@ -1,7 +1,7 @@
 import $http from 'axios'
 import { GithubContent, ContentVO } from 'domain/src'
 import { responseProcessor } from '@/helper'
-import { store } from '@/middleware'
+import { store } from '@/main'
 
 const githubURL = 'https://api.github.com'
 
