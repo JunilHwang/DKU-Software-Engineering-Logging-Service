@@ -1,5 +1,5 @@
 import $http from 'axios'
-import { Comment, CommentVO } from '@Domain'
+import { Comment, CommentVO } from 'domain/src'
 import { responseProcessor } from '@/helper'
 
 const baseURI = '/api/comment'

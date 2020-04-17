@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { Vue, Component, Emit } from 'vue-property-decorator'
-import { Post, PostVO } from '@Domain'
+import { Post, PostVO } from 'domain/src'
 import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
 

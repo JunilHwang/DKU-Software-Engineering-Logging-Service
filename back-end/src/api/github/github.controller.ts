@@ -3,7 +3,7 @@ import { Response, Request } from 'express'
 import { GithubFacade } from './github.facade'
 import { client_id, redirectURL } from './secret'
 import { GithubHookEntity as GithubHook } from '@/entity'
-import { GithubHookPayload, GithubTrees, GithubContent, GithubRepository, GithubBlob } from '@/domain'
+import { GithubHookPayload, GithubTrees, GithubContent, GithubRepository, GithubBlob } from 'domain/'
 import { Token } from '@/middle'
 
 const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirectURL}&scope=admin:repo_hook`

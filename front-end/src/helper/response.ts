@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { Response } from '@Domain'
+import { Response } from 'domain/src'
 import { store } from '@/middleware'
 import { eventBus } from '../helper'
 

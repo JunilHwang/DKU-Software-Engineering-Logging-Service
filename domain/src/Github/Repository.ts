@@ -1,4 +1,4 @@
-import { GithubProfile } from './index'
+import { GithubProfile } from './Profile'
 
 export type GithubRepository = {
   id: number

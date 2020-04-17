@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm'
-import { GithubHookData } from '@/domain'
+import { GithubHookData } from 'domain/'
 import { UserEntity as User } from '@/entity'
 
 @Entity({ name: 'github_hook' })

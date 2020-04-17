@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { components } from './index';
-import { GithubRepository, PostVO } from '@Domain'
+import { GithubRepository, PostVO } from 'domain/src'
 import { eventBus } from '@/helper'
 
 interface DialogComponent extends Vue {

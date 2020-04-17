@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { PostView } from '@Domain'
+import { PostView } from 'domain/src'
 
 @Component
 export default class PostList extends Vue {

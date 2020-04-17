@@ -1,8 +1,8 @@
 import Cookie from 'js-cookie'
-import { userService } from '@/services';
+import { userService } from '@/services'
 import { Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators'
-import { AccessToken } from '../types';
-import { GithubProfile, PostView, User } from '@Domain';
+import { AccessToken } from '../types'
+import { GithubProfile, PostView, User } from 'domain/src'
 
 @Module({ namespaced: true })
 export default class UserModule extends VuexModule {

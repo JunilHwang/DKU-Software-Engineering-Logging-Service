@@ -2,3 +2,5 @@
 *.iml
 docker-compose.yml
 back-end/data/
+.DS_Store
+node_modules

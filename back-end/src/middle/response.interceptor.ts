@@ -1,7 +1,7 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { Response } from '@/domain'
+import { Response } from 'domain/'
 import { APP_INTERCEPTOR } from "@nestjs/core";
 
 @Injectable()

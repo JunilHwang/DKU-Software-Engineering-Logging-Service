@@ -1,6 +1,6 @@
 import { Module, VuexModule, MutationAction } from 'vuex-module-decorators'
 import { commentService } from '@/services'
-import { Comment, CommentVO } from '@Domain'
+import { Comment, CommentVO } from 'domain/src'
 
 @Module({
   namespaced: true

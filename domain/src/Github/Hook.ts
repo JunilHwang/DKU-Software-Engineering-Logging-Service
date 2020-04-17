@@ -1,4 +1,5 @@
-import { GithubRepository, GithubProfile } from './index';
+import { GithubRepository } from './Repository';
+import { GithubProfile } from './Profile';
 import { User } from '../index'
 
 export interface GithubHookConfig {

@@ -60,7 +60,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { namespace } from 'vuex-class'
-import { GithubHook, GithubRepository } from '@Domain'
+import { GithubHook, GithubRepository } from 'domain/src'
 import { AccessToken } from '@/middleware/store/types'
 import { githubClientService } from '@/services'
 import { GithubRepositoryList } from '@/components'

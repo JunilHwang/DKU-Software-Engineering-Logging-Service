@@ -12,7 +12,7 @@ import { PostUpdatedService  } from './post.updated.service'
 import { UserService } from '@/api/user/user.service'
 import { CommentService } from '@/api/comment/comment.service'
 import { PostEntity as Post, PostViewEntity as PostView, UserEntity as User } from '@/entity'
-import { PostVO } from "@/domain";
+import { PostVO } from 'domain/'
 import { removeBlob, saveBlob } from "@/helper";
 
 @Injectable()

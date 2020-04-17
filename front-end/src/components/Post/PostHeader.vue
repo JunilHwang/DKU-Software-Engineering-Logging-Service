@@ -60,9 +60,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Post } from '@Domain'
+import { Post, GithubProfile } from 'domain/src'
 import { namespace } from 'vuex-class'
-import { GithubProfile } from '@Domain'
 
 const userStore = namespace('user')
 

@@ -10,7 +10,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { PostList } from '@/components'
 import { namespace } from 'vuex-class'
-import { Post} from '@Domain'
+import { Post } from 'domain/src'
 import { ActionMethod } from 'vuex'
 import { eventBus } from '@/helper'
 

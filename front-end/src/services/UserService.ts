@@ -1,6 +1,6 @@
 import $http from 'axios'
 import { AccessToken } from '@/middleware/store/types/StateType'
-import { GithubProfile, PostView, User } from '@Domain'
+import { GithubProfile, PostView, User } from 'domain/src'
 import { responseProcessor } from '@/helper'
 
 const baseURI = '/api/user'

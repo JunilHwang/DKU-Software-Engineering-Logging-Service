@@ -1,0 +1,18 @@
+{
+  "name": "domain",
+  "version": "1.0.0",
+  "description": "DKU Loggin Service의 도메인 Repository",
+  "main": "dist/index.js",
+  "author": "junilhwang",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "js-base64": "^2.5.2"
+  },
+  "devDependencies": {
+    "@types/js-base64": "^2.3.1",
+    "typescript": "~3.8.3"
+  }
+}

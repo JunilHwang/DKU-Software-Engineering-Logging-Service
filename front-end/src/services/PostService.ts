@@ -1,6 +1,7 @@
 import $http from 'axios'
-import { Post, PostVO, PostView, GithubContent } from '@Domain'
-import { responseProcessor, blobToContent } from '@/helper'
+import { Post, PostVO, PostView, GithubContent } from 'domain/src'
+import { responseProcessor } from '@/helper'
+import { blobToContent } from 'domain/src'
 import { githubClientService } from './index'
 
 const baseURI = '/api/post'
