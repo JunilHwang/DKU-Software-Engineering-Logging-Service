@@ -1,0 +1,8 @@
+{
+  "name": "domain",
+  "version": "1.0.0",
+  "description": "DKU Loggin Service의 도메인 Repository",
+  "main": "dist/index.js",
+  "author": "junilhwang",
+  "license": "MIT"
+}
