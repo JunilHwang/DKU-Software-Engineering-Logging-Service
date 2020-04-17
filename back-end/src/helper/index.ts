@@ -1,7 +1,6 @@
 import * as fs from 'fs'
 import { Base64 } from 'js-base64'
-import { GithubContent } from '@/domain'
-import {InternalServerErrorException} from "@nestjs/common";
+import { GithubContent } from 'domain/src'
 
 export const UPLOADED_PATH: string = process.env.NODE_ENV === 'development'
                                      ? '/Users/junil/Desktop/Uploaded'

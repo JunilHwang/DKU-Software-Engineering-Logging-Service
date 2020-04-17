@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { GithubHookData } from '@/domain'
+import { GithubHookData } from 'domain/src'
 import { InjectRepository } from '@nestjs/typeorm'
 import { GithubHookEntity as GithubHook, UserEntity as User } from '@/entity'
 import { Repository } from 'typeorm'

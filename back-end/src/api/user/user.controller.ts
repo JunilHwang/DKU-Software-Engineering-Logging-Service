@@ -2,7 +2,7 @@ import { CacheTTL, Controller, Get, Query, Param, HttpCode, HttpStatus } from '@
 import { UserEntity as User, PostViewEntity as PostView } from '@/entity'
 import { Token } from '@/middle'
 import { UserFacade } from './user.facade'
-import { GithubProfile } from '@/domain'
+import { GithubProfile } from 'domain/src'
 
 @Controller('/api/user')
 export class UserController {

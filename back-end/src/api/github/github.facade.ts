@@ -6,7 +6,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException
 } from '@nestjs/common'
-import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob, GithubHookPayload } from '@/domain/Github'
+import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob, GithubHookPayload } from 'domain/src'
 import { blobToContent } from '@/helper';
 import {
   GithubHookEntity as GithubHook,

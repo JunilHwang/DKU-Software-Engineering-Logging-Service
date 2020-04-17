@@ -1,6 +1,6 @@
 {
   "name": "front-end",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -52,7 +52,8 @@
     "sass-loader": "^8.0.0",
     "typescript": "~3.8.3",
     "vue-template-compiler": "^2.6.10",
-    "vuex-module-decorators": "^0.16.1"
+    "vuex-module-decorators": "^0.16.1",
+    "domain": "^1.0.0"
   },
   "browserslist": [
     "> 1%",

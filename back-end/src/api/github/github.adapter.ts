@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { default as $http, AxiosResponse } from 'axios'
 import { client_id, client_secret } from './secret'
-import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob, GithubHookData } from '@/domain/Github'
+import { GithubRepository, GithubContent, GithubResponseToken, GithubProfile, GithubTrees, GithubBlob, GithubHookData } from 'domain/src'
 import { defaultAccessToken as token } from './secret'
 
 const BASE_URL = 'https://api.github.com'
