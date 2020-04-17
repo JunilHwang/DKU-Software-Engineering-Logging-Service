@@ -1,4 +1,12 @@
 {
+  "name": "DKU-Software-Engineering-Logging-Service",
   "private": true,
-  "workspaces": [ "front-end", "back-end" ]
+  "workspaces": [ "front-end", "back-end" ],
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  },
+  "scripts": {
+    "lerna:dev:stream": "lerna run lerna:dev --stream",
+    "lerna:dev:parallel": "lerna run lerna:dev --parallel"
+  }
 }
