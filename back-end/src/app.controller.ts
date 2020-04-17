@@ -6,9 +6,9 @@ import { AppService } from './app.service'
 export class AppController {
   constructor (private readonly appService: AppService) {}
 
-  @Get("*")
-  @Render('index')
-  public async getIndex(@Req() req: Request) {
+  @Get()
+  @Render('dist/index')
+  public async getSSR(@Req() req: Request) {
     return {
       content: await this.appService.getSSR({ url: req.url }),
       title: 'SSR Success'

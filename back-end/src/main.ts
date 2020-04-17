@@ -11,16 +11,24 @@ async function bootstrap() {
     logger: ['error', 'debug', 'warn', 'log', 'verbose']
   })
   const cookieParser = require('cookie-parser')
-  const staticPath = join(__dirname, '../../resources/static')
-  const templatePath = join(__dirname, '../../resources/templates/dist')
+  const RESOURCE_PATH = join(__dirname, '../../resources')
+  const STATIC_PATH = join(RESOURCE_PATH, 'static')
+  const TEMPLATE_PATH = join(RESOURCE_PATH, 'templates')
+
+  app.useStaticAssets(STATIC_PATH)
+  app.setBaseViewsDir(TEMPLATE_PATH)
+  app.setViewEngine('hbs')
 
   app.use(express.json({limit: '50mb'}));
   app.use(express.urlencoded({limit: '50mb', extended: true}));
-  app.useStaticAssets(staticPath)
-  app.setBaseViewsDir(templatePath)
-  app.setViewEngine('hbs')
 
+  app.use('/static', express.static(STATIC_PATH,{
+    cacheControl: true,
+    maxAge: 3600 * 1000,
+    etag: false
+  }))
   app.use('/uploaded', express.static(UPLOADED_PATH))
+  app.use('/favicon.ico', express.static(RESOURCE_PATH + '/favicon.ico'))
   app.use(cookieParser())
 
   if (process.env.NODE_ENV === 'development') {
