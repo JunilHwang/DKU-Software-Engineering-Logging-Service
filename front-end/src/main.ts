@@ -1,8 +1,7 @@
 import { createApp } from './app'
 import 'element-ui/lib/theme-chalk/index.css'
+import { store } from './middleware'
 
-const { app, store, router } = createApp({ })
-
-export { store, router }
+const { app } = createApp({}, store)
 
 app.$mount('#app')

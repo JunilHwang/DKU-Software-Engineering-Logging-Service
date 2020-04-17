@@ -26,7 +26,7 @@ export const getContentWithoutFrontmatter = (content: string) => (
 export const sidebarAutoActive = (() => {
   let isLoaded = false
   return () => {
-    if (isLoaded === true) return
+    if (isLoaded === true || typeof window === 'undefined') return
     isLoaded = true
     window.addEventListener('scroll', e => {
       const markdownContent = document.querySelector<HTMLElement>('#markdown-content')

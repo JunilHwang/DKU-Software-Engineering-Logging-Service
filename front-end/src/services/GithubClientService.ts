@@ -2,7 +2,6 @@ import $http from 'axios'
 import { GithubContent, ContentVO } from 'domain/src'
 import { responseProcessor, eventBus } from '@/helper'
 import Cookie from 'js-cookie'
-// import { store } from '@/main'
 
 const githubURL = 'https://api.github.com'
 
