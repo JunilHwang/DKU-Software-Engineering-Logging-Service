@@ -2,6 +2,8 @@ const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 const isSSR = process.env.NODE_ENV === 'ssr'
 const isDev = process.env.NODE_ENV === 'development'
 
+console.log(`build-ssr-entry:  src/main${isSSR ? '-ssr' : '' }.ts`)
+
 module.exports = {
   devServer: {
     port: 8080,
