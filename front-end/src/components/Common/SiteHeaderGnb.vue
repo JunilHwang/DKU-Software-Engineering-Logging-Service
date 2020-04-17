@@ -70,6 +70,8 @@ export default class SiteHeader extends Vue {
   }
 
   created () {
+    if (typeof document === 'undefined') return
+
     document.body.onclick = () => {
       const target: HTMLElement = this.$refs.submenu as HTMLElement
       if (target && target.classList.contains('active')) {

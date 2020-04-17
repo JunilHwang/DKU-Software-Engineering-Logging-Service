@@ -1,19 +1,7 @@
-import Vue from 'vue'
-import App from './App.vue'
-import { router, store } from './middleware'
-import ElementUI from 'element-ui'
+import { createApp } from './app'
 import 'element-ui/lib/theme-chalk/index.css'
-import './filter'
-import './middleware/icon'
+import { store } from './middleware'
 
-Vue.config.productionTip = false
+const { app } = createApp({}, store)
 
-const locale = require('element-ui/lib/locale/lang/ko')
-
-Vue.use(ElementUI, { locale })
-
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+app.$mount('#app')

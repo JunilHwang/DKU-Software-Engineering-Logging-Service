@@ -1,7 +1,7 @@
 import $http from 'axios'
 import { GithubContent, ContentVO } from 'domain/src'
-import { responseProcessor } from '@/helper'
-import { store } from '@/middleware'
+import { responseProcessor, eventBus } from '@/helper'
+import Cookie from 'js-cookie'
 
 const githubURL = 'https://api.github.com'
 
@@ -9,12 +9,18 @@ export default Object.freeze({
 
   async getContent ({ user, repo, path }: ContentVO): Promise<GithubContent> {
     try {
-      const token = store.state.user.access_token
+      const token = Cookie.get('access_token')
       const headers = { Authorization: `token ${token}` }
       return (await $http.get(`${githubURL}/repos/${user}/${repo}/contents/${path}`, { headers })).data
-    } catch ({ code, request }) {
-      console.error(code, request)
-      throw 'GithubClientService.getContent error'
+    } catch (e) {
+      console.error('GithubClientService.getContent error')
+      const { status } = e.response
+      const message: { [k: number]: string } = {
+        401: '로그인이 필요합니다.',
+        403: '권한이 없습니다.',
+      }
+      eventBus.$message({ type: 'error', message: message[status] || '오류로 인하여 취소되었습니다.' })
+      throw status
     }
   },
 
@@ -22,7 +28,7 @@ export default Object.freeze({
     const cache: string|null = localStorage.getItem(`${user}/${repo}/sha`)
     if (cache) return cache
 
-    const token = store.state.user.access_token
+    const token = Cookie.get('access_token')
     const headers = { Authorization: `token ${token}` }
 
     const { data } = await $http.get(`${githubURL}/repos/${user}/${repo}/commits`, { headers })

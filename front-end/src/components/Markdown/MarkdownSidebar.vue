@@ -20,6 +20,7 @@ import { sidebarAutoActive } from '@/helper'
 @Component
 export default class MarkdownSidebar extends Vue {
   @Prop({ type: String, default: '' }) content!: string
+
   get sidebar () {
     const wrap = document.createElement('div')
     wrap.innerHTML = this.content

@@ -4,4 +4,5 @@ export type RootState = {
   github?: any
   post?: any
   comment?: any
+  [k: string]: string
 }

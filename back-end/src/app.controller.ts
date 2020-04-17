@@ -1,11 +1,17 @@
-import { Controller, Get, Render, Res } from '@nestjs/common';
-import { Response } from 'express'
+import { Controller, Get, Render, Req } from '@nestjs/common';
+import {Request, Response} from 'express'
+import { AppService } from './app.service'
 
 @Controller()
 export class AppController {
-  constructor() {}
+  constructor (private readonly appService: AppService) {}
 
-  @Get(['/', '/post/*', '/user/*'])
-  @Render('index')
-  getIndex(@Res() res: Response): void { }
+  @Get()
+  @Render('dist/index')
+  public async getSSR(@Req() req: Request) {
+    return {
+      content: await this.appService.getSSR({ url: req.url }),
+      title: 'SSR Success'
+    }
+  }
 }
