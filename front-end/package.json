@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "cross-env NODE_ENV=development vue-cli-service serve",
     "lerna:dev": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": " vue-cli-service build --no-clean",
+    "build:ssr": "cross-env NODE_ENV=ssr vue-cli-service build --no-clean",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -49,10 +50,12 @@
     "@vue/cli-plugin-vuex": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
     "@vue/test-utils": "1.0.0-beta.29",
+    "cross-env": "^7.0.2",
     "domain": "^1.0.0",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.0",
     "typescript": "~3.8.3",
+    "vue-server-renderer": "^2.6.11",
     "vue-template-compiler": "^2.6.10",
     "vuex-module-decorators": "^0.16.1"
   },
