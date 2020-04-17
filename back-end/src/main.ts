@@ -11,12 +11,13 @@ async function bootstrap() {
     logger: ['error', 'debug', 'warn', 'log', 'verbose']
   })
   const cookieParser = require('cookie-parser')
-  const staticPath = join(__dirname, '/resources/static')
+  const staticPath = join(__dirname, '../../resources/static')
+  const templatePath = join(__dirname, '../../resources/templates/dist')
 
   app.use(express.json({limit: '50mb'}));
   app.use(express.urlencoded({limit: '50mb', extended: true}));
   app.useStaticAssets(staticPath)
-  app.setBaseViewsDir(staticPath)
+  app.setBaseViewsDir(templatePath)
   app.setViewEngine('hbs')
 
   app.use('/uploaded', express.static(UPLOADED_PATH))
