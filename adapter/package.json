@@ -1,0 +1,14 @@
+{
+  "name": "adapter",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "author": {
+    "email": "junil.h@kakao.com",
+    "name": "Junil Hwang"
+  },
+  "devDependencies": {
+    "typescript": "~3.8.3",
+    "axios": "~0.19.2"
+  }
+}

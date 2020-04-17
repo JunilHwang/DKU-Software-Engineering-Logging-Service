@@ -1,7 +1,7 @@
 {
   "name": "DKU-Software-Engineering-Logging-Service",
   "private": true,
-  "workspaces": [ "front-end", "back-end", "domain" ],
+  "workspaces": [ "front-end", "back-end", "domain", "adapter" ],
   "devDependencies": {
     "lerna": "^3.20.2"
   },
