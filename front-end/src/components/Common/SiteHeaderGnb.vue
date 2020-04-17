@@ -34,7 +34,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { MutationMethod } from 'vuex'
 import { namespace } from 'vuex-class'
-import { GithubProfile } from '@Domain'
+import { GithubProfile } from 'domain/src'
 import { eventBus } from '@/helper'
 
 const userStore = namespace('user')

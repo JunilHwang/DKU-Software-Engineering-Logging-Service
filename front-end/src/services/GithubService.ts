@@ -1,5 +1,5 @@
 import $http from 'axios'
-import { GithubProfile, GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO, GithubHook } from '@Domain'
+import { GithubProfile, GithubRepository, GithubContent, GithubTrees, GithubBlob, ContentVO, GithubHook } from 'domain/src'
 import { responseProcessor } from '@/helper'
 
 const baseURI = '/api/github'

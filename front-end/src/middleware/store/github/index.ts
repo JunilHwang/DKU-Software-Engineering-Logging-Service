@@ -1,6 +1,6 @@
 import { Module, VuexModule, MutationAction } from 'vuex-module-decorators'
 import { githubService } from '@/services'
-import { GithubRepository, GithubProfile, GithubHook } from '@Domain'
+import { GithubRepository, GithubProfile, GithubHook } from 'domain/src'
 
 @Module({
   namespaced: true

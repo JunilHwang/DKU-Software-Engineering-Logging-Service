@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import jsYaml from 'js-yaml'
-import { GithubContent } from '@Domain'
+import { GithubContent } from 'domain/src'
 import { Base64 } from 'js-base64'
 
 

@@ -29,7 +29,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
-import { Comment } from '@Domain'
+import { Comment } from 'domain/src'
 
 const commentStore = namespace('comment')
 

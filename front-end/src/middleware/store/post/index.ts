@@ -1,5 +1,5 @@
 import {Action, Module, MutationAction, VuexModule} from 'vuex-module-decorators'
-import { Post, PostView, PostVO } from '@Domain'
+import { Post, PostView, PostVO } from 'domain/src'
 import { postService } from '@/services'
 
 @Module({ namespaced: true })

@@ -33,7 +33,7 @@
 import { Vue, Component, Emit } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
-import { PostVO } from '@Domain'
+import { PostVO } from 'domain/src'
 import { eventBus, getFrontMatter } from '@/helper'
 
 const reader: FileReader = new FileReader()

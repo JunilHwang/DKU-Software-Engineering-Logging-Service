@@ -58,7 +58,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { namespace } from 'vuex-class'
-import { Comment, GithubProfile } from '@Domain'
+import { Comment, GithubProfile } from 'domain/src'
 import CommentForm from './CommentForm.vue'
 
 const components = { CommentForm }

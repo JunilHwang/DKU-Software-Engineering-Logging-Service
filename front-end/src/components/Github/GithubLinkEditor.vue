@@ -16,7 +16,7 @@ import { Component, Emit, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { eventBus } from '@/helper'
 import { githubClientService } from '@/services'
-import { GithubProfile } from '@Domain'
+import { GithubProfile } from 'domain/src'
 
 const userStore = namespace('user')
 

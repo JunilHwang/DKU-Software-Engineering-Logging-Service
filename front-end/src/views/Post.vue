@@ -97,9 +97,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
-import { Post as PostType } from '@Domain'
+import { Post as PostType, GithubProfile } from 'domain/src'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit, GithubLinkEditor, GithubContent } from '@/components'
-import { GithubProfile } from '@Domain'
 
 const components = { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit, GithubLinkEditor, GithubContent }
 

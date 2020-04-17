@@ -24,7 +24,7 @@
 <script lang="ts">
 import { Vue, Component, Emit } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import { GithubRepository, GithubTrees, GithubTree, GithubBlob, GithubProfile, ContentVO } from '@Domain'
+import { GithubRepository, GithubTrees, GithubTree, GithubBlob, GithubProfile, ContentVO } from 'domain/src'
 import { githubService, githubClientService } from '@/services'
 import { Markdown } from '@/components'
 

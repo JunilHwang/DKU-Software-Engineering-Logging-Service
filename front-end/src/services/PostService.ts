@@ -1,5 +1,5 @@
 import $http from 'axios'
-import { Post, PostVO, PostView, GithubContent } from '@Domain'
+import { Post, PostVO, PostView, GithubContent } from 'domain/src'
 import { responseProcessor, blobToContent } from '@/helper'
 import { githubClientService } from './index'
 

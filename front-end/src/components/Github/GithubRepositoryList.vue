@@ -26,7 +26,7 @@
 import {Vue, Component, Emit} from 'vue-property-decorator'
 import { ActionMethod } from 'vuex'
 import { namespace } from 'vuex-class'
-import { GithubProfile, GithubRepository } from '@Domain'
+import { GithubProfile, GithubRepository } from 'domain/src'
 
 const githubStore = namespace('github')
 const userStore = namespace('user')

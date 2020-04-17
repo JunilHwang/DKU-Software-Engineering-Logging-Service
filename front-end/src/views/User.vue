@@ -51,7 +51,7 @@
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import { PostList } from '@/components'
 import { namespace } from 'vuex-class'
-import { Post, User as UserType } from '@Domain'
+import { Post, User as UserType } from 'domain/src'
 import { ActionMethod } from 'vuex'
 import { eventBus } from '@/helper'
 
