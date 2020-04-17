@@ -156,8 +156,8 @@ export default class Post extends Vue {
   }
 
   private async refreshPost () {
-    await this.REFRESH_POST({ ...this.selectedPost })
-    this.$message({ type: 'success', message: '포스트가 업데이트 되었습니다.' })
+    await this.REFRESH_POST({...this.selectedPost})
+    this.$message({type: 'success', message: '포스트가 업데이트 되었습니다.'})
   }
 
   private async fetchComment () {
