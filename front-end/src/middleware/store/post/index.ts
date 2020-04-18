@@ -1,4 +1,4 @@
-import {Action, Module, MutationAction, VuexModule} from 'vuex-module-decorators'
+import {Action, Module, Mutation, MutationAction, VuexModule} from 'vuex-module-decorators'
 import { Post, PostView, PostVO } from 'domain/src'
 import { postService } from '@/services'
 
@@ -8,6 +8,11 @@ export default class PostModule extends VuexModule {
   selectedPost: Post|null = null
   postList: PostView[] = []
   state!: { selectedPost: Post[]|null }
+
+  @Mutation
+  INIT_POST (selectedPost: Post) {
+    this.selectedPost = selectedPost
+  }
 
   @MutationAction
   async FETCH_POST (idx: number) {

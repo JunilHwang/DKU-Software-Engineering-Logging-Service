@@ -8,8 +8,8 @@ import { RootState } from './types'
 
 Vue.use(Vuex)
 
-export const createStore = (context: { [k: string]: string }) => {
-  const state: RootState = { ...context }
+export const createStore = () => {
+  const state: RootState = { }
   const mutations = { }
   const actions = { }
   const modules = { user, github, post, comment }
@@ -17,4 +17,4 @@ export const createStore = (context: { [k: string]: string }) => {
   return new Vuex.Store<RootState>(storeOption)
 }
 
-export const store: Store<RootState> = createStore({ })
+export const store: Store<RootState> = createStore()
