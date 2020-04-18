@@ -10,8 +10,8 @@ export default class PostModule extends VuexModule {
   state!: { selectedPost: Post[]|null }
 
   @Mutation
-  INIT_POST (selectedPost: Post) {
-    this.selectedPost = selectedPost
+  async INIT_POST (selectedPost: Promise<Post>) {
+    this.selectedPost = await selectedPost
   }
 
   @MutationAction

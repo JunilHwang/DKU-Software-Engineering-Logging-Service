@@ -181,8 +181,8 @@ export default class Post extends Vue {
   }
 
   private mounted () {
-    this.fetchPost()
-    this.fetchComment()
+    // this.fetchPost()
+    // this.fetchComment()
   }
 }
 </script>

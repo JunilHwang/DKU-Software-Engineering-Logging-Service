@@ -5,7 +5,7 @@ export default (context: SSRContext) => new Promise(async (resolve, reject) => {
   const { app, router, store } = createApp()
 
   if (context.selectedPost !== null) {
-    store.commit('post/INIT_POST', context.selectedPost)
+    store.commit('post/INIT_POST', await context.selectedPost)
   }
 
   await router.push(context.url)

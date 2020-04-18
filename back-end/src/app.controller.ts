@@ -22,8 +22,8 @@ export class AppController {
     const selectedPost: PostEntity|null = await this.appService.getPost(idx)
     const content = await this.appService.getPostSSR({ url: req.url, selectedPost })
     return {
-      content: content,
-      title: '단국대학교 개발자 커뮤니티 - 포스트',
+      content,
+      title: `${selectedPost ? selectedPost.title : '페이지를 찾을 수 없습니다' } | DKU Logging Service`,
     }
   }
 }
