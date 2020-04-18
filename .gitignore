@@ -4,3 +4,4 @@ docker-compose.yml
 back-end/data/
 .DS_Store
 node_modules
+vue-ssr-server-bundle.json
