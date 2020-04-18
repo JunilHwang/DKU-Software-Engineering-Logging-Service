@@ -95,7 +95,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
+import { namespace, State } from 'vuex-class'
 import { ActionMethod } from 'vuex'
 import { Post as PostType, GithubProfile } from 'domain/src'
 import { Markdown, CommentList, CommentForm, CommentDialog, PostHeader, PostEdit, GithubLinkEditor, GithubContent } from '@/components'
@@ -178,6 +178,12 @@ export default class Post extends Vue {
     const contentEditor = this.$refs.contentEditor as DialogComponent
     linkEditor.close()
     contentEditor.close()
+  }
+
+  private serverPrefetch () {
+    console.log('============selectedPost start============')
+    console.log(this.selectedPost)
+    console.log('============selectedPost end============')
   }
 
   private mounted () {

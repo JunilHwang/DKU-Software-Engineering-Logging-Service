@@ -23,7 +23,7 @@ export default class Home extends Vue {
   @postStore.State private postList!: Post[]
   @postStore.Action private FETCH_POST_ALL!: ActionMethod
 
-  async created () {
+  async mounted () {
     await this.FETCH_POST_ALL()
     eventBus.$on('fetchPostAll', this.FETCH_POST_ALL)
 

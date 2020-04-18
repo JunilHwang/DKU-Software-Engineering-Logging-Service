@@ -45,7 +45,7 @@ export default class Setting extends Vue {
     }
   }
 
-  private created () {
+  private mounted () {
     this.accessCheck()
   }
 }

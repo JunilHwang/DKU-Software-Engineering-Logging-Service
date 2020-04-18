@@ -118,7 +118,7 @@ export default class Hook extends Vue {
       })
   }
 
-  private async created () {
+  private async mounted () {
     await this.FETCH_GITHUB_HOOK()
   }
 }

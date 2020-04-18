@@ -24,7 +24,7 @@ export default class App extends Vue {
   @userStore.State private access_token!: AccessToken
   @userStore.Action private SIGN_IN!: ActionMethod
 
-  async created () {
+  async mounted () {
     const { access_token, SIGN_IN } = this
     access_token
     && SIGN_IN

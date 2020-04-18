@@ -79,7 +79,7 @@ export default class User extends Vue {
     window.open(url)
   }
 
-  created () {
+  mounted () {
     this.FETCH_USER(this.$route.params.userId)
     this.fetchPost()
 

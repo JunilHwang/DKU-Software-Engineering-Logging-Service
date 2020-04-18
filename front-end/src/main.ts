@@ -1,10 +1,10 @@
-import { createApp } from './app'
+import { app, store } from './app'
 import 'element-ui/lib/theme-chalk/index.css'
 
-const { app, store } = createApp()
+const $global: any = window
 
-export { store }
-
-store.replaceState((window as any).__INITIAL_STATE__)
+if ($global.__INITIAL_STATE__) {
+  store.replaceState($global.__INITIAL_STATE__)
+}
 
 app.$mount('#app')

@@ -69,9 +69,7 @@ export default class SiteHeader extends Vue {
     eventBus.$emit('openLinkEditor')
   }
 
-  created () {
-    if (typeof document === 'undefined') return
-
+  mounted () {
     document.body.onclick = () => {
       const target: HTMLElement = this.$refs.submenu as HTMLElement
       if (target && target.classList.contains('active')) {
