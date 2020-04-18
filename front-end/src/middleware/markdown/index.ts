@@ -1,3 +1,8 @@
+const highlight = require('highlight.js');
+const highlightDefineVue = require('highlightjs-vue');
+highlightDefineVue(highlight);
+highlight.initHighlightingOnLoad();
+
 import MarkdownIt from 'markdown-it'
 import 'highlight.js/styles/atom-one-dark.css'
 

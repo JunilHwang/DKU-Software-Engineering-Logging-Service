@@ -180,7 +180,13 @@ export default class Post extends Vue {
     contentEditor.close()
   }
 
-  private created () {
+  private serverPrefetch () {
+    // return the Promise from the action
+    // so that the component waits before rendering
+    return this.fetchPost()
+  }
+
+  private mounted () {
     this.fetchPost()
     this.fetchComment()
   }

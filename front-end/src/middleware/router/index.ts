@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Home, Content, User, Post, Setting } from '@/views'
+import { Home, User, Post, Setting } from '@/views'
 
 Vue.use(VueRouter)
 
@@ -11,10 +11,6 @@ export const createRouter = () => new VueRouter({
     {
       path: '/',
       component: Home
-    },
-    {
-      path: '/content',
-      component: Content
     },
     {
       path: '/user/:userId',

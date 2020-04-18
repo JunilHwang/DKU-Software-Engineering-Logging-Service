@@ -59,7 +59,8 @@
     "typescript": "~3.8.3",
     "vue-server-renderer": "^2.6.11",
     "vue-template-compiler": "^2.6.10",
-    "vuex-module-decorators": "^0.16.1"
+    "vuex-module-decorators": "^0.16.1",
+    "webpack-node-externals": "^1.7.2"
   },
   "browserslist": [
     "> 1%",

@@ -1,8 +1,8 @@
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
-const fs = require('fs')
-const path = require('path')
 const isSSR = process.env.NODE_ENV === 'ssr'
 const isDev = process.env.NODE_ENV === 'development'
+const nodeExternals = require('webpack-node-externals')
+
 
 console.log(`build-ssr-entry:  src/main${isSSR ? '-ssr' : '' }.ts`)
 
@@ -30,12 +30,8 @@ module.exports = {
       config.target('node')
       config.optimization.delete('splitChunks')
       config.output.libraryTarget('commonjs2')
-      config.plugin('ssr').use(VueSSRServerPlugin).end()
-    } else {
-      const highlight = require('highlight.js');
-      const highlightDefineVue = require('highlightjs-vue');
-      highlightDefineVue(highlight);
-      highlight.initHighlightingOnLoad();
+      config.externals(nodeExternals({ whitelist: /\.css|\.scss$/ }))
+      config.plugin('ssr').use(new VueSSRServerPlugin())
     }
   }
 }
