@@ -54,8 +54,6 @@
     "@vue/test-utils": "1.0.0-beta.29",
     "cross-env": "^7.0.2",
     "domain": "^1.0.0",
-    "jsdom": "^16.2.2",
-    "jsdom-global": "^3.0.2",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.0",
     "typescript": "~3.8.3",
