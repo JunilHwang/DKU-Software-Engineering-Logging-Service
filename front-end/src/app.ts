@@ -6,7 +6,7 @@ import './filter'
 import './middleware/icon'
 import { RootState } from '@/middleware/store/types'
 import { Store } from 'vuex'
-import { SSRContext } from 'domain/dist'
+import { sync } from 'vuex-router-sync'
 
 Vue.config.productionTip = false
 
@@ -17,6 +17,9 @@ Vue.use(ElementUI, { locale })
 export const createApp = (provideStore?: Store<RootState>) => {
   const router = createRouter()
   const store = provideStore || createStore()
+
+  sync(store, router)
+
   const render = (h: Function) => h(App)
   const app = new Vue({ router, store, render })
   return { app, router, store }

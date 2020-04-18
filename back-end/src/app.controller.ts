@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Render, Req } from '@nestjs/common'
 import { Request } from 'express'
 import { AppService } from './app.service'
-import { PostEntity } from '@/entity'
 
 @Controller()
 export class AppController {
@@ -19,7 +18,7 @@ export class AppController {
   @Get('/post/:idx')
   @Render('dist/index')
   public async getSSR(@Req() req: Request, @Param('idx') idx: number) {
-    const selectedPost: PostEntity|null = await this.appService.getPost(idx)
+    const selectedPost = await this.appService.getPost(idx)
     const content = await this.appService.getPostSSR({ url: req.url, selectedPost })
     return {
       content,

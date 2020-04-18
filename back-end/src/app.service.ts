@@ -30,7 +30,7 @@ export class AppService {
     return renderer.renderToString(context)
   }
 
-  public async getPost (idx: number): Promise<Post|null> {
+  public async getPost (idx: number): Promise<Post> {
     try {
       return await this.postService.find({idx})
     } catch (e) {

@@ -4,12 +4,14 @@ import { SSRContext } from 'domain/dist'
 export default (context: SSRContext) => new Promise(async (resolve, reject) => {
   const { app, router, store } = createApp()
 
-  if (context.selectedPost !== null) {
-    store.commit('post/INIT_POST', await context.selectedPost)
-  }
-
   await router.push(context.url)
   router.onReady(() => {
+    context.rendered = () => {
+      if (context.selectedPost !== null) {
+        store.commit('post/INIT_POST', context.selectedPost)
+      }
+    }
     resolve(app)
+
   }, reject)
 })
