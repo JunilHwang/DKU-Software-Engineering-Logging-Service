@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "cross-env NODE_ENV=development vue-cli-service serve",
     "lerna:dev": "vue-cli-service serve",
-    "build": "vue-cli-service build --no-clean",
+    "build:csr": "vue-cli-service build --no-clean",
     "build:ssr": "cross-env NODE_ENV=ssr vue-cli-service build --no-clean",
     "build:all": "vue-cli-service build --no-clean && cross-env NODE_ENV=ssr vue-cli-service build --no-clean",
     "test:unit": "vue-cli-service test:unit"
