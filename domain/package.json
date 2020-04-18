@@ -6,7 +6,7 @@
   "author": "junilhwang",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build:domain": "tsc"
   },
   "dependencies": {
     "js-base64": "^2.5.2"

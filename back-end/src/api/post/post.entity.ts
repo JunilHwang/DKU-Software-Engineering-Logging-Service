@@ -1,8 +1,9 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from 'typeorm'
 import { UserEntity as User} from '@/entity'
+import { Post } from 'domain/dist'
 
 @Entity({ name: 'post' })
-export class PostEntity {
+export class PostEntity implements Post {
 
   @PrimaryGeneratedColumn()
   idx: number
