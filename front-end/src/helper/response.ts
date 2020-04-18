@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { Response } from 'domain/src'
-import { store } from '@/middleware'
+import { store } from '@/main'
 import { eventBus } from '../helper'
 
 export const responseProcessor = async <T>(response: Promise<AxiosResponse<Response<T>>>): Promise<T> => {

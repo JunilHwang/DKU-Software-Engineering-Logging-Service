@@ -6,10 +6,13 @@ export default (context: SSRContext) => new Promise(async (resolve, reject) => {
 
   await router.push(context.url)
   router.onReady(() => {
+    if (context.selectedPost !== null) {
+      store.commit('post/INIT_POST', context.selectedPost)
+    }
     context.rendered = () => {
-      if (context.selectedPost !== null) {
-        store.commit('post/INIT_POST', context.selectedPost)
-      }
+      console.log('=====================rendered=====================')
+      console.log('selectedPost: ', store.state.post.selectedPost)
+      context.state = store.state
     }
     resolve(app)
 

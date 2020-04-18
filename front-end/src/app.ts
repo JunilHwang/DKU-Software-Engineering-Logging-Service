@@ -14,9 +14,9 @@ const locale = require('element-ui/lib/locale/lang/ko')
 
 Vue.use(ElementUI, { locale })
 
-export const createApp = (provideStore?: Store<RootState>) => {
+export const createApp = () => {
   const router = createRouter()
-  const store = provideStore || createStore()
+  const store = createStore()
 
   sync(store, router)
 
