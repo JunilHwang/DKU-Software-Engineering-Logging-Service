@@ -33,10 +33,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV === 'development') {
     app.use((req: Request, res: Response, next: Function) => {
-      if (
-        req.path.includes('/api') ||
-        req.path.includes('/post')
-      ) console.log(`${req.method}:  ${req.path}`);
+      if (req.path.includes('/api')) console.log(`${req.method}:  ${req.path}`);
       next();
     })
   }
