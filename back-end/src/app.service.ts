@@ -28,7 +28,7 @@ export class AppService {
       runInNewContext: false
     })
     const html = await renderer.renderToString(context)
-    window.close()
+    global['window'].close()
     return html
   }
 
