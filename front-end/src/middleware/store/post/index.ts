@@ -5,7 +5,7 @@ import { postService } from '@/services'
 @Module({ namespaced: true })
 export default class PostModule extends VuexModule {
 
-  selectedPost!: Post|null
+  selectedPost: Post|null = null
   postList: PostView[] = []
   state!: { selectedPost: Post[]|null }
 
