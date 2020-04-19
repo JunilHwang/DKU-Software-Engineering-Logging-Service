@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { createBundleRenderer } from 'vue-server-renderer'
+import {BundleRendererOptions, createBundleRenderer, createRenderer} from 'vue-server-renderer'
 import { join } from 'path'
 import { JSDOM } from 'jsdom'
 import { PostService } from '@/api/post/post.service'
@@ -10,6 +10,7 @@ const bundlePath = join(__dirname, '../../resources/vue-ssr-server-bundle.json')
 const isDev = process.env.NODE_ENV === 'development'
 const port = isDev ? 3000 : 8080
 const baseURL = `http://localhost:${port}`
+const htmlStr = `<!DOCTYPE html><html><head><title></title></head><body></body></html>`
 
 @Injectable()
 export class AppService {
@@ -19,17 +20,14 @@ export class AppService {
   ) { }
 
   public async getPostSSR (context: SSRContext): Promise<string> {
-    const { window } = new JSDOM(`<!DOCTYPE html><html><head><title></title></head><body></body></html>`, {
-      url: `${baseURL}${context.url}`
-    })
+    const url: string = `${baseURL}${context.url}`
+    const { window } = new JSDOM(htmlStr, { url })
     global['window'] = window
     global['document'] = window.document
-    const renderer = createBundleRenderer(bundlePath, {
-      runInNewContext: false
-    })
-    const html = await renderer.renderToString(context)
-    global['window'].close()
-    return html
+    return createBundleRenderer(bundlePath, {
+      runInNewContext: false,
+      template: (result, context) => `${result}${context.renderState()}${context.renderScripts()}`
+    } as any).renderToString(context)
   }
 
   public async getPost (idx: number): Promise<Post> {

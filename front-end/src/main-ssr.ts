@@ -9,6 +9,10 @@ export default (context: SSRContext) => new Promise(async (resolve, reject) => {
     if (context.selectedPost) {
       store.commit('post/INIT_POST', context.selectedPost)
     }
+
+    context.rendered = () => {
+      context.state = store.state
+    }
     resolve(app)
   }, reject)
 })

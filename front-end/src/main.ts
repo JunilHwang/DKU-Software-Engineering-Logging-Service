@@ -2,12 +2,11 @@ import { createApp } from './app'
 import 'element-ui/lib/theme-chalk/index.css'
 import { storeContainer } from './helper'
 
-const { initPost } = window as any
-
 const { app, store }  = createApp()
 
-if (initPost) store.commit('post/INIT_POST', initPost)
+const { __INITIAL_STATE__ } = window as any
+if (__INITIAL_STATE__) store.replaceState(__INITIAL_STATE__)
 
 storeContainer.set(store)
 
-app.$mount('#app')
+app.$mount('#app', true)
