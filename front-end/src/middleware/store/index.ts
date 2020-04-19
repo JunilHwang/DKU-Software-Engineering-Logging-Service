@@ -9,9 +9,7 @@ import { RootState } from './types'
 Vue.use(Vuex)
 
 export const createStore = () => {
-  const state: () => RootState = () => ({
-    selectedPost: null
-  })
+  const state: () => RootState = () => ({ })
   const mutations = { }
   const actions = { }
   const modules = { user, github, post, comment }

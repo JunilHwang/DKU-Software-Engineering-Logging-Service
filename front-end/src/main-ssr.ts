@@ -8,14 +8,9 @@ export default (context: SSRContext) => new Promise(async (resolve, reject) => {
 
   sync(store, router)
 
-
   if (context.selectedPost) {
     store.commit('post/INIT_POST', context.selectedPost)
   }
 
-  router.onReady(() => {
-
-    resolve(app)
-
-  }, reject)
+  router.onReady(() => resolve(app), reject)
 })

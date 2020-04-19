@@ -18,7 +18,7 @@ export class AppService {
     @Inject(PostService) private readonly postService: PostService
   ) { }
 
-  public getPostSSR (context: SSRContext): Promise<string> {
+  public async getPostSSR (context: SSRContext): Promise<string> {
     const { window } = new JSDOM(`<!DOCTYPE html><html><head><title></title></head><body></body></html>`, {
       url: `${baseURL}${context.url}`
     })
@@ -27,7 +27,9 @@ export class AppService {
     const renderer = createBundleRenderer(bundlePath, {
       runInNewContext: false
     })
-    return renderer.renderToString(context)
+    const html = await renderer.renderToString(context)
+    window.close()
+    return html
   }
 
   public async getPost (idx: number): Promise<Post> {
