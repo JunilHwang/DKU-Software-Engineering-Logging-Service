@@ -22,6 +22,7 @@ export class AppController {
     const selectedPost: PostEntity = await this.appService.getPost(idx)
     const content: string = await this.appService.getPostSSR({ url: req.url, selectedPost })
     const title: string = `${selectedPost ? selectedPost.title : '페이지를 찾을 수 없습니다' } | DKU Logging Service`
+    global['window'].close()
     return { content, title }
   }
 }
