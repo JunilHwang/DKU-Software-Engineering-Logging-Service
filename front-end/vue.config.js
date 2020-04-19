@@ -10,7 +10,7 @@ module.exports = {
   devServer: {
     port: 8080,
     proxy: {
-      '^/(api|uploaded|post\/[0-9]+)': {
+      '^/(api|uploaded)': {
         target: 'http://0.0.0.0:3000'
       },
     }

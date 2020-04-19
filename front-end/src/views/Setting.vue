@@ -23,7 +23,7 @@ interface TabMenu {
 }
 
 const components = { Hook, Profile }
-const userStore = namespace('userStore')
+const userStore = namespace('user')
 
 @Component({ components })
 export default class Setting extends Vue {
