@@ -12,15 +12,25 @@ const htmlStr = `<!DOCTYPE html><html><head><title></title></head><body></body><
 export class SSRService {
 
   public getRenderer (): BundleRenderer {
-    return createBundleRenderer(bundlePath, {
-      runInNewContext: false,
-      template: (result, context) => `${result}${context.renderState()}${context.renderScripts()}`
-    } as any)
+    try {
+      return createBundleRenderer(bundlePath, {
+        runInNewContext: false,
+        template: (result, context) => `${result}${context.renderState()}${context.renderScripts()}`
+      } as any)
+    } catch (e) {
+      console.log(e)
+      throw 'Renderer Error'
+    }
   }
 
   public getDom (contextURL: string): [ DOMWindow, Document ] {
-    const url: string = `${baseURL}${contextURL}`
-    const { window } = new JSDOM(htmlStr, {url})
-    return [ window, window.document ]
+    try {
+      const url: string = `${baseURL}${contextURL}`
+      const {window} = new JSDOM(htmlStr, {url})
+      return [window, window.document]
+    } catch (e) {
+      console.log(e)
+      throw 'JSDOM Error'
+    }
   }
 }

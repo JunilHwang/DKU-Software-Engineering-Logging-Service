@@ -7,3 +7,8 @@ export const Token = createParamDecorator((data: undefined, req: Request): strin
     return token
   },
 );
+
+export const OptionalToken = createParamDecorator((data: undefined, req: Request): string => {
+    return req.cookies.access_token
+  },
+);

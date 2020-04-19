@@ -46,7 +46,6 @@ import { Post, PostVO } from 'domain/src'
 import { namespace } from 'vuex-class'
 import { ActionMethod } from 'vuex'
 
-const reader: FileReader = new FileReader()
 const postStore = namespace('post')
 
 @Component
@@ -56,6 +55,7 @@ export default class PostEdit extends Vue {
   private postData: Post|null = null
   private opened: boolean = false
   private uploadedThumbnail: string = ''
+  private reader: FileReader|null = null
 
   public open (postData: Post) {
     this.opened = true
@@ -80,7 +80,7 @@ export default class PostEdit extends Vue {
   }
 
   private thumbnailUpload ({ target: { files } }: { target: { files: FileList } }) {
-    files.length && reader.readAsDataURL(files[0])
+    files.length && this.reader!.readAsDataURL(files[0])
   }
 
   private thumbnailEdit () {
@@ -101,7 +101,9 @@ export default class PostEdit extends Vue {
     this.postData!.route = route
   }
 
-  private created () {
+  private mounted () {
+    const reader: FileReader = new FileReader()
+    this.reader = reader
     reader.onloadend = (e: any) => {
       this.postData!.thumbnail = true
       this.uploadedThumbnail = e.target!.result

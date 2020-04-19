@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Render, Req } from '@nestjs/common'
 import { SSRFacade } from './ssr.facade'
 import { Request } from 'express'
+import { OptionalToken } from '@/middle'
 
 @Controller()
 export class SSRController {
@@ -16,8 +17,12 @@ export class SSRController {
 
   @Get('/post/:idx')
   @Render('dist/index')
-  public getPostSSR(@Req() { url }: Request, @Param('idx') idx: number): Promise<{ [k: string]: string }> {
-    return this.ssrFacade.postRender(url, idx)
+  public getPostSSR(
+    @Req() { url }: Request,
+    @Param('idx') idx: number,
+    @OptionalToken() access_token?: string
+  ): Promise<{ [k: string]: string }> {
+    return this.ssrFacade.postRender(url, idx, access_token)
   }
 
 }

@@ -20,6 +20,10 @@ export default class UserModule extends VuexModule {
     Cookie.remove('access_token')
   }
 
+  @Mutation INIT (user: User) {
+    this.profile = user.profile
+  }
+
   @MutationAction async SIGN_IN (access_token: AccessToken) {
     return { profile: await userService.getMe(access_token) }
   }
