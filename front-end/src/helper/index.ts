@@ -1,10 +1,19 @@
 import Vue from 'vue'
 import jsYaml from 'js-yaml'
+import { Store } from 'vuex'
+import { RootState } from '@/middleware/store/types'
 
 export * from './response'
 
-// 이벤트 버스
-export const eventBus: Vue = new Vue()
+export const eventBus = new Vue({})
+
+export const storeContainer = (() => {
+  let store: Store<RootState>|null = null
+  return {
+    get: (): Store<RootState> => store!,
+    set: (v: Store<RootState>) => { store = v }
+  }
+})();
 
 // markdown content 에서 front matter를 파싱하여 반환
 export const getFrontMatter = (content: string) => {

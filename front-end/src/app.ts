@@ -19,5 +19,3 @@ export const createApp = () => {
   const app = new Vue({ router, store, render })
   return { app, router, store }
 }
-
-export const { app, store, router }  = createApp()
