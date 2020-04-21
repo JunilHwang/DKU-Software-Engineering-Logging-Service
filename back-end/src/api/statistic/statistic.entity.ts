@@ -1,5 +1,5 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import { UserEntity as User } from "@/api/user/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { UserEntity as User } from '@/api/user/user.entity'
 
 @Entity({ name: 'statistic' })
 export class StatisticEntity {
@@ -25,6 +25,6 @@ export class StatisticEntity {
   @Column()
   stars: number
 
-  @Column({ type: 'bigint' })
+  @Column({ name: 'created_at', type: 'bigint' })
   createdAt: number
 }
