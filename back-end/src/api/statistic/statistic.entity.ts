@@ -17,9 +17,6 @@ export class StatisticEntity {
   prs: number
 
   @Column()
-  pr: number
-
-  @Column()
   issues: number
 
   @Column()
