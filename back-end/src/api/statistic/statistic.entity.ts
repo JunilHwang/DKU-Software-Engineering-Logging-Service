@@ -6,7 +6,7 @@ export class StatisticEntity {
   @PrimaryGeneratedColumn()
   idx: number
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'user' })
   user: User
 

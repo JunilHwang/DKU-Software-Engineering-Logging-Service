@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { UserEntity as User } from '@/entity'
 
 @Entity({ name: 'project' })
@@ -31,6 +31,17 @@ export class ProjectEntity {
   @Column({ name: 'due_at', type: 'bigint' })
   dueAt: number
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, { eager: true })
+  @JoinTable({
+    name: 'project_participant',
+    joinColumn: {
+      name: 'project',
+      referencedColumnName: 'idx'
+    },
+    inverseJoinColumn: {
+      name: 'user',
+      referencedColumnName: 'idx'
+    }
+  })
   participant: User[]
 }
